@@ -1,0 +1,20 @@
+# Backend environment files
+backend/.env
+backend/.env*
+
+# Frontend environment files (jeśli są)
+frontend/.env
+frontend/.env*
+
+# Exclude product images everywhere
+**/productImages/
+productImages/
+
+# More specific path
+ecommerce/backend/productImages/
+
+
+# Universal exclusions
+**/.DS_Store
+**/Thumbs.db
+
