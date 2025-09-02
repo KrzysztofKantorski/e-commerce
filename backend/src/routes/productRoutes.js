@@ -124,6 +124,47 @@ router.get("/search", async(req, res)=>{
 
 })
 
+
+
+//count items by category
+router.get("/category/count", async(req, res)=>{
+  try{
+ 
+const categories = await Product.distinct('category');
+const categoryCounts = []
+
+// Dla każdej kategorii policz produkty
+for (const category of categories) {
+  const count = await Product.countDocuments({ category });
+  categoryCounts.push({
+    cat: category,
+    count: count
+  });
+}
+   
+//Add all filters 
+  if(!categoryCounts || categoryCounts.length === 0){
+    return(
+      res.status(404).json({
+      message: "No products found in this category"
+    })
+    )
+  }
+  res.status(200).json({
+    message: `Counted products by category`,
+    count: categoryCounts
+  })
+  }
+
+  catch(error){
+    res.status(500).json({
+      message: "An error occured",
+      error: error.message
+    })
+  }
+
+})
+
 //display products by category
 router.get("/category/:category", async(req, res)=>{
   try{

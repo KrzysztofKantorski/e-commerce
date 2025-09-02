@@ -87,11 +87,11 @@ function Product() {
                 color="default" 
                 variant="light" 
                 onPress={() => navigate(-1)}
-                className="mb-6"
+              
             >
                 <FaArrowLeft className="mr-2" /> Back to Products
             </Button>
- <h1 className="text-[4rem] mb-[1rem] ">{product.name}</h1>
+ <p className="text-[4rem] mb-[1rem] mt-[0]">{product.name}</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
 
                 {/* Zdjęcie produktu */}
@@ -99,7 +99,7 @@ function Product() {
                     <Image
                         src={`http://localhost:3000${product.images}`}
                         alt={product.name}
-                        className="w-full max-w-md h-auto rounded-lg shadow-lg "
+                        className="rounded-lg shadow-lg w-full object-cover h-[500px]"
                         onError={(e) => {
                             e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmaWxsPSIjNjY2Ij5CcmFrIG9icmF6dTwvdGVx0D48L3N2Zz4=';
                         }}
@@ -109,8 +109,7 @@ function Product() {
                 <div>
                  
                  
-                    <h2>{
-                    product.description}</h2>
+                    <h2>{product.description}</h2>
                     
                    
                 </div>

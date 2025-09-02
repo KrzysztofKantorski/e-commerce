@@ -14,8 +14,6 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/product/:id" element={<Product />}></Route>
-      
-
       </Routes>
     </BrowserRouter>
     
