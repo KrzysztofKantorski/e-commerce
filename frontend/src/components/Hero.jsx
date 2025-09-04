@@ -2,11 +2,10 @@ import React from 'react'
 import "../styles/Hero.css"
 import { useKeenSlider } from "keen-slider/react"
 import "keen-slider/keen-slider.min.css"
-import Shoes from "../Images/Buty Nike Air Max 270.jpg"
+import { HyperText } from "@/components/magicui/hyper-text";
+import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
+import { InteractiveGridPattern } from "./MagicUi/interactive-grid-pattern";
 
-import {
-Button
-} from "@heroui/react";
 function Hero() {
      const [sliderRef] = useKeenSlider(
     {
@@ -33,22 +32,35 @@ function Hero() {
         slider.on("animationEnded", nextTimeout)
         slider.on("updated", nextTimeout)
       },
-    ]
-  )
-  return (
-    <>
-      <div ref={sliderRef} className="keen-slider h-[95vh] ">
-        <div className="keen-slider__slide number-slide1 relative">
-            1
+  ]
+)
 
-          <div className="absolute bottom-[10rem] left-[2rem]">
-              <h1 className="text-white">Nowa dostawa butów</h1>
-              <Button>Zobacz więcej</Button>
-          </div>
-           
+return (
+    <>
+    <div ref={sliderRef} className="keen-slider h-[100vh] absolute w-full overflow-hidden  top-[-5vh] left-[0] right-[0] bottom-[0]">
+      
+    <div className="keen-slider__slide number-slide1 relative z-[5] ">
+        <HyperText duration={1000} className="text-primary text-[6rem] text-center">Nowa dostawa butów</HyperText>
+        <div className="absolute top-[0] h-[100vh] w-[100%] overflow-hidden z-[-1]">
+        <InteractiveGridPattern />
         </div>
-        <div className="keen-slider__slide number-slide2">2</div>
-        <div className="keen-slider__slide number-slide3">3</div>
+        <InteractiveHoverButton>Zobacz więcej</InteractiveHoverButton>
+    </div>
+
+        <div className="keen-slider__slide number-slide2 relative z-[5]" >
+<HyperText duration={1000} className="text-primary text-[6rem] text-center">Nowa dostawa butów</HyperText>
+        <div className="absolute top-[0] h-[100vh] w-[100%] overflow-hidden z-[-1]">
+        <InteractiveGridPattern />
+          </div>
+<InteractiveHoverButton>Zobacz więcej</InteractiveHoverButton>
+        </div>
+        <div className="keen-slider__slide number-slide3 relative z-[5]">
+          <HyperText duration={1000} className="text-primary text-[6rem] text-center">Nowa dostawa butów</HyperText>
+        <div className="absolute top-[0] h-[100vh] w-[100%] overflow-hidden z-[-1]">
+        <InteractiveGridPattern />
+          </div>
+<InteractiveHoverButton>Zobacz więcej</InteractiveHoverButton>
+        </div>
       
       </div>
     </>

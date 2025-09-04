@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   Navbar,
-  NavbarBrand,
   NavbarContent,
   NavbarItem,
   Link,
@@ -12,8 +11,8 @@ import {
   DropdownMenu,
   Avatar,
 } from "@heroui/react";
-
-
+import {useState} from "react"
+import DisplaySearch from './DisplaySearch';
 
 export const SearchIcon = ({size = 50, strokeWidth = 2.5, width, height, ...props}) => {
   return (
@@ -29,14 +28,14 @@ export const SearchIcon = ({size = 50, strokeWidth = 2.5, width, height, ...prop
     >
       <path
         d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
-        stroke="currentColor"
+        stroke="primary"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={strokeWidth}
       />
       <path
         d="M22 22L20 20"
-        stroke="currentColor"
+        stroke="primary"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={strokeWidth}
@@ -45,18 +44,21 @@ export const SearchIcon = ({size = 50, strokeWidth = 2.5, width, height, ...prop
   );
 };
 function Nav() {
+  const [searchText, setSearchText] = useState("");
+  console.log(searchText)
   return (
-    <Navbar isBordered className="px-4">
+    <>
+    <Navbar isBordered className="flex justify-around w-[100%] z-[1000]">
      
-      <NavbarContent justify="start" className="flex-1">
-        <NavbarContent className="hidden sm:flex ">
+      <NavbarContent justify="start">
+        <NavbarContent className="hidden sm:flex z-[1000]">
           <NavbarItem>
             <Link color="foreground" href="#">
               Features
             </Link>
           </NavbarItem>
           <NavbarItem isActive>
-            <Link aria-current="page" color="secondary" href="#">
+            <Link aria-current="page" color="primary" href="#">
               Customers
             </Link>
           </NavbarItem>
@@ -68,35 +70,32 @@ function Nav() {
         </NavbarContent>
       </NavbarContent>
 
-<NavbarContent as="div" className="flex-1 justify-center" justify="center">
+      <NavbarContent as="div" justify="center">
         <Input
           classNames={{
-      base: "w-full max-w-full sm:max-w-[35rem] md:max-w-[45rem] lg:max-w-[55rem] xl:max-w-[65rem] h-10",
-      mainWrapper: "h-full w-full",
-      input: "text-small",
-      inputWrapper:
-        "h-full w-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500-20",
-          }}
+          base: "sm:w-[15rem] md:w-[17rem] lg:w-[20rem] xl:w-[25rem] h-10",
+          mainWrapper: "h-full w-full",
+          input: "text-small",
+          inputWrapper:
+            "h-full w-full font-normal text-default-500 bg-default-400/20",
+              }}
           placeholder="Type to search..."
           size="sm"
           startContent={<SearchIcon size={18} />}
           type="search"
+          value={searchText}
+          onChange={(e)=>setSearchText(e.target.value)}
         />
       </NavbarContent>
 
-
-
-
-
-
-      <NavbarContent as="div" className="flex-1 " justify="end">
+      <NavbarContent as="div" justify="end">
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
             <Avatar
               isBordered
               as="button"
               className="transition-transform"
-              color="secondary"
+              color="primary"
               name="Jason Hughes"
               size="sm"
               src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
@@ -121,7 +120,9 @@ function Nav() {
       </NavbarContent>
       
     </Navbar>
-
+           <DisplaySearch search={searchText}></DisplaySearch>
+        
+</>
   )
 }
 
