@@ -7,6 +7,7 @@ import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-b
 import { InteractiveGridPattern } from "./MagicUi/interactive-grid-pattern";
 
 function Hero() {
+ 
      const [sliderRef] = useKeenSlider(
     {
       loop: true,

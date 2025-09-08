@@ -7,54 +7,54 @@ const auth = require("../validators/login");
 
 //add product to cart
 router.post("/", auth, async(req, res)=>{
-    try{
-    const user =  req.user.id;
-    const {product, quantity} = req.body;
+    try {
+        const userId = req.user.id;
+        const { productId, quantity = 1 } = req.body; // Zmiana z req.query na req.body
 
-    //check if user exists
-    const userToFind = await User.findById(user);
-    if(!userToFind){
-       return(
-            res.status(404).json({
-            message: "User was not found"
-        })
-       ) 
-    }
+        // Check if user exists
+        const user = await User.findById(userId);
+        if(!user) {
+            return res.status(404).json({
+                message: "User was not found"
+            });
+        }
 
-
-    //check if product exists
-    const dbProduct = await Product.findById(product);
-    if(!dbProduct){
-        return(
-                res.status(404).json({
+        // Check if product exists
+        const product = await Product.findById(productId);
+        if(!product) {
+            return res.status(404).json({
                 message: "Product was not found"
-            })
-            ) 
-    }
+            });
+        }
 
-    //check if product is alerdy in cart
-    const existngProduct = await userToFind.cart.find((item)=> item.product.toString() === product);
+        // Check if product is already in cart
+        const existingCartItem = user.cart.find(
+            item => item.product.toString() === productId
+        );
 
-    //product is in cart - change quantity
-    if(existngProduct){
-        existngProduct.quantity+= quantity;
-    }
-    //add to cart
-    else{
-        userToFind.cart.push({product, quantity})
-    }
+        if(existingCartItem) {
+            // Product is in cart - change quantity
+            existingCartItem.quantity += parseInt(quantity);
+        } else {
+            // Add to cart
+            user.cart.push({
+                product: productId,
+                quantity: parseInt(quantity)
+            });
+        }
 
-    await userToFind.save();
-     res.status(201).json({
+        await user.save();
+        
+        res.status(201).json({
             message: "Product added successfully",
-            cart: userToFind.cart
-        })
+            cart: user.cart
+        });
     }
-    catch(error){
+    catch(error) {
         res.status(500).json({
-            message: "An error occured",
+            message: "An error occurred",
             error: error.message
-        })
+        });
     }
 
 })

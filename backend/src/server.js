@@ -4,6 +4,7 @@ const authRoutes = require("./routes/authRoutes.js");
 const productRoutes = require("./routes/productRoutes.js");
 const cartRoutes = require("./routes/cartRoutes.js");
 const orderRoutes = require("./routes/orderRoutes.js");
+const favoritesRoutes = require("./routes/favoritesRoutes.js");
 const path = require('path');
 const fs = require('fs');
 const cors = require("cors")
@@ -33,7 +34,7 @@ app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
 app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
-app.use("/favorites", cartRoutes);
+app.use("/favorites", favoritesRoutes);
 
 
 

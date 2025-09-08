@@ -102,8 +102,8 @@ router.get("/search", async(req, res)=>{
   const queryProducts = await Product.find({name: {$regex: q, $options: "i"}}).sort({ name: 1 });
   if(!queryProducts || queryProducts.length === 0){
   return(
-      res.status(404).json({
-      message: "No products found"
+      res.status(200).json({
+      message: "Try searching something else"
     })
   )  
   }
@@ -165,7 +165,6 @@ for (const category of categories) {
 
 })
 
-//display products by category
 router.get("/category/:category", async(req, res)=>{
   try{
   const {category} = req.params;
@@ -415,7 +414,7 @@ router.get("/:id/reviews", auth, async(req, res)=>{
 
   //pagination
 
-  const start = (page -1) *limit;
+  const start = (page -1)*limit;
   const end = start + Number(limit);
   const paginated = reviews.slice(start, end);
 

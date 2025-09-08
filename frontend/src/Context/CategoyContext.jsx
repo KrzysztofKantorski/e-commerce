@@ -5,9 +5,11 @@ const CategoryContext = createContext();
 export const CategoryProvider = ({ children }) => {
   //default category
   const [category, setCategory] = useState('all'); 
-  const [filter, setFilter] = useState("newest")
+  const [filter, setFilter] = useState("newest");
+  const [newProduct, setNewProduct] = useState([]);
+  const [addToCart, setAddToCart] = useState([]);
   return (
-    <CategoryContext.Provider value={{ category, setCategory, filter, setFilter }}>
+    <CategoryContext.Provider value={{ category, setCategory, filter, setFilter, newProduct, setNewProduct, addToCart, setAddToCart }}>
       {children}
     </CategoryContext.Provider>
   );

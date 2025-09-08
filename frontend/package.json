@@ -12,6 +12,7 @@
   "dependencies": {
     "@heroui/button": "^2.2.25",
     "@heroui/card": "^2.2.24",
+    "@heroui/form": "^2.1.25",
     "@heroui/listbox": "^2.3.24",
     "@heroui/navbar": "^2.2.23",
     "@heroui/react": "^2.8.3",
@@ -22,6 +23,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.12",
+    "jwt-decode": "^4.0.0",
     "keen-slider": "^6.8.6",
     "lucide-react": "^0.542.0",
     "motion": "^12.23.12",

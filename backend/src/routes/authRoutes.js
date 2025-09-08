@@ -90,6 +90,7 @@ router.post("/login", (req, res)=>{
                 {
                     userId: user._id,
                     userName: user.username,
+                    userEmail: user.email
                 },
                 process.env.JWT,
                 {expiresIn: 60 * 60 }
@@ -122,7 +123,9 @@ router.post("/login", (req, res)=>{
 
 //user verification
 router.get("/verify", auth, (req, res)=>{
-    res.json({message: "Authorized to access"});
+    res.status(200).send({message: "Authorized to access"
+       
+    });
 })
 
 
