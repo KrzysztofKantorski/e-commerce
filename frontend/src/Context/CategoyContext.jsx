@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const CategoryContext = createContext();
 
@@ -8,8 +8,11 @@ export const CategoryProvider = ({ children }) => {
   const [filter, setFilter] = useState("newest");
   const [newProduct, setNewProduct] = useState([]);
   const [addToCart, setAddToCart] = useState([]);
+  
+
+  
   return (
-    <CategoryContext.Provider value={{ category, setCategory, filter, setFilter, newProduct, setNewProduct, addToCart, setAddToCart }}>
+    <CategoryContext.Provider value={{ category, setCategory, filter, setFilter, newProduct, setNewProduct, addToCart, setAddToCart}}>
       {children}
     </CategoryContext.Provider>
   );

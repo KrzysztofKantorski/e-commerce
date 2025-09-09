@@ -337,7 +337,7 @@ router.post("/:id/reviews", auth, async(req, res)=>{
   try{
   const {id} = req.params;
   const user = req.user.id
-  const  {comment, rating} = req.body;
+  const {comment, rating} = req.body;
   const productToFind = await Product.findById(id);
   if(!productToFind){
     return(
@@ -368,7 +368,7 @@ router.post("/:id/reviews", auth, async(req, res)=>{
   await productToFind.save();
   res.status(200).json({
     message: `Review added successfully`,
-    product: productToFind
+    product: productToFind.reviews
   })
   }
 
@@ -382,7 +382,7 @@ router.post("/:id/reviews", auth, async(req, res)=>{
 })
 
 //display comments related to specific product 
-router.get("/:id/reviews", auth, async(req, res)=>{
+router.get("/:id/reviews",  async(req, res)=>{
   try{
   const {id} = req.params;
   const {page=1, limit = 5, sort = "newest"} = req.query;
@@ -403,10 +403,10 @@ router.get("/:id/reviews", auth, async(req, res)=>{
   const reviews = [...productToFind.reviews];
   reviews.sort((a,b)=>{
     if(sort === "ratingAsc"){
-      return b.rating - a.rating;
+      return a.rating - b.rating;
     }
     if(sort === "ratingDesc"){
-      return a.rating - b.rating;
+      return b.rating - a.rating;
     }
 
   return new Date(b.createdAt) - new Date(a.createdAt);

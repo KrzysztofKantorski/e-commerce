@@ -8,7 +8,7 @@ import Register from "./pages/Register"
 import LoginSuccess from "./pages/verifyLogin"
 import FavoriteProducts from "./pages/FavoriteProducts"
 import CartProducts from "./pages/CartProducts"
-
+import AddReview from "./pages/AddReview"
 import {HeroUIProvider} from '@heroui/react'
 import { BrowserRouter, Routes, Route } from "react-router";
 import { CategoryProvider } from './Context/CategoyContext'
@@ -28,6 +28,9 @@ export default function App() {
         <Route path="/Register" element={<Register />}></Route>
         <Route path="/FavoriteProducts" element={<FavoriteProducts />}></Route>
         <Route path="/CartProducts" element={<CartProducts />}></Route>
+        <Route path="/AddReview/:product" element={<AddReview />}></Route>
+
+        
       </Routes>
       </CategoryProvider>
       </UserDataProvider>

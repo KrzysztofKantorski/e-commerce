@@ -174,7 +174,7 @@ useEffect(() => {
   }
 
   if(firstRender.current){
-    setTimeout(fetchProducts, 500)
+    setTimeout(fetchProducts, 2500)
   }
 
   else{

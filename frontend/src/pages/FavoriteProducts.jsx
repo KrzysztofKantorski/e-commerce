@@ -132,7 +132,7 @@ if (error) {
           </AnimatedGridPattern>
     </div>
     <div className="flex items-center justify-center min-h-[100vh] flex-col">
- <HyperText duration={1000} className="relative text-primary text-center text-[4rem] z-[1000]">Polubione produkty</HyperText>
+ <HyperText duration={1000} className="relative text-primary text-center text-[6rem] z-[1000]">Polubione produkty</HyperText>
     <div className="flex  gap-5 justify-center items-center flex-wrap">
         
     {favorites.length > 0 ? (
@@ -149,10 +149,11 @@ if (error) {
               shadow="sm"
                src={`http://localhost:3000${favProduct.images}`}
               width="100%"
-            />
-          <p className="text-default-500 mt-[1rem] ml-[.5rem] mb-[.5rem]" onClick={()=>setDisplay(favProduct._id)} >{favProduct.name}</p>
+            /> 
+          <p className="text-default-500 text-xl ml-[.5rem] mb-[.5rem] mt-[.5rem]" onClick={()=>setDisplay(favProduct._id)} >{favProduct.name}</p>
+      
           </CardBody>
-            <p className="text-lg-500 text-left text-primary ml-[.5rem]" onClick={()=>setDisplay(favProduct._id)} >{favProduct.price} zł</p>
+                <p className="text-xl text-left text-primary ml-[.5rem]" onClick={()=>setDisplay(favProduct._id)} >{favProduct.price} zł</p>
           <CardFooter className="text-small justify-start" >
             <Tooltip content="Usuń produkt">
                 <FaTrashAlt onClick={()=>{removeFromFavorites(favProduct._id)}}className="text-lg"></FaTrashAlt>
