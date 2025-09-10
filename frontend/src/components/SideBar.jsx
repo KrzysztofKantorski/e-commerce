@@ -51,7 +51,7 @@ if (error) {
         return (
           <div className="height-[600px]  mt-[3rem] ml-[10%]">
 
-   <Chip className="shadow-small rounded-medium py-[1.5rem] max-w-[500px] min-w-[250px] text-center  bg-primary text-[rgb(255,255,255)] h-8">Wyszukaj na podstawie kategorii</Chip>
+   <Chip className="relative z-[10] shadow-small rounded-medium py-[1.5rem] max-w-[500px] min-w-[250px] text-center  bg-primary text-[rgb(255,255,255)] h-8">Wyszukaj na podstawie kategorii</Chip>
       <Listbox
       aria-label="User Menu"
       className="p-0 gap-0 divide-y divide-default-300/50 dark:divide-default-100/80 bg-content1 max-w-[500px] min-w-[250px] overflow-visible shadow-small rounded-medium"
@@ -101,12 +101,12 @@ if (error) {
 }
   return (
 
-    <div className="height-[600px]  mt-[3rem] ml-[10%]">
+    <div className="height-[600px]  mt-[3rem] ml-[10%] relative z-[10]">
 
-   <Chip className="shadow-small rounded-medium py-[1.5rem] max-w-[500px] min-w-[250px] text-center  bg-primary text-[rgb(255,255,255)] h-8">Wyszukaj na podstawie kategorii</Chip>
+   <Chip className=" shadow-small rounded-medium py-[1.5rem] max-w-[500px] min-w-[250px] text-center  bg-primary text-[rgb(255,255,255)] h-8">Wyszukaj na podstawie kategorii</Chip>
       <Listbox
       aria-label="User Menu"
-      className="p-0 gap-0 divide-y divide-default-300/50 dark:divide-default-100/80 bg-content1 max-w-[500px] min-w-[250px] overflow-visible shadow-small rounded-medium"
+      className="relative z-[10] p-0 gap-0 divide-y divide-default-300/50 dark:divide-default-100/80 bg-content1 max-w-[500px] min-w-[250px] overflow-visible shadow-small rounded-medium"
       itemClasses={{
         base: "px-3 first:rounded-t-medium last:rounded-b-medium rounded-none gap-1 h-12 data-[hover=true]:rgba(195, 0, 255, 0.5)",
       }}

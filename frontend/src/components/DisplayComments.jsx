@@ -8,7 +8,8 @@ import {Card, CardBody} from "@heroui/react";
 import CountStars from "../components/CountStars";
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@heroui/react";
 import { useCategory } from "../Context/CategoyContext";
-
+import { HyperText } from './MagicUi/hyper-text'
+import TextGlitchAnimation from './TextGlitchAnimation'
 function DisplayComments({id}) {
     const product = id;
     const [reviews, setReviews] = useState([]);
@@ -16,7 +17,7 @@ function DisplayComments({id}) {
     const [error, setError] = useState(null);
     const [filter, setFilter] = useState("newest");
     const navigate = useNavigate();
-     // POPRAWIONE: użyj useEffect do ustawiania productId
+   
    
    const AddRewiev = ()=>{
    
@@ -69,6 +70,7 @@ function DisplayComments({id}) {
     fetchReviews();
 }, [id, filter])
 
+
     if(loading){
         return(
             <LoadingData></LoadingData>
@@ -81,16 +83,27 @@ function DisplayComments({id}) {
     }
 return (
 <div>
-      
-   
-    <div className="flex gap-2 items-center">
+      {reviews.length == 0 ? (
+        <>
+       <TextGlitchAnimation text={"Brak opinii"}></TextGlitchAnimation>
+       <div className="text-center">
+         <Button color="primary" onPress={() => {AddRewiev()}} className="z-100 py-[1.5rem]">
+            Dodaj opinię
+        </Button>
+       </div>
+        </>
+      ) : (
+        <>
+        <TextGlitchAnimation text={"opinie"}></TextGlitchAnimation>
+        <div className="text-center">
     <Dropdown  classNames={{
         base: "before:bg-default-200", // change arrow background
         content:
-          "py-1 px-1 border border-default-200 bg-linear-to-br from-white to-default-200 dark:from-default-50 dark:to-black",
+          "py-1 px-1 border  border-default-200 bg-linear-to-br from-white to-default-200 dark:from-default-50 dark:to-black",
       }}>
+    
       <DropdownTrigger>
-        <Button className="shadow-small rounded-medium py-[1.5rem] max-w-[500px] min-w-[150px] text-center  bg-primary text-[rgb(255,255,255)] h-8">Sortuj</Button>
+        <Button className="shadow-small rounded-medium py-[1.5rem] px-[1rem] text-center mr-[1rem] bg-primary text-[rgb(255,255,255)] h-8">Sortuj</Button>
       </DropdownTrigger>
       <DropdownMenu aria-label="Action event example" onAction={(key) => setFilter(key)}>
         <DropdownItem key="newest">Od najnowszych</DropdownItem>
@@ -103,7 +116,7 @@ return (
     </Button>
     </div>
     
-        {reviews.map((item, index)=>(
+    {reviews.map((item, index)=>(
             <>
     <Card className="mt-[1rem] relative py-[.5rem] px-[.5rem] flex flex-col align-center justify-space-between">
       <CardBody>
@@ -114,8 +127,12 @@ return (
       </CardBody>
     </Card>
     </>
-    )
+    ))}
+    </>
+        
     )}
+   
+    
     
 </div>
   )

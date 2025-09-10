@@ -1,19 +1,17 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router';
+import {useState, useEffect } from 'react';
+import {useParams } from 'react-router';
 import axios from 'axios';
-import { Image, Button, Spinner } from "@heroui/react";
-import { FaCartPlus, FaHeart, FaArrowLeft } from "react-icons/fa";
-import { cn } from "@/lib/utils";
+import {Image, Button, Spinner } from "@heroui/react";
+import {FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from 'react-router';
-import { FaStar } from "react-icons/fa"
 import { FaComment } from "react-icons/fa";
-import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
 import CountStars  from "../components/CountStars";
 import DisplayProductDescription from "../components/DisplayProductDescription";
 import DisplayComments from "../components/DisplayComments";
-import { HyperText } from "@/components/magicui/hyper-text";
-
+import TextGlitchAnimation from '@/components/TextGlitchAnimation';
+import AnimatedBackground from '@/components/AnimatedBackground';
+import { FaArrowRight } from "react-icons/fa";
 function Product() {
     const [loading, setLoading] = useState(true);
     const [product, setProduct] = useState(null)
@@ -79,7 +77,7 @@ function Product() {
                 <Button 
                     color="primary" 
                     variant="flat" 
-                    onPress={() => navigate(-1)}
+                    onPress={() => navigate("/")}
                     className="mt-4"
                 >
                     <FaArrowLeft className="mr-2" /> Go Back
@@ -90,24 +88,13 @@ function Product() {
 
     return (
         <>
-    <div className="fixed inset-0 z-[1] ">
-        <AnimatedGridPattern
-            numSquares={200}
-            maxOpacity={0.5}
-            duration={1}
-            repeatDelay={1}
-            className={cn(
-            "[mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)]",
-            "absolute inset-0 w-full h-full text-primary"
-            )}
-        />
-    </div>
+    <AnimatedBackground gradientStyle={"to_bottom_right"}/>
         <div className="container mx-auto p-3 max-w-6xl z-[1]" >
             
             <Button 
             color="default" 
             variant="light" 
-            onPress={() => navigate(-1)}
+            onPress={() => navigate("/")}
             className="z-100"
             >
                 <FaArrowLeft className="mr-2" /> Back to Products
@@ -147,14 +134,11 @@ function Product() {
            
     </div>
            <div className="mt-[1rem] z-[1]" >
-            <HyperText duration={1000} className="relative text-primary text-center text-[6rem] z-[1000]">Dane techniczne</HyperText>
+          <TextGlitchAnimation text={"Dane techniczne"}></TextGlitchAnimation>
               <DisplayProductDescription description={product.description} className="z-[10] relative"></DisplayProductDescription>
             </div>  
 
             <div className="mt-[1rem] z-[1]" >
-                 <HyperText duration={1000} className="relative text-primary text-center text-[6rem] z-[1000]">Opinie</HyperText>
-                 
-           
                  <DisplayComments id={product._id}></DisplayComments>
             </div>
 </div>

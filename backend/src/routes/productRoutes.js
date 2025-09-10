@@ -10,6 +10,7 @@ router.get("/", async (req, res)=>{
     try{
       
       const {sort = "newest"} = req.query;
+      const {page=1, limit = 10} = req.query;
         const products = await Product.find();
         
         const displayInOrder = [...products];
@@ -33,10 +34,18 @@ router.get("/", async (req, res)=>{
 
       return 0; // default (jeśli ktoś poda zły parametr)
         })
+        
+        const start = (page -1)*limit;
+      const end = start + Number(limit);
+      const paginatedProducts = displayInOrder.slice(start, end);
         res.status(201).send({
-            message: "Success",
-            products: displayInOrder,
-            order: sort
+           message: "Success",
+            products: paginatedProducts, // Wysyłamy PAGINOWANE produkty
+            order: sort,
+            page: Number(page),
+            limit: Number(limit),
+            totalProducts: displayInOrder.length,
+            totalPages: Math.ceil(displayInOrder.length / limit)
         })
     }
     catch(error){
@@ -166,50 +175,54 @@ for (const category of categories) {
 })
 
 router.get("/category/:category", async(req, res)=>{
-  try{
-  const {category} = req.params;
-  const { sort = "newest" } = req.query;
+ try {
+    const { category } = req.params;
+    const { sort = "newest", page = 1, limit = 10 } = req.query;
+    
+    const products = await Product.find({ category: category });
+    
+    const displayInOrder = [...products];
+        displayInOrder.sort((a,b)=>{
 
-  let sortOption = {};
+        if (sort === "alphabetical") {
+        return a.name.localeCompare(b.name); // A-Z
+        }
 
-    if (sort === "alphabetical") {
-      sortOption = { name: 1 }; // A-Z
+        if (sort === "ratingAsc") {
+          return a.averageRating - b.averageRating; // od najniższej oceny
+        }
 
-    } 
-    else if (sort === "ratingAsc") {
-      sortOption = { averageRating: 1 }; 
-    } 
-    else if (sort === "ratingDesc") {
-      sortOption = { averageRating: -1 }; 
-    } 
-    else if (sort === "newest") {
-      sortOption = { createdAt: -1 }; 
-    }
+        if (sort === "ratingDesc") {
+          return b.averageRating - a.averageRating; // od najwyższej oceny
+        }
 
-    const products = await Product.find({category: category}).sort(sortOption);
+        if (sort === "newest") {
+          return new Date(b.createdAt) - new Date(a.createdAt); // najnowsze
+        }
 
-  if(!products || products.length === 0){
-    return(
-      res.status(404).json({
-      message: "No products found in this category"
-    })
-    )
-  }
-
-
-  res.status(200).json({
-    message: `Products displayed by category: ${category}`,
-    products: products
-  })
-  }
-
-  catch(error){
-    res.status(500).json({
-      message: "An error occured",
+      return 0; // default (jeśli ktoś poda zły parametr)
+        })
+    
+    const start = (page - 1) * limit;
+    const end = start + Number(limit);
+    const paginatedProducts = displayInOrder.slice(start, end);
+    
+    res.status(200).send({
+      message: "Success",
+      products: paginatedProducts,
+      order: sort,
+      page: Number(page),
+      limit: Number(limit),
+      totalProducts: displayInOrder.length,
+      totalPages: Math.ceil(displayInOrder.length / limit)
+    });
+    
+  } catch (error) {
+    res.status(500).send({
+      message: "Cannot display products",
       error: error.message
-    })
+    });
   }
-
 })
 
 //update specific product

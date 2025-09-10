@@ -8,16 +8,15 @@ import { cn } from "@/lib/utils";
 import axios from "axios"
 import "../styles/Login.css";
 import Cookies from "universal-cookie";
+import AnimatedBackground from '@/components/AnimatedBackground';
+import TextGlitchAnimation from '@/components/TextGlitchAnimation';
 const cookies = new Cookies();
-// cookies.set("TOKEN", res.data.token, {
-//           path: "/",
-  //          });
-//
+
 function Login() {
   
-   const [username, setUsername] = useState("");
-   const [password, setPassword] = useState("");
-   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
    
 
@@ -33,20 +32,7 @@ function Login() {
 
   return (
     <>
-     <div className="absolute flex h-[100vh] t-[0] bottom-[0] left-[0] right-[0] w-[100%] items-center justify-center overflow-hidden rounded-lg border bg-background p-20 z-[1]">
-     <AnimatedGridPattern
-        numSquares={120}
-        maxOpacity={1}
-        duration={2}
-        repeatDelay={1}
-        className={cn(
-          "[mask-image:radial-gradient(1000px_circle_at_center,white,transparent)]",
-          "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12",
-        )}>
-
-      </AnimatedGridPattern>
-     </div>
-
+     <AnimatedBackground gradientStyle={"to_bottom_left"}/>
 
    <div className="w-[100%] min[100vh] flex column items-center justify-center"> 
     

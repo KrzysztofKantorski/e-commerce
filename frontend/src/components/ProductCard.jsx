@@ -3,6 +3,7 @@ import {useState, useEffect, useRef} from "react"
 import {Card, CardBody, CardFooter, Image, Tooltip, Button} from "@heroui/react";
 import { FaCartPlus } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
+import {FaRegFaceSadCry} from "react-icons/fa6";
 import Error from "./handleData/Error"
 import LoadingData from "./handleData/LoadingData"
 import axios from "axios"
@@ -10,11 +11,12 @@ import { useNavigate } from 'react-router';
 import SideBar from "./SideBar"
 import { useCategory } from '../Context/CategoyContext';
 import Cookies from "universal-cookie"
-
+import {Pagination} from "@heroui/react";
 const cookies = new Cookies();
 function ProductCard() {
-
+ const [currentPage, setCurrentPage] = useState(1);
 const firstRender = useRef(true)
+const [pages, setPages] = useState();
 const [products, setProducts] = useState([]);
 const navigate = useNavigate();
 const [loading, setLoading] = useState(true);
@@ -118,8 +120,6 @@ const addToFavorites = (id)=>{
       
     }
     addToFavorites();
-   
-
 }
 
 const setDisplay = (id)=>{
@@ -127,65 +127,62 @@ const setDisplay = (id)=>{
     navigate(`/product/${id}`)
 }
 
+const fetchProducts = async (page = 1) => {
+    try {
+    let url = "http://localhost:3000/products";
+    const params = { page, limit: 10 };
+    
+    if (category && category !== "all") {
+      url += `/category/${category}`;
+    }
+
+    if (filter && filter !== "newest") {
+      params.sort = filter;
+    }
+
+    const response = await axios.get(url, { params });
+    
+    setProducts(response.data.products || []);
+    setPages(response.data.totalPages);
+    setError(null);
+    
+  } catch (err) {
+    console.error('Error:', err);
+    setError("Błąd ładowania produktów");
+    setProducts([]);
+  } finally {
+    setLoading(false);
+    firstRender.current = false;
+  }
+  }
+
 //fetch products
 useEffect(() => {
+  
   let isMounted = true;
+  
+  
+  setCurrentPage(1);
+  
   if (firstRender.current) {
-    setLoading(true)
-  };
-
-  const fetchProducts = async () => {
-    try {
-      let url = "http://localhost:3000/products";
-        
-       
-      if (category && category !== "all") {
-        url += `/category/${category}`;
-      }
-
-      if(filter && filter !== "newest"){
-        url+= `?sort=${filter}`;
-        console.log(url);
-      }
-
-      const response = await axios.get(url);
-        
-      if (isMounted) {
-        setProducts(response.data.products || []);
-        setError(null);
-        }
-
-    } 
-
-    catch (err) {
-      if (isMounted) {
-        console.error('Error:', err);
-        setError("Błąd ładowania produktów");
-        setProducts([]);
-      }
-    } 
-
-    finally {
-      if (isMounted) {
-        setLoading(false);
-        firstRender.current = false;
-      }
-    }
-  }
-
-  if(firstRender.current){
-    setTimeout(fetchProducts, 2500)
-  }
-
-  else{
-    fetchProducts();
+    setLoading(true);
+    setTimeout(() => {
+      if (isMounted) fetchProducts(1);
+    }, 2500);
+  } else {
+    if (isMounted) fetchProducts(1);
   }
 
   return () => {
     isMounted = false;
-  };
+  }
 }, [category, filter]);
- 
+
+
+ const handlePageChange = (clickedPage)=>{
+    setCurrentPage(clickedPage);
+    fetchProducts(clickedPage)
+}
   return (
     <>
    
@@ -202,11 +199,15 @@ useEffect(() => {
       <>
       
    <SideBar></SideBar>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 w-[100%] mr-[10%]  mt-[3rem] gap-[1rem] ">
+   <div className="relative w-[80%] flex items-center justify-center mt-[-3rem]">
+
+
+
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 w-[100%] mr-[10%]  gap-[1rem]  h-[35rem] items-start relative">
      
       {products.map((product, index) => (
         
-        <Card key={index} isPressable shadow="sm" className="px-2 max-h-[20rem] z-[10]" >
+        <Card key={index} isPressable shadow="sm" className="px-2 min-h-[18rem] z-[10] self-start" >
           <CardBody className="overflow-visible p-0">
             <Image
               className="w-full object-cover h-[140px]"
@@ -217,9 +218,9 @@ useEffect(() => {
               src={`http://localhost:3000${product.images}`}
               width="100%"
             />
-             <p className="text-default-500 mt-[1rem] ml-[.5rem] mb-[.5rem]" onClick={()=>setDisplay(product._id)}>{product.name}</p>
+             <p className="text-default-500 text-sm mt-[.5rem] ml-[.5rem] mb-[.5rem]" onClick={()=>setDisplay(product._id)}>{product.name}</p>
           </CardBody>
-          <p className="text-xl text-primary text-left ml-[.5rem] ">{product.price} zł</p>
+          <p className="text-sm text-primary text-left ml-[.5rem] ">{product.price} zł</p>
           <CardFooter className="text-small justify-start">
            
            <div>
@@ -235,7 +236,16 @@ useEffect(() => {
            
       </Card>
       ))}
+       
     </div>
+   
+
+<Pagination  initialPage={currentPage} showControls  total={pages} className="w-[500px] absolute bottom-[0] z-[10]" onChange={handlePageChange}/>;
+
+
+
+   </div>
+        
     </>
     )}
    

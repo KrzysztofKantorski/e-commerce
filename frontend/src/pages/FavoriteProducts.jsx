@@ -3,17 +3,16 @@ import { FaHeart } from "react-icons/fa";
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@heroui/react";
 import {useState, useEffect} from "react";
 import axios from "axios"
-import { cn } from "@/lib/utils";
 import {Tooltip} from "@heroui/tooltip";
 import LoadingData from '../components/handleData/LoadingData';
 import Cookies from "universal-cookie"
 import { FaTrashAlt } from "react-icons/fa";
-import { FaArrowRight } from "react-icons/fa6";
 import { useNavigate } from 'react-router';
 import { useCategory } from "../Context/CategoyContext";
 import {Card, CardBody, CardFooter, Image} from "@heroui/react";
-import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
 import { HyperText } from "@/components/magicui/hyper-text";
+import AnimatedBackground from '@/components/AnimatedBackground';
+
 const cookies = new Cookies();
 
 function FavoriteProducts() {
@@ -25,9 +24,14 @@ function FavoriteProducts() {
     const [deleted, setDeleted] = useState([]);
     const navigate = useNavigate();
 
-     const removeFromFavorites = async (id)=>{
+    const removeFromFavorites = async (id)=>{
            try{
             const token = cookies.get("TOKEN");
+            if(!token){
+                alert("Musisz być zalogowany aby zarządzać ulubionymi produktami");
+                navigate("/Login");
+                return;
+            }
             const url = `http://localhost:3000/favorites/remove/${id}`;
             const response = await axios.delete(url, {
             headers: {
@@ -37,11 +41,10 @@ function FavoriteProducts() {
 
             if(response.status == 200){
                 setDeleted(id);
-                console.log(response.data.favorites);
-                
+                alert("produkt został usunięty z ulubionych")
+                console.log(response.data.favorites); 
             }
         
-
             }catch(error){
                 setError(error.message)
             }
@@ -88,16 +91,7 @@ function FavoriteProducts() {
 
 if (loading) {
         return (
-            <Dropdown>
-                <DropdownTrigger>
-                    <FaHeart className="size-[2.5rem] mr-[.5rem] ml-[-0.5rem] radius-100 bg-[rgba(0,0,0,.1)] px-[.5rem] py-[.5rem] rounded-[100%] text-default-600"/>
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Loading favorites">
-                    <DropdownItem key="loading">
-                        <LoadingData /> 
-                    </DropdownItem>
-                </DropdownMenu>
-            </Dropdown>
+          <LoadingData></LoadingData>
         );
     }
 
@@ -118,19 +112,7 @@ if (error) {
   return (
   
     <>
-    <div className="absolute flex h-[100vh] t-[0] bottom-[0] left-[0] right-[0] w-[100%] items-center justify-center overflow-hidden rounded-lg border bg-background p-20 z-[1]">
-         <AnimatedGridPattern
-            numSquares={120}
-            maxOpacity={1}
-            duration={2}
-            repeatDelay={1}
-            className={cn(
-              "[mask-image:radial-gradient(1000px_circle_at_center,white,transparent)]",
-              "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12",
-            )}>
-    
-          </AnimatedGridPattern>
-    </div>
+    <AnimatedBackground gradientStyle={"to_bottom_right"}/>
     <div className="flex items-center justify-center min-h-[100vh] flex-col">
  <HyperText duration={1000} className="relative text-primary text-center text-[6rem] z-[1000]">Polubione produkty</HyperText>
     <div className="flex  gap-5 justify-center items-center flex-wrap">

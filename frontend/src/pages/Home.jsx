@@ -1,8 +1,7 @@
 import React from 'react'
 import Navbar from "../components/Nav"
-import ProductCard from "../components/ProductCard"
+import ProductCard from "../components/ProductCard";
 import Hero from "../components/Hero"
-
 
 
 function Home() {

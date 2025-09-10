@@ -5,7 +5,8 @@ import "keen-slider/keen-slider.min.css"
 import { HyperText } from "@/components/magicui/hyper-text";
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
 import { InteractiveGridPattern } from "./MagicUi/interactive-grid-pattern";
-
+import AnimatedBackground from './AnimatedBackground';
+import AnimateText from './AnimateText';
 function Hero() {
  
      const [sliderRef] = useKeenSlider(
@@ -38,27 +39,26 @@ function Hero() {
 
 return (
     <>
+    <AnimatedBackground gradientStyle={"to_bottom_right"}/>
+
     <div ref={sliderRef} className="keen-slider h-[100vh] absolute w-full overflow-hidden  top-[-5vh] left-[0] right-[0] bottom-[0]">
       
     <div className="keen-slider__slide number-slide1 relative z-[5] ">
-        <HyperText duration={1000} className="text-primary text-[6rem] text-center">Nowa dostawa butów</HyperText>
+        <AnimateText text={"Nowa dostawa butów"}></AnimateText>
         <div className="absolute top-[0] h-[100vh] w-[100%] overflow-hidden z-[-1]">
-        <InteractiveGridPattern />
         </div>
         <InteractiveHoverButton>Zobacz więcej</InteractiveHoverButton>
     </div>
 
         <div className="keen-slider__slide number-slide2 relative z-[5]" >
-<HyperText duration={1000} className="text-primary text-[6rem] text-center">Nowa dostawa butów</HyperText>
+           <AnimateText text={"Nowa dostawa butów"}></AnimateText>
         <div className="absolute top-[0] h-[100vh] w-[100%] overflow-hidden z-[-1]">
-        <InteractiveGridPattern />
           </div>
 <InteractiveHoverButton>Zobacz więcej</InteractiveHoverButton>
         </div>
         <div className="keen-slider__slide number-slide3 relative z-[5]">
-          <HyperText duration={1000} className="text-primary text-[6rem] text-center">Nowa dostawa butów</HyperText>
+           <AnimateText text={"Nowa dostawa butów"}></AnimateText>
         <div className="absolute top-[0] h-[100vh] w-[100%] overflow-hidden z-[-1]">
-        <InteractiveGridPattern />
           </div>
 <InteractiveHoverButton>Zobacz więcej</InteractiveHoverButton>
         </div>

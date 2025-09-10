@@ -2,9 +2,9 @@ import React from 'react'
 import {Form, Input, Button} from "@heroui/react";
 import { NeonGradientCard } from "@/components/magicui/neon-gradient-card";
 import { HyperText } from "@/components/magicui/hyper-text";
-import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
+
 import {useState, useEffect} from "react"
-import { cn } from "@/lib/utils";
+import AnimatedBackground from '@/components/AnimatedBackground';
 import axios from "axios"
 import "../styles/Login.css";
 import Cookies from "universal-cookie";
@@ -99,25 +99,13 @@ function Login(e) {
   return (
     <>
    
-     <div className="absolute flex h-[100vh] t-[0] bottom-[0] left-[0] right-[0] w-[100%] items-center justify-center overflow-hidden rounded-lg border bg-background p-20 z-[1]">
-     <AnimatedGridPattern
-        numSquares={120}
-        maxOpacity={1}
-        duration={2}
-        repeatDelay={1}
-        className={cn(
-          "[mask-image:radial-gradient(1000px_circle_at_center,white,transparent)]",
-          "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12",
-        )}>
-
-      </AnimatedGridPattern>
-     </div>
+    <AnimatedBackground gradientStyle={"to_bottom_left"}/>
 
 
    <div className="w-[100%] min[100vh] flex column items-center justify-center"> 
     
-      <div className="flex flex-col items-center justify-center py-[5rem]">
-     <HyperText duration={1000} className="relative text-primary text-center text-[6rem] z-[1000]">Zaloguj się</HyperText>
+      <div className="flex flex-col items-center justify-start py-[5rem]">
+     <HyperText duration={1000} className="relative text-center text-primary-xlg z-[1000]">Zaloguj się</HyperText>
 <NeonGradientCard className="items-center justify-center text-center min-h-[20rem] max-w-sm z-[10] mt-[2rem]">
        <Form
        validationErrors={errors}
@@ -137,7 +125,7 @@ function Login(e) {
         type="text"
         className="border-2 border-primary rounded-lg"
         value={username}
-        onChange = {(e)=> setUsername(e.target.value)}
+        onChange = {(e)=> setUsername(e.target.value)}    
       />
      
      
