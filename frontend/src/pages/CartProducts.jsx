@@ -7,6 +7,7 @@ import {useState, useEffect} from "react"
 import {useNavigate} from "react-router"
 import TextGlitchAnimation from '@/components/TextGlitchAnimation';
 import {Form, Image, Button} from "@heroui/react"
+import { FaTrashAlt } from "react-icons/fa";
 import {NumberInput} from "@heroui/react";
 import {
   Table,
@@ -22,12 +23,65 @@ const cookies = new Cookies();
 function CartProducts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(true);
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
+  const [updateCart, setUpdateCart] = useState([]);
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState()
-  const updateQuantity = async ()=>{
-   
-   alert("git")
+  const goToOrder = ()=>{
+    navigate("/Order")
+  }
+
+  const removeFromCart = async (id)=>{
+        try{
+            const token = cookies.get("TOKEN");
+            if(!token){
+                alert("Musisz być zalogowany aby zarządzać koszykiem");
+                navigate("/Login");
+                return;
+            }
+            const url = `http://localhost:3000/cart/${id}`;
+            const response = await axios.delete(url, {
+            headers: {
+            Authorization: `Bearer ${token}`,
+            }
+        });
+
+            if(response.status == 200){
+                setUpdateCart(id);
+                console.log(response.data.cart);
+                
+            }
+        
+
+            }catch(error){
+                setError(error.message)
+            }
+  }
+  const updateQuantity = async ( quantity,  id)=>{  
+
+   console.log(typeof id)
+    try{
+      const token = cookies.get("TOKEN");
+            if(!token){
+                alert("Musisz być zalogowany aby zarządzać koszykiem");
+                navigate("/Login");
+                return;
+      }
+      const url = `http://localhost:3000/cart/${id}`;
+      const response = await axios.put(url, {
+         quantity :quantity
+        } ,{
+            headers: {
+            Authorization: `Bearer ${token}`
+       }})
+       if(response.status == 200){
+        console.log("success")
+        setQuantity(quantity)
+       }
+    }
+    catch(error){
+      console.log(error.message)
+    }
 
   }
   useEffect(()=>{   
@@ -45,7 +99,10 @@ function CartProducts() {
             const response = await axios.get(url, {
             headers: {
             Authorization: `Bearer ${token}`
-            }
+            },
+            
+              
+            
 
            
         });
@@ -70,7 +127,7 @@ function CartProducts() {
       }
     }
     displayCart();
-  }, [])
+  }, [quantity, updateCart])
 
   if(loading){
     return (
@@ -90,7 +147,7 @@ function CartProducts() {
       
       
       <div className="relative w-full text-right">
-         <Button color="primary" className="mb-[1rem]"><FaArrowRight /></Button>
+         <Button color="primary" className="mb-[1rem] relative z-[10]" onPress={()=>{goToOrder()}}><FaArrowRight /></Button>
         <Table aria-label="Example static collection table" className="realtive z-[10]">
         <TableHeader>
           <TableColumn>Nazwa</TableColumn>
@@ -113,18 +170,13 @@ function CartProducts() {
             </TableCell>
             <TableCell>{item.product.price}</TableCell>
             <TableCell>
-              
-                  <NumberInput
-                    isRequired
-                    value={item.quantity}
-                    label="Amount"
-                    name="amount"
-                    placeholder="Enter a number"
-                    onChangeValue={updateQuantity}
-                  />
-               
+              <input type="number" min={1} defaultValue={item.quantity}  onChange={(e) => updateQuantity(parseInt(e.target.value), item.product._id.toString())}></input>
             </TableCell>
-            <TableCell>Usuń</TableCell>
+            <TableCell>
+              <span onClick={()=>removeFromCart(item.product._id)}>
+                 <FaTrashAlt/>
+              </span>
+             </TableCell>
           </TableRow>
         
       )
@@ -133,6 +185,7 @@ function CartProducts() {
           
         </TableBody>
       </Table>
+      
     </div>
 
       </div>

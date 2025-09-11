@@ -7,18 +7,18 @@ import Error from './handleData/Error'
 import {Card, CardBody} from "@heroui/react";
 import CountStars from "../components/CountStars";
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@heroui/react";
-import { useCategory } from "../Context/CategoyContext";
-import { HyperText } from './MagicUi/hyper-text'
+import {Pagination} from "@heroui/react";
 import TextGlitchAnimation from './TextGlitchAnimation'
 function DisplayComments({id}) {
     const product = id;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pages, setPages] = useState();
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [filter, setFilter] = useState("newest");
     const navigate = useNavigate();
-   
-   
+
    const AddRewiev = ()=>{
    
     navigate(`/AddReview/${product}`);
@@ -32,21 +32,23 @@ function DisplayComments({id}) {
         minute: '2-digit'
         });
     };
-    useEffect(()=>{
-    const fetchReviews = async()=>{
+    const fetchReviews = async(page=1)=>{
         setLoading(true);
         setError(null)
         try{
             let url = `http://localhost:3000/products/${id}/reviews`;
+            const params = { page, limit: 5 };
             if(filter!="newest"){
-                url+=`?sort=${filter}`
+                url+=`?sort=${filter}`;
+                setCurrentPage(1);
             }
-            const response = await axios.get(url);
+        const response = await axios.get(url, {params});
             console.log(response)
            
             if (response.data.reviews) {
                 console.log("✅ Znaleziono response.data.reviews");
                 setReviews(response.data.reviews);
+                setPages(response.data.totalPages)
             } 
         }
         catch(error){
@@ -67,10 +69,15 @@ function DisplayComments({id}) {
         setLoading(false)
         }
     }
-    fetchReviews();
+
+useEffect(()=>{
+    fetchReviews(1);
 }, [id, filter])
 
-
+ const handlePageChange = (clickedPage)=>{
+    setCurrentPage(clickedPage);
+    fetchReviews(clickedPage)
+}
     if(loading){
         return(
             <LoadingData></LoadingData>
@@ -118,7 +125,7 @@ return (
     
     {reviews.map((item, index)=>(
             <>
-    <Card className="mt-[1rem] relative py-[.5rem] px-[.5rem] flex flex-col align-center justify-space-between">
+    <Card className="z-[10] mt-[1rem] relative py-[.5rem] px-[.5rem] flex flex-col align-center justify-space-between">
       <CardBody>
         <div className="absolute top-[0] right-[.5rem]">{formatDateTime(item.createdAt)}</div>
         <p className="text-[1.5rem] text-primary mb-[1rem]">{item.user?.username}</p>
@@ -128,11 +135,19 @@ return (
     </Card>
     </>
     ))}
-    </>
-        
+    
+        <div className="flex w-full justify-center">
+        <Pagination  
+        initialPage={currentPage} 
+        showControls  
+        total={pages} 
+        className=" mt-[1rem] relative bottom-[0] z-[10] " 
+        onChange={handlePageChange}
+        />
+   </div>
+   </>
     )}
    
-    
     
 </div>
   )

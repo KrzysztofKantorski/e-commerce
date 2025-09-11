@@ -11,7 +11,7 @@ import DisplayProductDescription from "../components/DisplayProductDescription";
 import DisplayComments from "../components/DisplayComments";
 import TextGlitchAnimation from '@/components/TextGlitchAnimation';
 import AnimatedBackground from '@/components/AnimatedBackground';
-import { FaArrowRight } from "react-icons/fa";
+import Recommendations from '@/components/Recommendations';
 function Product() {
     const [loading, setLoading] = useState(true);
     const [product, setProduct] = useState(null)
@@ -107,9 +107,7 @@ function Product() {
             alt={product.name}
             className="rounded-lg shadow-lg w-[500px] object-cover h-[600px]"
             /> 
-           
 
-            
             <div className="grid grid-cols-1 md:grid-cols-1 gap-5 items-start z-[1]">
                 <p className="text-[3.5rem]">{product.name}</p>
                 <div className="flex items-center justify-start text-[1.5rem] z-[1]">
@@ -141,6 +139,12 @@ function Product() {
             <div className="mt-[1rem] z-[1]" >
                  <DisplayComments id={product._id}></DisplayComments>
             </div>
+
+             <div className="mt-[1rem] z-[1]" >
+                <TextGlitchAnimation text={"Rekomendacje"}></TextGlitchAnimation>
+               <Recommendations category={product.category} id={product._id}></Recommendations>
+            </div>
+            
 </div>
 
 </>
