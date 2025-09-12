@@ -5,6 +5,7 @@
 .env.test.local
 .env.production.local
 backend/productImages/
+backend/uploads
 # Also add these common exclusions for Node.js
 node_modules/
 npm-debug.log*

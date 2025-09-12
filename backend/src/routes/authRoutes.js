@@ -6,6 +6,90 @@ const { validationResult } = require("express-validator");
 const { registerValidator } = require("../validators/register");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const upload = require("../uploadUserImage/multer")
+const fs = require("fs")
+const cloudinary = require("../uploadUserImage/cloudinary")
+const path = require('path');
+
+//add user image
+router.post("/uploadImage", auth, upload.single("file"), async (req, res) => {
+    const userId = req.user.id;
+    try {
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: "No file uploaded"
+            });
+        }
+
+        const uploader = async (path) => await cloudinary.uploads(path, "Images");
+        
+        // Upload to Cloudinary
+        const newPath = await uploader(req.file.path);
+        
+        
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { image: newPath.url },
+            { new: true }
+        );
+
+        if (!user) {
+            // Usuń plik tymczasowy jeśli użytkownik nie istnieje
+            fs.unlinkSync(req.file.path);
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        //Delete temporary file
+        fs.unlinkSync(req.file.path);
+        
+        return res.status(200).json({
+            success: true,
+            message: "Image uploaded successfully",
+            data: user
+        });
+
+    } catch (error) {
+        //Delete temporary fie
+        if (req.file && fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+        }
+        
+        console.error("Upload error:", error);
+        return res.status(500).send({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+
+router.get("/uploadImage", auth, async(req, res)=>{
+    const userId = req.user.id;
+    try{
+        const user = await User.findById(userId);
+        const image = user.image;
+        if(!image){
+            return res.status(404).json({
+                message: "Image not found",
+                error: error
+            })
+        }
+        return res.status(200).json({
+            message: "Image displayed successfully",
+            image: image
+        })
+    } catch (error){
+        return res.status(500).json({
+            message: "An error occured",
+            error: error.message
+        })
+    }
+})
+
 
 
 //register user

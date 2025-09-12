@@ -11,20 +11,54 @@ import {
   DropdownMenu,
   Avatar,
 } from "@heroui/react";
-import {useState} from "react"
+import {useState, useEffect} from "react"
 import DisplaySearch from './DisplaySearch';
 import {useNavigate} from "react-router"
 import {useData} from "../Context/UserDataContext"
 import Cart from "./Cart"
 import Favorites from "./Favorites"
-
+import Cookies from "universal-cookie"
+import axios from "axios"
+const cookies = new Cookies();
 function Nav() {
   const { data, logout } = useData(); 
-   
+  const [image, setImage] = useState();
   const navigate = useNavigate();
+
+  if(data){
+    
+  const fetchUserProfile = async () => {
+    try {
+       const token = cookies.get("TOKEN");
+       if(!token){
+                alert("Musisz być zalogowany aby zarządzać ulubionymi produktami");
+                navigate("/Login");
+                return;
+            }
+      
+      const response = await axios.get(
+        'http://localhost:3000/auth/uploadImage',
+        {
+          headers: { 'Authorization': `Bearer ${token}` }
+        }
+      );
+      setImage(response.data.image);
+     
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    } 
+  };
+  
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+  }
   const goToLogin = ()=>{
     console.log("siup")
     navigate("/Login")
+  }
+  const handleCustomize = ()=>{
+    navigate("/Customize")
   }
   const handleLogout = ()=>{
     logout();
@@ -103,7 +137,7 @@ function Nav() {
                 color="primary"
                 name="Jason Hughes"
                 size="sm"
-                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                src={image}
               />
             </DropdownTrigger>
             </>
@@ -117,11 +151,13 @@ function Nav() {
             <>
             <DropdownItem key="settings" onPress={()=>goToLogin()}>Login</DropdownItem>
             <DropdownItem key="team_settings" onPress={()=>goToRegister()}>Register</DropdownItem>
+            
             </>
           ): (
             <>
              <DropdownItem key="username">Witaj: {data.username}</DropdownItem>
               <DropdownItem key="email" >{data.email}</DropdownItem>
+              <DropdownItem key="customize" onClick = {handleCustomize}>personalizacja</DropdownItem>
               <DropdownItem key="logout" onClick = {handleLogout}>Wyloguj się</DropdownItem>
             </>
           )}

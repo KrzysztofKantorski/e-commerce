@@ -65,7 +65,7 @@ router.get("/", auth, async(req, res)=>{
     try{
     const user =  req.user.id;
     const userToFind = await User.findById(user).populate("cart.product");
-    console.log(userToFind.cart)
+  
     if(!userToFind){
          res.status(404).json({
             message: "User was not found"
@@ -110,7 +110,7 @@ router.put("/:productId", auth, async(req, res)=>{
             message: "Product was not found in cart"
         })
     }
-    console.log(cartItem)
+  
     //check if quantity didn`t change
     if(cartItem.quantity == quantity || quantity < 1){
       return(
