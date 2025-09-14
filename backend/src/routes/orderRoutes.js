@@ -53,7 +53,7 @@ router.post("/", auth, async(req, res)=>{
     userToFind.cart = [];
 
     await userToFind.save();
-    res.status(200).send({
+    res.status(201).send({
         message: "Success",
         order: newOrder
     })
@@ -67,6 +67,38 @@ router.post("/", auth, async(req, res)=>{
     }
    
 })
+
+
+//create order
+router.put("/", auth, async(req, res)=>{
+    try{
+    const user =  req.user.id;
+    const { pay, status } = req.body;
+    const userToFind = await User.findById(user).populate("cart.product");
+    if (!userToFind) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    userToFind.payment = pay;
+    const updatePayment =  userToFind.payment;
+    await userToFind.save();
+    res.status(201).send({
+        message: "Success",
+        payment: updatePayment
+    })
+
+    } 
+    catch(error){
+        res.status(500).send({
+        message: "Success",
+        error: error.message
+    })
+    }
+   
+})
+
+
+
+
 
 //display user orders
 router.get("/", auth, async(req, res)=>{

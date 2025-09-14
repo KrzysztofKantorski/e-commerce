@@ -21,8 +21,12 @@ const orderSchema = new mongoose.Schema({
     type: String, 
     enum: ["pending", "paid", "shipped", "delivered", "cancelled"], 
     default: "pending" 
-  }, 
-
+  },
+  payment: { 
+    type: String, 
+    enum: ["blik", "paysafecard", "paypal", "credit card", "not paid"], 
+    default: "not paid" 
+  },
 }, { timestamps: true });
 
 

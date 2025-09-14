@@ -26,7 +26,7 @@ function CartProducts() {
   const [data, setData] = useState([]);
   const [updateCart, setUpdateCart] = useState([]);
   const navigate = useNavigate();
-  const [quantity, setQuantity] = useState()
+  const [quantity, setQuantity] = useState();
   const goToOrder = ()=>{
     navigate("/Order")
   }
@@ -75,7 +75,7 @@ function CartProducts() {
             Authorization: `Bearer ${token}`
        }})
        if(response.status == 200){
-        console.log("success")
+        console.log("success");
         setQuantity(quantity)
        }
     }
@@ -106,15 +106,9 @@ function CartProducts() {
 
            
         });
-        
-          console.log(data)
-          console.log(response.data.cart)
          if(response.status == 200){
                if (response.data.cart) {
                 setData(response.data.cart);
-                
-                console.log("✅ Znaleziono response.data.reviews");
-              console.log(data)
             } 
           }
       }
@@ -129,6 +123,9 @@ function CartProducts() {
     displayCart();
   }, [quantity, updateCart])
 
+  const totalPrice = data.reduce((total, item) => {
+  return total + (item.product.price * item.quantity);
+}, 0);
   if(loading){
     return (
       <LoadingData></LoadingData>
@@ -158,6 +155,7 @@ function CartProducts() {
         </TableHeader>
         <TableBody emptyContent={"Brak produktów w koszyku"}>
           {data.map((item, index)=>(
+            
             <TableRow key={index} className={index % 2 === 0 ? "bg-grey-50" : "bg-accent"}>
             <TableCell>{item.product.name}</TableCell>
             <TableCell>
@@ -168,7 +166,9 @@ function CartProducts() {
               className="rounded-lg shadow-lg w-[3rem] object-cover h-[3rem]"
               /> 
             </TableCell>
-            <TableCell>{item.product.price}</TableCell>
+            <TableCell>{item.product.price}
+              
+            </TableCell>
             <TableCell>
               <input type="number" min={1} defaultValue={item.quantity}  onChange={(e) => updateQuantity(parseInt(e.target.value), item.product._id.toString())}></input>
             </TableCell>
@@ -177,23 +177,16 @@ function CartProducts() {
                  <FaTrashAlt/>
               </span>
              </TableCell>
+            
           </TableRow>
-        
       )
-        
       )}
-          
+            
         </TableBody>
       </Table>
-      
+        <h1 className="mt-[1rem] text-lg text-primary z-[10] relative">Całkowita cena: {totalPrice} zł</h1>
     </div>
-
       </div>
-      
-    
-  
-     
-
     </>
     
   )
