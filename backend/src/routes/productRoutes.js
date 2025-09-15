@@ -40,7 +40,7 @@ router.get("/", async (req, res)=>{
       const paginatedProducts = displayInOrder.slice(start, end);
         res.status(201).send({
            message: "Success",
-            products: paginatedProducts, // Wysyłamy PAGINOWANE produkty
+            products: paginatedProducts, 
             order: sort,
             page: Number(page),
             limit: Number(limit),

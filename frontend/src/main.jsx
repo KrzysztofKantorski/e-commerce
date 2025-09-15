@@ -12,6 +12,7 @@ import AddReview from "./pages/AddReview"
 import Order from "./pages/Order"
 import Customize from "./pages/Customize"
 import OrderSuccess from "./pages/OrderSuccess"
+import ShowOrders from "./pages/ShowOrders"
 import {HeroUIProvider} from '@heroui/react'
 import { BrowserRouter, Routes, Route } from "react-router";
 import { CategoryProvider } from './Context/CategoyContext'
@@ -35,8 +36,9 @@ export default function App() {
         <Route path="/Order" element={<Order />}></Route>
         <Route path="/Customize" element={<Customize />}></Route>
         <Route path="/OrderSuccess" element={<OrderSuccess />}></Route>
+        <Route path="/ShowOrders" element={<ShowOrders />}></Route>
 
-        
+        ShowOrders
       </Routes>
       </CategoryProvider>
       </UserDataProvider>

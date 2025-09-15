@@ -96,10 +96,9 @@ if(error){
        <DropdownMenu aria-label="Favorite products" className="relative min-w-[420px]" >
            <DropdownItem key="see_more" className="text-right w-[10%] ml-[90%] text-center" >
                <Tooltip content="Zobacz wszystkie">
-                
-                    <FaArrowRight calssName="text-center" onClick={()=>{showCart()}}/>
-               
-                   
+                {cart.length === 0 ? (""): (
+                     <FaArrowRight calssName="text-center" onClick={()=>{showCart()}}/>
+                )}
                </Tooltip>
            </DropdownItem>
          
@@ -142,7 +141,7 @@ if(error){
                            
        ))
      ) : (
-       <DropdownItem key="no_products" isReadOnly>Brak ulubionych produktów</DropdownItem>
+       <DropdownItem key="no_products" isReadOnly>Brak produktów w koszyku</DropdownItem>
      )}
        </DropdownMenu>
        </Dropdown>

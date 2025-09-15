@@ -69,23 +69,36 @@ router.post("/", auth, async(req, res)=>{
 })
 
 
-//create order
+//update order status
 router.put("/", auth, async(req, res)=>{
     try{
     const user =  req.user.id;
-    const { pay, status } = req.body;
-    const userToFind = await User.findById(user).populate("cart.product");
+    const {payment, status} = req.body
+    const userToFind = await User.findById(user).populate("orders");
+    
+    
     if (!userToFind) {
       return res.status(404).json({ message: "User not found" });
     }
-    userToFind.payment = pay;
-    const updatePayment =  userToFind.payment;
-    await userToFind.save();
-    res.status(201).send({
-        message: "Success",
-        payment: updatePayment
-    })
 
+    if(userToFind.orders.length === 0){
+        return res.status(404).json({
+            message: "Order not found"
+        })
+    }
+
+    const sortOrders = userToFind.orders.sort((a, b) => 
+         new Date(b.createdAt) - new Date(a.createdAt)
+     );
+    const latestOrder = sortOrders[0];
+    latestOrder.payment = payment;
+    latestOrder.status = status;
+    latestOrder.save();
+    res.status(200).send({
+        message: "Success",
+        payment: latestOrder.payment,
+        status: latestOrder.status
+    })
     } 
     catch(error){
         res.status(500).send({

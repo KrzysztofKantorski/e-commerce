@@ -66,6 +66,9 @@ function Nav() {
   const goToRegister = ()=>{
     navigate("/Register")
   }
+  const handleOrders = ()=>{
+    navigate("/ShowOrders")
+  }
   const [searchText, setSearchText] = useState("");
   console.log(searchText)
   return (
@@ -158,6 +161,7 @@ function Nav() {
              <DropdownItem key="username">Witaj: {data.username}</DropdownItem>
               <DropdownItem key="email" >{data.email}</DropdownItem>
               <DropdownItem key="customize" onClick = {handleCustomize}>personalizacja</DropdownItem>
+              <DropdownItem key="orders" onClick = {handleOrders}>zamówienia</DropdownItem>
               <DropdownItem key="logout" onClick = {handleLogout}>Wyloguj się</DropdownItem>
             </>
           )}

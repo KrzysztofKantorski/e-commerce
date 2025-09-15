@@ -1,14 +1,14 @@
 import React from 'react'
-import LoadingData from '@/components/handleData/LoadingData'
-import Error from '@/components/handleData/Error'
 import axios from "axios"
 import {useState, useEffect} from "react"
 import {useNavigate} from "react-router"
 import AnimatedBackground from '@/components/AnimatedBackground'
 import TextGlitchAnimation from '@/components/TextGlitchAnimation'
-import {Form, Input, Button} from "@heroui/react";
-import {Card, CardBody, CardFooter, Image} from "@heroui/react";
+import {Button} from "@heroui/react";
+import {Image} from "@heroui/react";
 import {Accordion, AccordionItem} from "@heroui/react";
+import {RadioGroup} from "@heroui/react";
+import CustomRadio from '@/components/CustomRadio'
 import Cookies from "universal-cookie"
 import {
   Table,
@@ -40,7 +40,7 @@ function OrderSuccess() {
             return;
             }
             const url = "http://localhost:3000/orders";
-
+            console.log(url)
             const response = await axios.get(url, {
             headers: {
             Authorization: `Bearer ${token}`,
@@ -56,8 +56,7 @@ function OrderSuccess() {
                 setTotal(currentOrder.totalPrice);
                 setOrder(currentOrder.products);
                 setAdres(currentOrder.shippingAddress);
-
-                console.log(currentOrder.shippingAddress)
+               
                 
             }
             }catch(error){
@@ -70,42 +69,60 @@ function OrderSuccess() {
     displayTotal();
 }, [])
 
-const finalizeOrder = ()=>{
-    
+const finalizeOrder = async ()=>{
+    if(payment === ""){
+      alert("wybierz metodę płatności");
+      return
+    }
+     try{
+      
+            const token = cookies.get("TOKEN");
+             if (!token) {
+            alert("Musisz być zalogowany aby złożyć zamówienie");
+            navigate("/Login");
+            return;
+            }
+            const url = "http://localhost:3000/orders";
+
+            const response = await axios.put(url, {payment: payment, status: "paid"},{
+            headers: {
+            Authorization: `Bearer ${token}`,
+            }});
+            console.log(response)
+              alert("Zamówienie zostało złożone");
+              setTimeout(()=>{navigate("/")}, 3000)
+           
+            }catch(error){
+                setError(error.message)
+            }
 }
 
-   console.log(order)
+  
   return (
     <div>
          <AnimatedBackground></AnimatedBackground>
           <TextGlitchAnimation text={"Finalizacja"}></TextGlitchAnimation>
-    <div className="w-[50%] ml-[25%] min-h-[10rem] gap-2 grid grid-cols-1 sm:grid-cols-4 gap-5 md:w-1/2 md:grid-cols-2 z-[10] relative" >
-        <Card isPressable shadow="sm" onPress={()=>setPayment("blik")}>
-          <CardBody className="overflow-visible p-0">
-            <h1 className="text-lg text-primary px-[5rem] py-[5rem] text-center">Blik</h1>
-          </CardBody>
-        </Card>
-
-         <Card isPressable shadow="sm"  className="text-center" onPress={()=>setPayment("paysafecard")}>
-          <CardBody className="overflow-visible p-0">
-            <h1 className="text-lg text-primary px-[5rem] py-[5rem] text-center">Paysafecard</h1>
-          </CardBody>
-        </Card>
-
-         <Card isPressable shadow="sm" onPress={()=>setPayment("credit card")}> 
-          <CardBody className="overflow-visible p-0">
-            <h1 className="text-lg text-primary px-[5rem] py-[5rem] text-center">Karta kredytowa</h1>
-          </CardBody>
-        </Card>
-
-         <Card isPressable shadow="sm" onPress={()=>setPayment("paypal")}>
-          <CardBody className="overflow-visible p-0">
-            <h1 className="text-lg text-primary px-[5rem] py-[5rem] text-center">Paypal</h1>
-          </CardBody>
-        </Card>
+  
+        
+     <RadioGroup className="w-full z-[10] relative">
+  <div className="flex flex-wrap items-center justify-center gap-5">
+    <CustomRadio value="blik" className="w-[10rem] h-[7rem]" onChange={()=>{setPayment("blik")}}>
+      Blik
+    </CustomRadio>
+    <CustomRadio value="paypal" className="w-[10rem] h-[7rem]" onChange={()=>{setPayment("paypal")}}>
+      Paypal
+    </CustomRadio>
+    <CustomRadio value="paysafecard" className="w-[10rem] h-[7rem]" onChange={()=>{setPayment("paysafecard")}}>
+      Paysafecard
+    </CustomRadio>
+    <CustomRadio value="credit card" className="w-[10rem] h-[7rem]" onChange={()=>{setPayment("credit card")}}>
+      Karta kredytowa
+    </CustomRadio>
+  </div>
+</RadioGroup>
 
        
-    </div>
+  
     <div className="w-[50%] min-h-[10rem] ml-[25%] z-[10] relative text-right">
          <Accordion>
       <AccordionItem key="1" aria-label="Zamówienie" title="Zamówienie" className="text-left">

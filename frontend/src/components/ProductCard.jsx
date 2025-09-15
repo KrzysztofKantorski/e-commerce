@@ -218,7 +218,7 @@ useEffect(() => {
               src={`http://localhost:3000${product.images}`}
               width="100%"
             />
-             <p className="text-default-500 text-sm mt-[.5rem] ml-[.5rem] mb-[.5rem]" onClick={()=>setDisplay(product._id)}>{product.name}</p>
+             <p className="text-default-500 text-md mt-[.5rem] ml-[.5rem] mb-[.5rem]" onClick={()=>setDisplay(product._id)}>{product.name}</p>
           </CardBody>
           <p className="text-sm text-primary text-left ml-[.5rem] ">{product.price} zł</p>
           <CardFooter className="text-small justify-start">
