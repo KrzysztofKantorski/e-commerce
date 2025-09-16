@@ -2,7 +2,6 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@
 
 export default function DisplayProductDescription({description}) {
     const data = description
-
     const parseDescription = (desc)=>{
         if(!desc) return []
 
@@ -15,7 +14,7 @@ export default function DisplayProductDescription({description}) {
                  
                 return {param, value}
             })
-           
+          
         }
         catch(error){
         console.error("Błąd parsowania danych:", error);
@@ -24,7 +23,7 @@ export default function DisplayProductDescription({description}) {
 
     }
 
-    const displayData = parseDescription(data);
+const displayData = parseDescription(data);
   return (
     <Table aria-label="Example static collection table">
       <TableHeader>

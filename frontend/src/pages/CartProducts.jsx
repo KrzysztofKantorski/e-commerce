@@ -186,10 +186,8 @@ function CartProducts() {
       </Table>
         <h1 className="mt-[1rem] text-lg text-primary z-[10] relative">Całkowita cena: {totalPrice} zł</h1>
     </div>
-      </div>
-    </>
-    
-  )
-}
+  </div>
+</>  
+  )}
 
 export default CartProducts

@@ -42,18 +42,16 @@ useEffect(()=>{
 
 
 if (error) {
-        return (
-            <div className="text-center p-8">
-                <h2 className="text-2xl font-bold text-danger">Error loading product</h2>
-                <p className="text-default-500">{error}</p>
-            </div>
-        );
+  return (
+    <div className="text-center p-8">
+      <h2 className="text-2xl font-bold text-danger">Error loading product</h2>
+      <p className="text-default-500">{error}</p>
+    </div>
+  );
 }
-
  if (loading) {
-        return (
-          <div className="height-[600px]  mt-[3rem] ml-[10%]">
-
+  return (
+  <div className="height-[600px]  mt-[3rem] ml-[10%]">
    <Chip className="relative z-[10] shadow-small rounded-medium py-[1.5rem] max-w-[500px] min-w-[250px] text-center  bg-primary text-[rgb(255,255,255)] h-8">Wyszukaj na podstawie kategorii</Chip>
       <Listbox
       aria-label="User Menu"
@@ -86,7 +84,6 @@ if (error) {
       <ListboxItem key="siup">
         siup
       </ListboxItem>
-
       <ListboxItem key="sport">
         sport
       </ListboxItem>
@@ -97,43 +94,33 @@ if (error) {
         wszytskie
       </ListboxItem>
      </Listbox>
-
       <Filter></Filter>
      </div>
         )
 }
   return (
-
-    <>
-     <div className=" w-[80%] lg:hidden ml-[10%] ">
-      <h1 className="text-center mt-[2rem] mb-[2rem] text-lg">Wyszukaj na podstawie kategorii</h1>
+  <>
+  <div className=" w-[80%] lg:hidden ml-[10%] ">
+    <h1 className="text-center mt-[2rem] mb-[2rem] text-lg">Wyszukaj na podstawie kategorii</h1>
       <div className="w-full flex items-center justify-center gap-2">
         <Dropdown>
-      <DropdownTrigger>
-        <Button variant="bordered" className="mt-[1.5rem]  py-[1.5rem]">Open Menu</Button>
-      </DropdownTrigger>
-      <DropdownMenu aria-label="Action event example" onAction={(siup) => setCategory(siup)}>
-      {product.map((prod, index)=>(
-              <DropdownItem
-              siup={prod.count}
-              key={prod.cat}
-             
-              >
-            
-              {prod.cat}
-            </DropdownItem>
-            ))}
-      </DropdownMenu>
-    </Dropdown>
+          <DropdownTrigger>
+            <Button variant="bordered" className="mt-[1.5rem]  py-[1.5rem]">Open Menu</Button>
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Action event example" onAction={(siup) => setCategory(siup)}>
+          {product.map((prod, index)=>(
+                  <DropdownItem
+                  siup={prod.count}
+                  key={prod.cat}>
+                  {prod.cat}
+                </DropdownItem>
+                ))}
+          </DropdownMenu>
+        </Dropdown>
     <Filter></Filter>
-
-      
-        
-      </div>
-      
     </div>
-    <div className=" h-[0] mt-[3rem] ml-[10%] relative z-[10] hidden  lg:block h-[600px]">
-
+  </div>
+  <div className=" h-[0] mt-[3rem] ml-[10%] relative z-[10] hidden  lg:block h-[600px]">
    <Chip className=" shadow-small rounded-medium py-[1.5rem] max-w-[500px] min-w-[250px] text-center  bg-primary text-[rgb(255,255,255)] h-8 ">Wyszukaj na podstawie kategorii</Chip>
       <Listbox
       aria-label="User Menu"
@@ -143,27 +130,23 @@ if (error) {
       }}
       onAction={(siup)=>setCategory(siup)}>
 
-      
-      {product.map((prod, index)=>(
-        <ListboxItem
-        siup={prod.count}
-        key={prod.cat}
-        endContent={<ItemCounter number={prod.count} />}>
-      
-        {prod.cat}
-      </ListboxItem>
-      ))}
+          {product.map((prod, index)=>(
+            <ListboxItem
+            siup={prod.count}
+            key={prod.cat}
+            endContent={<ItemCounter number={prod.count} />}>
+          
+            {prod.cat}
+          </ListboxItem>
+          ))}
+          <ListboxItem key="all">
+            wszystkie
+          </ListboxItem>
 
-
-      <ListboxItem key="all">
-        wszystkie
-      </ListboxItem>
      </Listbox>
-
-      <Filter></Filter>
-     </div>
-    </>
-    
+    <Filter></Filter>
+  </div>
+  </>
   );
 }
 

@@ -35,7 +35,6 @@ router.post("/uploadImage", auth, upload.single("file"), async (req, res) => {
         );
 
         if (!user) {
-            // Usuń plik tymczasowy jeśli użytkownik nie istnieje
             fs.unlinkSync(req.file.path);
             return res.status(404).json({
                 success: false,
@@ -66,7 +65,7 @@ router.post("/uploadImage", auth, upload.single("file"), async (req, res) => {
     }
 });
 
-
+//display user image
 router.get("/uploadImage", auth, async(req, res)=>{
     const userId = req.user.id;
     try{

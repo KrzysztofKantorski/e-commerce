@@ -14,35 +14,31 @@ const ListboxWrapper = ({children}) => (
 );
 
 function DisplaySearch({search}) {
-
-const navigate = useNavigate(); 
+const navigate = useNavigate();
+const [searchedProducts, setSearchedProducts] = useState([])
+const [error, setError] = useState(null)
+const [loading, setLoading] = useState(false)
+const [noResults, setNoResults] = useState(false)
+const isScrolled = useScroll()
 
 const setDisplay = (id)=>{
-      axios.get(`http://localhost:3000/products/${id}`)
-      navigate(`/product/${id}`)
+    axios.get(`http://localhost:3000/products/${id}`)
+    navigate(`/product/${id}`)
 }
-    const [searchedProducts, setSearchedProducts] = useState([]);
-    const [error, setError] = useState(null)
-    const [loading, setLoading] = useState(false);
-    const [noResults, setNoResults] = useState(false);
-  
-    const isScrolled = useScroll();
-    
-       
-    useEffect(() => {
-        setError(null);
-        setNoResults(false);
-        let isMounted = true;
-        setLoading(true);
-        const fetchProducts = async () => {
-
-        if (search.trim() === "") {
-              if (isMounted) {
-                  setSearchedProducts([]);
-                  setLoading(false);
-              }
-              return;
-      }
+   
+useEffect(() => {
+  setError(null);
+  setNoResults(false);
+  let isMounted = true;
+  setLoading(true);
+  const fetchProducts = async () => {
+    if (search.trim() === "") {
+      if (isMounted) {
+          setSearchedProducts([]);
+          setLoading(false);
+        }
+    return;
+    }
       try {
         let url = "http://localhost:3000/products";
         
@@ -66,39 +62,37 @@ const setDisplay = (id)=>{
           
       } catch (err) {
         if (isMounted) {
-                    if (err.response) {
-                        // Error types
-                        switch (err.response.status) {
-                            case 404:
-                                setError("Endpoint wyszukiwania nie został znaleziony");
-                               
-                                break;
-                            case 500:
-                                setError("Błąd serwera. Spróbuj ponownie później");
-                                break;
-                            default:
-                                setError("Wystąpił błąd podczas wyszukiwania");
-                        }
-                    } else if (err.request) {
-                        // No response
-                        setError("Brak połączenia z serwerem. Sprawdź swoje połączenie internetowe");
-                    } else {
-                        // Different error
-                        setError("Nie znaleziono produktów");
-                    }
-                    setSearchedProducts([]);
-                    setNoResults(true);
+            if (err.response) {
+              switch (err.response.status) {
+                case 404:
+                  setError("Endpoint wyszukiwania nie został znaleziony");
+                  break;
+                case 500:
+                  setError("Błąd serwera. Spróbuj ponownie później");
+                  break;
+                default:
+                  setError("Wystąpił błąd podczas wyszukiwania");
+              }
+            } 
+            else if (err.request) {
+              
+              setError("Brak połączenia z serwerem. Sprawdź swoje połączenie internetowe");
+            } 
+            else {
+              setError("Nie znaleziono produktów");
+            }
+            setSearchedProducts([]);
+            setNoResults(true);
       } 
     }
       finally{
         setLoading(false)
       }
     };
-       fetchProducts()
 
+    fetchProducts()
     return () => {
       isMounted = false;
-      
     };
 }, [search]);
 

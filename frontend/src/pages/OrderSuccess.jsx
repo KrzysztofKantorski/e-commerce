@@ -75,56 +75,49 @@ const finalizeOrder = async ()=>{
       return
     }
      try{
-      
-            const token = cookies.get("TOKEN");
-             if (!token) {
+          const token = cookies.get("TOKEN");
+          if (!token) {
             alert("Musisz być zalogowany aby złożyć zamówienie");
             navigate("/Login");
             return;
-            }
-            const url = "http://localhost:3000/orders";
-
-            const response = await axios.put(url, {payment: payment, status: "paid"},{
+          }
+          const url = "http://localhost:3000/orders";
+          const response = await axios.put(url, {payment: payment, status: "paid"},{
             headers: {
             Authorization: `Bearer ${token}`,
             }});
-            console.log(response)
-              alert("Zamówienie zostało złożone");
-              setTimeout(()=>{navigate("/")}, 3000)
-           
-            }catch(error){
-                setError(error.message)
-            }
+         
+          alert("Zamówienie zostało złożone");
+          setTimeout(()=>{navigate("/")}, 3000)
+        }
+      catch(error){
+          setError(error.message)
+        }
 }
 
   
   return (
-    <div>
-         <AnimatedBackground></AnimatedBackground>
-          <TextGlitchAnimation text={"Finalizacja"}></TextGlitchAnimation>
-  
-        
-     <RadioGroup className="w-full z-[10] relative">
-  <div className="flex flex-wrap items-center justify-center gap-5">
-    <CustomRadio value="blik" className="w-[10rem] h-[7rem]" onChange={()=>{setPayment("blik")}}>
-      Blik
-    </CustomRadio>
-    <CustomRadio value="paypal" className="w-[10rem] h-[7rem]" onChange={()=>{setPayment("paypal")}}>
-      Paypal
-    </CustomRadio>
-    <CustomRadio value="paysafecard" className="w-[10rem] h-[7rem]" onChange={()=>{setPayment("paysafecard")}}>
-      Paysafecard
-    </CustomRadio>
-    <CustomRadio value="credit card" className="w-[10rem] h-[7rem]" onChange={()=>{setPayment("credit card")}}>
-      Karta kredytowa
-    </CustomRadio>
-  </div>
-</RadioGroup>
-
-       
-  
-    <div className="w-[50%] min-h-[10rem] ml-[25%] z-[10] relative text-right">
-         <Accordion>
+<div>
+    <AnimatedBackground></AnimatedBackground>
+    <TextGlitchAnimation text={"Finalizacja"}></TextGlitchAnimation>
+  <RadioGroup className="w-full z-[10] relative">
+      <div className="flex flex-wrap items-center justify-center gap-5">
+        <CustomRadio value="blik" className="w-[10rem] h-[7rem]" onChange={()=>{setPayment("blik")}}>
+          Blik
+        </CustomRadio>
+        <CustomRadio value="paypal" className="w-[10rem] h-[7rem]" onChange={()=>{setPayment("paypal")}}>
+          Paypal
+        </CustomRadio>
+        <CustomRadio value="paysafecard" className="w-[10rem] h-[7rem]" onChange={()=>{setPayment("paysafecard")}}>
+          Paysafecard
+        </CustomRadio>
+        <CustomRadio value="credit card" className="w-[10rem] h-[7rem]" onChange={()=>{setPayment("credit card")}}>
+          Karta kredytowa
+        </CustomRadio>
+      </div>
+  </RadioGroup>
+  <div className="w-[50%] min-h-[10rem] ml-[25%] z-[10] relative text-right">
+    <Accordion>
       <AccordionItem key="1" aria-label="Zamówienie" title="Zamówienie" className="text-left">
          <Table aria-label="Order" className="realtive z-[10]">
                <TableHeader>
@@ -153,72 +146,60 @@ const finalizeOrder = async ()=>{
                    <TableCell>
                     <span>{item.quantity}</span>
                    </TableCell>
-                   
-                   
                  </TableRow>
-                 
-                   </>
-                   
+                   </> 
              )
              )}
                    
-               </TableBody>
-             </Table>
-             <h1 className="mt-[1rem] text-primary text-right">Do zapłaty: {total} zł</h1>
-      </AccordionItem>
-      <AccordionItem key="2" aria-label="Adres" title="Adres" className="text-left">
-        <Table aria-label="Order" className="realtive z-[10]">
-               <TableHeader>
-                 <TableColumn>Pole</TableColumn>
-                 <TableColumn>Dane</TableColumn>
-               </TableHeader>
-               <TableBody emptyContent={"Brak produktów w koszyku"}>
-                 
+        </TableBody>
+      </Table>
+    <h1 className="mt-[1rem] text-primary text-right">Do zapłaty: {total} zł</h1>
+  </AccordionItem>
+  <AccordionItem key="2" aria-label="Adres" title="Adres" className="text-left">
+      <Table aria-label="Order" className="realtive z-[10]">
+          <TableHeader>
+            <TableColumn>Pole</TableColumn>
+            <TableColumn>Dane</TableColumn>
+          </TableHeader>
+          <TableBody emptyContent={"Brak produktów w koszyku"}>
                    <>
-                   <TableRow className={ "bg-grey-50" }>
+                <TableRow className={ "bg-grey-50" }>
                    <TableCell>Imię i nazwisko</TableCell>
                    <TableCell>{adres.fullName}</TableCell>
                 </TableRow>
                  
-                  <TableRow className={"bg-accent"}>
+                <TableRow className={"bg-accent"}>
                    <TableCell>Ulica</TableCell>
                    <TableCell>{adres.street}</TableCell>
                 </TableRow>
 
-                 <TableRow className={"bg-grey-50" }>
+                <TableRow className={"bg-grey-50" }>
                    <TableCell>Misato</TableCell>
                    <TableCell>{adres.city}</TableCell>
                 </TableRow>
 
-                 <TableRow className={"bg-accent"}>
+                <TableRow className={"bg-accent"}>
                    <TableCell>Kraj</TableCell>
                    <TableCell>{adres.country}</TableCell>
                 </TableRow>
 
-                 <TableRow className={"bg-grey-50" }>
+                <TableRow className={"bg-grey-50" }>
                    <TableCell>Kod pocztowy</TableCell>
                    <TableCell>{adres.postalCode}</TableCell>
                 </TableRow>
 
-                 <TableRow className={"bg-accent"}>
+                <TableRow className={"bg-accent"}>
                    <TableCell>Numer telefonu</TableCell>
                    <TableCell>{adres.phone}</TableCell>
                 </TableRow>
                    </>
-                   
-            
-                   
                </TableBody>
              </Table>
       </AccordionItem>
     </Accordion>
-    
     <Button className="z-[10] relative" onPress={finalizeOrder}>Zapłać</Button>
     </div>
-    
     </div>
-
-     
   )
 }
 

@@ -20,9 +20,9 @@ function DisplayComments({id}) {
     const navigate = useNavigate();
 
    const AddRewiev = ()=>{
-   
     navigate(`/AddReview/${product}`);
    }
+
     const formatDateTime = (dateString) => {
     return new Date(dateString).toLocaleString('pl-PL', {
         year: 'numeric',
@@ -30,8 +30,9 @@ function DisplayComments({id}) {
         day: '2-digit',
         hour: '2-digit',
         minute: '2-digit'
-        });
-    };
+        })
+    }
+    
     const fetchReviews = async(page=1)=>{
         setLoading(true);
         setError(null)
@@ -42,18 +43,13 @@ function DisplayComments({id}) {
                 url+=`?sort=${filter}`;
                 setCurrentPage(1);
             }
-        const response = await axios.get(url, {params});
-            console.log(response)
-           
+            const response = await axios.get(url, {params});
             if (response.data.reviews) {
-                console.log("✅ Znaleziono response.data.reviews");
                 setReviews(response.data.reviews);
                 setPages(response.data.totalPages)
             } 
         }
         catch(error){
-            console.log(error.message)
-                // Obsługa różnych błędów
             if (error.response?.status === 400) {
                 alert("Produkt został już dodany do ulubionych");
                 navigate("/");
@@ -74,20 +70,20 @@ useEffect(()=>{
     fetchReviews(1);
 }, [id, filter])
 
- const handlePageChange = (clickedPage)=>{
+const handlePageChange = (clickedPage)=>{
     setCurrentPage(clickedPage);
     fetchReviews(clickedPage)
 }
-    if(loading){
-        return(
-            <LoadingData></LoadingData>
-        )
-    }
-    if(error){
-        return(
-             <Error></Error>
-        ) 
-    }
+if(loading){
+    return(
+        <LoadingData></LoadingData>
+    )
+}
+if(error){
+    return(
+        <Error></Error>
+    ) 
+}
 return (
 <div className="min-h-[50vh]">
       {reviews.length == 0 ? (
@@ -136,8 +132,6 @@ return (
     </>
     ))}
     </div>
-    
-    
         <div className="flex w-full justify-center">
         <Pagination  
         initialPage={currentPage} 
@@ -149,8 +143,6 @@ return (
    </div>
    </>
     )}
-   
-    
 </div>
   )
 }

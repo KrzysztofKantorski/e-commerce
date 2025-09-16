@@ -49,10 +49,7 @@ console.log(product)
         navigate(-1);
         return;
       }
-
-      // Konwersja rating na number
       const numericRating = parseInt(rating);
-      
       const response = await axios.post(
         `http://localhost:3000/products/${product}/reviews`, 
         {
@@ -66,15 +63,12 @@ console.log(product)
           }
         }
       );
-
-      console.log("Odpowiedź z serwera:", response.data);
-      
       if (response.status === 200) {
         alert("Opinia dodana pomyślnie!");
         navigate(`/product/${product}`);
       }
-
-    } catch (err) {
+    } 
+    catch (err) {
       console.error("Błąd dodawania opinii:", err);
       
       if (err.response?.status === 401) {
@@ -85,7 +79,8 @@ console.log(product)
       } else {
         setServerError("Wystąpił błąd podczas dodawania opinii");
       }
-    } finally {
+    } 
+    finally {
       setLoading(false);
     }
   };
@@ -94,9 +89,6 @@ console.log(product)
     setComment("");
     setRating("")
    }
-
- 
-
   return (
     <>
    
@@ -113,106 +105,100 @@ console.log(product)
 
       </AnimatedGridPattern>
      </div>
+<div className="w-[100%] min[100vh] flex column items-center justify-center"> 
+  <div className="flex flex-col items-center justify-center relative">
+    <HyperText duration={1000} className="relative text-primary text-center text-[6rem] z-[1000]">Dodaj opinię</HyperText>
+         <NeonGradientCard className="items-center justify-center text-center min-h-[20rem] max-w-sm z-[10] mt-[2rem]">
+            <Form
+            validationErrors={errors}
+            className="w-[30rem] max-w-xs flex flex-col gap-5 min-h-[10rem] text-left  justify-center items-center"
+            onReset={() => setAction("reset")}
+            onSubmit={addReview}>
 
+              <Textarea
+                disableAnimation
+                disableAutosize
+                classNames={{
+                  base: "max-w-xs border-2 border-primary rounded-lg",
+                  input: "resize-y min-h-[10rem] ",
+                }}
+                placeholder="Treść opinii"
+                value={comment}
+              onChange = {(e)=> setComment(e.target.value)}
+              />
+            <Dropdown  classNames={{
+                base: "before:bg-default-200", // change arrow background
+                content:
+                  "py-1 px-1 border border-default-200 bg-linear-to-br from-white to-default-200 dark:from-default-50 dark:to-black",
+              }}>
+              <DropdownTrigger>
+                <Button className="shadow-small rounded-medium py-[1.5rem] max-w-[500px] w-full text-center  bg-primary text-[rgb(255,255,255)] h-8">Wybierz ilość gwiazdek</Button>
+              </DropdownTrigger>
+            <DropdownMenu aria-label="Action event example" onAction={(key) => setRating(key)}>
+              <DropdownItem key="1">
+                <div className="flex text-[1.2rem]">
+                  <span><FaStar color="gold"/></span>
+                  <span><FaRegStar color="gold"/></span>
+                  <span><FaRegStar color="gold"/></span>
+                  <span><FaRegStar color="gold"/></span>
+                  <span><FaRegStar color="gold"/></span>
+                </div>
+              </DropdownItem>
 
-   <div className="w-[100%] min[100vh] flex column items-center justify-center"> 
-    
-      <div className="flex flex-col items-center justify-center relative">
-     <HyperText duration={1000} className="relative text-primary text-center text-[6rem] z-[1000]">Dodaj opinię</HyperText>
-<NeonGradientCard className="items-center justify-center text-center min-h-[20rem] max-w-sm z-[10] mt-[2rem]">
-       <Form
-       validationErrors={errors}
-      className="w-[30rem] max-w-xs flex flex-col gap-5 min-h-[10rem] text-left  justify-center items-center"
-      onReset={() => setAction("reset")}
-       
-      onSubmit={addReview}
-    >
-      <Textarea
-        disableAnimation
-        disableAutosize
-        classNames={{
-          base: "max-w-xs border-2 border-primary rounded-lg",
-          input: "resize-y min-h-[10rem] ",
-        }}
-        placeholder="Treść opinii"
-        value={comment}
-       onChange = {(e)=> setComment(e.target.value)}
-      />
-     <Dropdown  classNames={{
-        base: "before:bg-default-200", // change arrow background
-        content:
-          "py-1 px-1 border border-default-200 bg-linear-to-br from-white to-default-200 dark:from-default-50 dark:to-black",
-      }}>
-      <DropdownTrigger>
-        <Button className="shadow-small rounded-medium py-[1.5rem] max-w-[500px] w-full text-center  bg-primary text-[rgb(255,255,255)] h-8">Wybierz ilość gwiazdek</Button>
-      </DropdownTrigger>
-      <DropdownMenu aria-label="Action event example" onAction={(key) => setRating(key)}>
-        <DropdownItem key="1">
-          <div className="flex text-[1.2rem]">
-            <span><FaStar color="gold"/></span>
-            <span><FaRegStar color="gold"/></span>
-            <span><FaRegStar color="gold"/></span>
-            <span><FaRegStar color="gold"/></span>
-            <span><FaRegStar color="gold"/></span>
-          </div>
+              <DropdownItem key="2">
+                <div className="flex text-[1.2rem]">
+                  <span><FaStar color="gold"/></span>
+                  <span><FaStar color="gold"/></span>
+                  <span><FaRegStar color="gold"/></span>
+                  <span><FaRegStar color="gold"/></span>
+                  <span><FaRegStar color="gold"/></span>
+                </div>
+              </DropdownItem>
+
+              <DropdownItem key="3">
+                <div className="flex text-[1.2rem]">
+                  <span><FaStar color="gold"/></span>
+                  <span><FaStar color="gold"/></span>
+                  <span><FaStar color="gold"/></span>
+                  <span><FaRegStar color="gold"/></span>
+                  <span><FaRegStar color="gold"/></span>
+                </div>
+              </DropdownItem>
+
+              <DropdownItem key="4">
+                <div className="flex text-[1.2rem]">
+                  <span><FaStar color="gold"/></span>
+                  <span><FaStar color="gold"/></span>
+                  <span><FaStar color="gold"/></span>
+                  <span><FaStar color="gold"/></span>
+                  <span><FaRegStar color="gold"/></span>
+                </div>
+              </DropdownItem>
+
+              <DropdownItem key="5">
+                <div className="flex text-[1.2rem]">
+                  <span><FaStar color="gold"/></span>
+                  <span><FaStar color="gold"/></span>
+                  <span><FaStar color="gold"/></span>
+                  <span><FaStar color="gold"/></span>
+                  <span><FaStar color="gold"/></span>
+                </div>
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
           
-        </DropdownItem>
-        <DropdownItem key="2">
-          <div className="flex text-[1.2rem]">
-            <span><FaStar color="gold"/></span>
-            <span><FaStar color="gold"/></span>
-            <span><FaRegStar color="gold"/></span>
-            <span><FaRegStar color="gold"/></span>
-            <span><FaRegStar color="gold"/></span>
+          <div className="flex items-center justify-center gap-2 text-center w-full mt-[1rem]">
+            <Button color="primary" type="submit" className="px-[1rem] px-[1rem]">
+               Dodaj opinię
+            </Button>
+            <Button type="reset" variant="flat" className="px-[1rem] px-[1rem]" onPress={()=>{clear()}}>
+              Wyczyść
+            </Button>
           </div>
-          
-        </DropdownItem>
-        <DropdownItem key="3">
-          <div className="flex text-[1.2rem]">
-            <span><FaStar color="gold"/></span>
-            <span><FaStar color="gold"/></span>
-            <span><FaStar color="gold"/></span>
-            <span><FaRegStar color="gold"/></span>
-            <span><FaRegStar color="gold"/></span>
-          </div>
-          
-        </DropdownItem>
-        <DropdownItem key="4">
-          <div className="flex text-[1.2rem]">
-            <span><FaStar color="gold"/></span>
-            <span><FaStar color="gold"/></span>
-            <span><FaStar color="gold"/></span>
-            <span><FaStar color="gold"/></span>
-            <span><FaRegStar color="gold"/></span>
-          </div>
-          
-        </DropdownItem>
-         <DropdownItem key="5">
-          <div className="flex text-[1.2rem]">
-            <span><FaStar color="gold"/></span>
-            <span><FaStar color="gold"/></span>
-            <span><FaStar color="gold"/></span>
-            <span><FaStar color="gold"/></span>
-            <span><FaStar color="gold"/></span>
-          </div>
-        </DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
-     
-      <div className="flex items-center justify-center gap-2 text-center w-full mt-[1rem]">
-        <Button color="primary" type="submit" className="px-[1rem] px-[1rem]">
-          Dodaj opinię
-        </Button>
-        <Button type="reset" variant="flat" className="px-[1rem] px-[1rem]" onPress={()=>{clear()}}>
-          Wyczyść
-        </Button>
-        
-      </div>
-    </Form>
+      </Form>
     </NeonGradientCard>
-    </div>
-     
-   </div>
+  </div>
+</div>
      </>
   )
 }

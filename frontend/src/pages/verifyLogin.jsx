@@ -10,63 +10,46 @@ const cookies = new Cookies();
 
 
 function LoginSuccess() {
-    const { data, setData } = useData();
-    const [error, setError] = useState("");
-  
-    const navigate = useNavigate()
+  const { data, setData } = useData();
+  const [error, setError] = useState("");
+  const navigate = useNavigate()
   const token = cookies.get("TOKEN");
-   
-   
 
-    useEffect(() => {
-
-   
+  useEffect(() => {
     if(!token){
     navigate("/Login");
     }
     const decoded = jwtDecode(token);
-   
-   
     // set configurations for the API call here
     const header = {
         Authorization: `Bearer ${token}`,
     }
-
     const verify = async ()=>{
-        try{
+      try{
         const response = await axios.get("http://localhost:3000/auth/verify", {
         headers: header
-            })
-        
-        
-         if (response.status === 200) {
-          
-          setData({
+        })
+        if (response.status === 200) {
+        setData({
             username: decoded.userName,
             email: decoded.userEmail,
-          });
-           const timer = setTimeout(() => {
-            navigate("/");
-          }, 1000);
-
+        });
+          const timer = setTimeout(() => {
+          navigate("/");
+        }, 1000);
           return () => clearTimeout(timer);
         }
-
-        }
-
-        catch(error){
+      }
+      catch(error){
             setError(error.message)
-        }
-     
+      }
     }
-
-    verify();
-    
+  verify();
   }, [token, navigate, setData])
   return (
-    <>
+  <>
    <LoadingData></LoadingData>
-    </>
+  </>
    
   )
 }

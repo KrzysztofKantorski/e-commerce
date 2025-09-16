@@ -56,7 +56,7 @@ function Customize() {
                 ref={fileInputRef}
                 type="file" 
                 onChange={onFileChange} 
-                style={{ display: 'none' }} // Całkowicie ukrywamy input
+                style={{ display: 'none' }} 
             />
             
             <button onClick={triggerFileInput}>

@@ -2,86 +2,69 @@ import React from 'react'
 import { FaHeart } from "react-icons/fa";
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@heroui/react";
 import {useState, useEffect} from "react";
+import LoadingData from './handleData/LoadingData';
+import Error from './handleData/Error';
 import axios from "axios"
 import {Tooltip} from "@heroui/tooltip";
-import LoadingData from './handleData/LoadingData';
 import Cookies from "universal-cookie"
 import { FaTrashAlt } from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa6";
 import { useNavigate } from 'react-router';
-import { useCategory } from "../Context/CategoyContext";
+import { useFavorites } from '@/hooks/useFavorites';
 const cookies = new Cookies();
 
 function Favorites() {
-   
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [favorites, setFavorites] = useState([]);
-    const {newProduct, setNewProduct} = useCategory();
-    const [deleted, setDeleted] = useState([]);
     const navigate = useNavigate();
-
-     const removeFromFavorites = async (id)=>{
-           try{
-            const token = cookies.get("TOKEN");
-            const url = `http://localhost:3000/favorites/remove/${id}`;
-            const response = await axios.delete(url, {
-            headers: {
-            Authorization: `Bearer ${token}`,
-            }
-        });
-
-            if(response.status == 200){
-                setDeleted(id);
-                console.log(response.data.favorites);
-                
-            }
-        
-
-            }catch(error){
-                setError(error.message)
-            }
-          
-        }
-
- const showFavorites = ()=>{
-    navigate("/FavoriteProducts")
- }
+    const {newProduct, removedProduct, removeFromFavorites} = useFavorites();
+    const showFavorites = ()=>{
+        navigate("/FavoriteProducts")
+    }
 
     const setDisplay = (id)=>{
     axios.get(`http://localhost:3000/products/${id}`)
     navigate(`/product/${id}`)
     }
 
+    const handleRemoveFromFavorites = async (productId) => {
+        const result = await removeFromFavorites(productId);
+        
+        if (result.success) {
+        alert(result.message); 
+        } else {
+        alert(result.message); 
+        
+        }
+    };
 
     useEffect(()=>{
-       
         const displayFavorites = async ()=>{
-             setLoading(true);
-              
+            setLoading(true);
             try{
-            const token = cookies.get("TOKEN");
-            const url = "http://localhost:3000/favorites";
-            const response = await axios.get(url, {
-            headers: {
-            Authorization: `Bearer ${token}`,
+                const token = cookies.get("TOKEN");
+                const url = "http://localhost:3000/favorites";
+                const response = await axios.get(url, {
+                headers: {
+                Authorization: `Bearer ${token}`,
             }
         });
-
             if(response.status == 200){
                 setFavorites(response.data.favorites);
                 console.log(response.data.favorites);
                 
             }
-            }catch(error){
+            }
+            catch(error){
                 setError(error.message)
             }
             finally{
                 setLoading(false);
             }
-        }
+    }
     displayFavorites();
-}, [newProduct, deleted])
+}, [newProduct, removedProduct])
 
 
 if (loading) {
@@ -107,7 +90,7 @@ if (error) {
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Error">
                     <DropdownItem key="error" className="text-danger">
-                        Błąd: {error}
+                        <Error></Error>
                     </DropdownItem>
                 </DropdownMenu>
             </Dropdown>
@@ -128,11 +111,10 @@ if (error) {
     <DropdownMenu aria-label="Favorite products" className="relative min-w-[400px]" >
         <DropdownItem key="see_more" className="text-right w-[10%] ml-[90%] text-center">
             <Tooltip content="Zobacz wszystkie">
-                <FaArrowRight calssName="text-center" onClick={()=>{showFavorites()}}/>
+                <FaArrowRight className="text-center" onClick={()=>{showFavorites()}}/>
             </Tooltip>
         </DropdownItem>
-      
-
+    
     {favorites.length > 0 ? (
     favorites.map((favProduct) => (
         <>
@@ -157,7 +139,7 @@ if (error) {
                     {favProduct.price} zł
                 </span>
                 <Tooltip content="Usuń produkt">
-                    <span className="text-right ml-[1rem] mt-[.2rem] w-[10%]" onClick={()=>removeFromFavorites(favProduct._id)}>
+                    <span className="text-right ml-[1rem] mt-[.2rem] w-[10%]" onClick={()=>handleRemoveFromFavorites(favProduct._id)}>
                     <FaTrashAlt />
                     </span>
                 </Tooltip>                    
