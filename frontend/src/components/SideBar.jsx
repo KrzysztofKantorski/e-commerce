@@ -1,10 +1,13 @@
-import {Listbox, ListboxItem} from "@heroui/react";
+import {DropdownItem, Listbox, ListboxItem} from "@heroui/react";
 import {useState, useEffect} from "react";
 import axios from "axios"
 import { useCategory } from "../Context/CategoyContext";
 import {Chip} from "@heroui/chip";
-import {Spinner} from "@heroui/react"
+import {Button, ButtonGroup} from "@heroui/react"
 import Filter from "./Filter"
+import {Dropdown, DropdownTrigger, DropdownMenu} from "@heroui/react";
+
+
 export const ItemCounter = ({number}) => (
   <div className="flex items-center gap-1 text-default-400">
     <span className="text-small">{number}</span>
@@ -101,9 +104,37 @@ if (error) {
 }
   return (
 
-    <div className="height-[600px]  mt-[3rem] ml-[10%] relative z-[10]">
+    <>
+     <div className=" w-[80%] lg:hidden ml-[10%] ">
+      <h1 className="text-center mt-[2rem] mb-[2rem] text-lg">Wyszukaj na podstawie kategorii</h1>
+      <div className="w-full flex items-center justify-center gap-2">
+        <Dropdown>
+      <DropdownTrigger>
+        <Button variant="bordered" className="mt-[1.5rem]  py-[1.5rem]">Open Menu</Button>
+      </DropdownTrigger>
+      <DropdownMenu aria-label="Action event example" onAction={(siup) => setCategory(siup)}>
+      {product.map((prod, index)=>(
+              <DropdownItem
+              siup={prod.count}
+              key={prod.cat}
+             
+              >
+            
+              {prod.cat}
+            </DropdownItem>
+            ))}
+      </DropdownMenu>
+    </Dropdown>
+    <Filter></Filter>
 
-   <Chip className=" shadow-small rounded-medium py-[1.5rem] max-w-[500px] min-w-[250px] text-center  bg-primary text-[rgb(255,255,255)] h-8">Wyszukaj na podstawie kategorii</Chip>
+      
+        
+      </div>
+      
+    </div>
+    <div className=" h-[0] mt-[3rem] ml-[10%] relative z-[10] hidden  lg:block h-[600px]">
+
+   <Chip className=" shadow-small rounded-medium py-[1.5rem] max-w-[500px] min-w-[250px] text-center  bg-primary text-[rgb(255,255,255)] h-8 ">Wyszukaj na podstawie kategorii</Chip>
       <Listbox
       aria-label="User Menu"
       className="relative z-[10] p-0 gap-0 divide-y divide-default-300/50 dark:divide-default-100/80 bg-content1 max-w-[500px] min-w-[250px] overflow-visible shadow-small rounded-medium"
@@ -131,6 +162,8 @@ if (error) {
 
       <Filter></Filter>
      </div>
+    </>
+    
   );
 }
 

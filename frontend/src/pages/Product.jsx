@@ -12,12 +12,20 @@ import DisplayComments from "../components/DisplayComments";
 import TextGlitchAnimation from '@/components/TextGlitchAnimation';
 import AnimatedBackground from '@/components/AnimatedBackground';
 import Recommendations from '@/components/Recommendations';
+import { useCategory } from '../Context/CategoyContext';
+import Cookies from "universal-cookie"
+
+
+const cookies = new Cookies();
 function Product() {
+    const {newProduct, setNewProduct} = useCategory();
     const [loading, setLoading] = useState(true);
     const [product, setProduct] = useState(null)
     const [error, setError] = useState(null);
+    const {addToCart, setAddToCart} = useCategory();
+    const [cart, setCart] = useState([]);
     const navigate = useNavigate();
-    //get product id
+    
     const {id} = useParams();
     useEffect(() => {
         setLoading(true);
@@ -43,6 +51,92 @@ function Product() {
         fetchProduct();
     }, [id]);
 
+ const  addToFavorites = (id)=>{
+
+    const addToFavorites = async()=>{
+      try{
+        const token = cookies.get("TOKEN");
+        if (!token) {
+        alert("Musisz być zalogowany, aby dodawać do ulubionych");
+        
+        return;
+      }
+        console.log(token)
+        const url = `http://localhost:3000/favorites/${id}`;
+        const response = await axios.post(url,
+          {id},  {
+        headers: {
+        Authorization: `Bearer ${token}`,
+          }
+        });
+        if(response.status == 201){
+          setNewProduct(prev => [...prev, id]);
+         alert("Produkt został dodany do ulubionych")
+         
+        }
+      }
+      catch(error){
+        console.log(error.message)
+        
+      if (error.response?.status === 400) {
+        alert("Produkt został już dodany do ulubionych");
+        navigate("/");
+      } else if (error.response?.status === 403) {
+        alert("Brak uprawnień do wykonania tej operacji");
+        
+      } else {
+        alert("Wystąpił błąd podczas dodawania do ulubionych");
+      } 
+      }
+      
+    }
+    addToFavorites();
+}
+
+    const handleCart = async(product)=>{
+      const quantity = 1;
+      try{
+        
+        const token = cookies.get("TOKEN");
+        if (!token) {
+        alert("Musisz być zalogowany, aby dodawać do ulubionych");
+        
+        return;
+      }
+        console.log(token)
+        const url = `http://localhost:3000/cart`;
+        const response = await axios.post(url,{
+         productId: product, quantity :quantity
+        }
+        ,  {
+        headers: {
+        Authorization: `Bearer ${token}`,
+          }
+        });
+        if(response.status == 201){
+          setCart(prev => [...prev, product]);
+         alert("Produkt został dodany do koszyka");
+         setAddToCart({product})
+         
+        }
+      }
+      catch(error){
+        console.log("err", error.message)
+         // Obsługa różnych błędów
+      if (error.response?.status === 400) {
+        alert("Produkt został już dodany do ulubionych");
+        navigate("/");
+      } else if (error.response?.status === 403) {
+        alert("Brak uprawnień do wykonania tej operacji");
+        
+      } else {
+        alert("Wystąpił błąd podczas dodawania do ulubionych");
+      } 
+      }
+      
+    }
+   
+   
 
    if (loading) {
         return (
@@ -123,8 +217,8 @@ function Product() {
                <div className="flex flex-col justify-space-between align-end  gap-[1rem] z-[1]">
                 <p className="text-[2.5rem]">{product.price} zł</p>
                 <div>
-                    <Button size="md" color="primary" className="mr-[1rem]">Dodaj do koszyka</Button>
-                  <Button size="md" color="primary">Dodaj do ulubionych</Button> 
+                    <Button size="md" color="primary" className="mr-[1rem]" onPress={()=>handleCart(product._id)}>Dodaj do koszyka</Button>
+                  <Button size="md" color="primary" onPress={()=>addToFavorites(product._id)}>Dodaj do ulubionych</Button> 
                 </div>
                 </div>
                 

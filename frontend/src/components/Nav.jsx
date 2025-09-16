@@ -11,6 +11,13 @@ import {
   DropdownMenu,
   Avatar,
 } from "@heroui/react";
+import {
+  NavbarBrand,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
+  Button,
+} from "@heroui/react";
 import {useState, useEffect} from "react"
 import DisplaySearch from './DisplaySearch';
 import {useNavigate} from "react-router"
@@ -23,6 +30,7 @@ const cookies = new Cookies();
 function Nav() {
   const { data, logout } = useData(); 
   const [image, setImage] = useState();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   if(data){
@@ -30,11 +38,7 @@ function Nav() {
   const fetchUserProfile = async () => {
     try {
        const token = cookies.get("TOKEN");
-       if(!token){
-                alert("Musisz być zalogowany aby zarządzać ulubionymi produktami");
-                navigate("/Login");
-                return;
-            }
+    
       
       const response = await axios.get(
         'http://localhost:3000/auth/uploadImage',
@@ -62,6 +66,7 @@ function Nav() {
   }
   const handleLogout = ()=>{
     logout();
+    window.location.reload();
   }
   const goToRegister = ()=>{
     navigate("/Register")
@@ -73,10 +78,12 @@ function Nav() {
   console.log(searchText)
   return (
     <>
-    <Navbar isBordered className="flex justify-around w-[100%] z-[1000]">
+    <Navbar isBordered className="flex justify-around w-[100%] z-[1000]" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
      
       <NavbarContent justify="start">
-        <NavbarContent className="hidden sm:flex z-[1000]">
+        <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className="block sm:block md:block  lg:hidden"/>
+        <NavbarContent className="hidden lg:flex z-[1000]">
+          
           <NavbarItem>
             <Link color="foreground" href="#">
               Nowości
@@ -93,8 +100,25 @@ function Nav() {
             </Link>
           </NavbarItem>
         </NavbarContent>
-      </NavbarContent>
+         <NavbarMenu className="flex flex-col lg:hidden ">
+        
+          <NavbarMenuItem className="flex flex-col items-center gap-2 text-lg relative z-[10]">
+            <Link>
+            Nowości
+            </Link>
 
+            <Link>
+            Nowości
+            </Link>
+
+            <Link>
+            Nowości
+            </Link>
+          </NavbarMenuItem>
+      
+      </NavbarMenu>
+   
+      </NavbarContent>
       <NavbarContent as="div" justify="center">
         <Input
           classNames={{

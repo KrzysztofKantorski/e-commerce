@@ -46,7 +46,7 @@ console.log(product)
       const token = cookies.get("TOKEN");
       if (!token) {
         alert("Zaloguj się aby dodać opinię");
-        navigate("/Login");
+        navigate(-1);
         return;
       }
 

@@ -106,7 +106,7 @@ const setDisplay = (id)=>{
       console.log(error)
   }
 
-  let containerClass = isScrolled?  "fixed top-[4rem] z-50 w-[30%] left-[35%] bg-background shadow-xl border-b": "absolute left-[35%] right-0 z-50 w-[30%] top-[4rem] mt-0 bg-background shadow-xl border-b"
+  let containerClass = isScrolled?  "fixed top-[4rem] z-50 w-[90%] left-[5%] bg-background shadow-xl border-b xl:w-[30%] xl:left-[35%]": "absolute left-[5%] right-0 z-50 w-[90%] top-[4rem] mt-0 bg-background shadow-xl border-b xl:w-[30%] xl:left-[35%]"
   
 if (search.trim() === "") {
         return null;

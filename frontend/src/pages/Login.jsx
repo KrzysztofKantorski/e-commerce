@@ -8,7 +8,7 @@ import AnimatedBackground from '@/components/AnimatedBackground';
 import axios from "axios"
 import "../styles/Login.css";
 import Cookies from "universal-cookie";
-
+import TextGlitchAnimation from '@/components/TextGlitchAnimation';
 const cookies = new Cookies();
 
 function Login(e) {
@@ -19,7 +19,7 @@ function Login(e) {
    const [errors, setErrors] = useState({});
    const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
-
+const [action, setAction] = useState("")
   
   const loginAuth = async (e)=>{
       e.preventDefault();
@@ -57,7 +57,7 @@ function Login(e) {
       
      
       if (err.response) {
-        // Serwer odpowiedział z kodem błędu
+      
         switch (err.response.status) {
           case 400:
             setError("Nieprawidłowe hasło lub brak danych");
@@ -77,10 +77,10 @@ function Login(e) {
         }
         setMessage(err.response.data?.message || "Błąd logowania");
       } else if (err.request) {
-        // Brak odpowiedzi z serwera
+        
         setError("Brak połączenia z serwerem");
       } else {
-        // Inny błąd
+       
         setError("Wystąpił błąd podczas logowania");
       }
    }
@@ -100,12 +100,12 @@ function Login(e) {
     <>
    
     <AnimatedBackground gradientStyle={"to_bottom_left"}/>
-
+    <TextGlitchAnimation text={"Zaloguj się"}></TextGlitchAnimation>
 
    <div className="w-[100%] min[100vh] flex column items-center justify-center"> 
     
       <div className="flex flex-col items-center justify-start py-[5rem]">
-     <HyperText duration={1000} className="relative text-center text-primary-xlg z-[1000]">Zaloguj się</HyperText>
+     
 <NeonGradientCard className="items-center justify-center text-center min-h-[20rem] max-w-sm z-[10] mt-[2rem]">
        <Form
        validationErrors={errors}

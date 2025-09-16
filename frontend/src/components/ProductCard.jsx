@@ -12,6 +12,7 @@ import SideBar from "./SideBar"
 import { useCategory } from '../Context/CategoyContext';
 import Cookies from "universal-cookie"
 import {Pagination} from "@heroui/react";
+
 const cookies = new Cookies();
 function ProductCard() {
  const [currentPage, setCurrentPage] = useState(1);
@@ -37,7 +38,7 @@ const [cart, setCart] = useState([]);
         const token = cookies.get("TOKEN");
         if (!token) {
         alert("Musisz być zalogowany, aby dodawać do ulubionych");
-        navigate("/Login");
+        
         return;
       }
         console.log(token)
@@ -80,14 +81,14 @@ const [cart, setCart] = useState([]);
 
 
 
-const addToFavorites = (id)=>{
+ const  addToFavorites = (id)=>{
 
     const addToFavorites = async()=>{
       try{
         const token = cookies.get("TOKEN");
         if (!token) {
         alert("Musisz być zalogowany, aby dodawać do ulubionych");
-        navigate("/Login");
+        
         return;
       }
         console.log(token)
@@ -106,7 +107,7 @@ const addToFavorites = (id)=>{
       }
       catch(error){
         console.log(error.message)
-         // Obsługa różnych błędów
+        
       if (error.response?.status === 400) {
         alert("Produkt został już dodany do ulubionych");
         navigate("/");
@@ -186,10 +187,13 @@ useEffect(() => {
   return (
     <>
    
-    <div className="flex align-start justify-center gap-[1.5rem] z-[10]">
+    <div className=" w-[90%] flex  items-start flex-col justify-start gap-[1.5rem] ml-[5%] z-[10] sm:w-[80%] sm:ml-[10%] lg:flex-row lg:ml-[5%]">
   
     {loading ? (
-      <LoadingData title={loading}></LoadingData>
+      <div className="h-[50vh] w-full flex items-center justify-center ml-[10%]">
+         <LoadingData title={loading}></LoadingData>
+        </div>
+     
     ) : error ? (
       <div className="text-center flex flex-col px-8 py-8 border-b">
         <h2 className="text-lg text-default-500 mb-4">Nie znaleziono żadnego produktu</h2>
@@ -199,15 +203,17 @@ useEffect(() => {
       <>
       
    <SideBar></SideBar>
-   <div className="relative w-[80%] flex items-center justify-center mt-[-3rem]">
+   <div className="relative  flex items-start  justify-center lg:justify-start">
 
 
+<div className=" w-full flex items-start mt-[3rem] justify-center lg:h-[130vh] xl:h-[120vh] 2xl:h-[100vh]">
 
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 w-[100%] mr-[10%]  gap-[1rem]  h-[35rem] items-start relative">
+
+ <div className="w-[100%] gap-4 grid grid-cols-2 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 justify-items-center">
      
       {products.map((product, index) => (
         
-        <Card key={index} isPressable shadow="sm" className="px-2 min-h-[18rem] z-[10] self-start" >
+        <Card key={index} isPressable shadow="sm" className="px-2 min-h-[20rem] z-[10] self-start w-full max-w-[20rem] " >
           <CardBody className="overflow-visible p-0">
             <Image
               className="w-full object-cover h-[140px]"
@@ -236,11 +242,29 @@ useEffect(() => {
            
       </Card>
       ))}
-       
+       <Pagination  initialPage={currentPage} showControls  total={pages} className="
+     
+    
+    absolute 
+  
+    z-[10] 
+    w-[300px] 
+    left-[2rem] 
+    bottom-[-5rem] 
+    sm:bottom-[-5rem]
+    sm:left-[10rem]
+    md:left-[10rem]
+    lg:left-[-18rem] 
+    lg:bottom-[30rem]
+    xl:left-[-18rem] 
+    xl:bottom-[25rem]
+  2xl:left-[20rem] 
+   2xl:bottom-[15rem]
+  " onChange={handlePageChange}/>
     </div>
    
+</div>
 
-<Pagination  initialPage={currentPage} showControls  total={pages} className="w-[500px] absolute bottom-[0] z-[10]" onChange={handlePageChange}/>;
 
 
 

@@ -89,7 +89,7 @@ useEffect(()=>{
         ) 
     }
 return (
-<div>
+<div className="min-h-[50vh]">
       {reviews.length == 0 ? (
         <>
        <TextGlitchAnimation text={"Brak opinii"}></TextGlitchAnimation>
@@ -122,8 +122,8 @@ return (
             Dodaj opinię
     </Button>
     </div>
-    
-    {reviews.map((item, index)=>(
+    <div className="h-[100vh]">
+        {reviews.map((item, index)=>(
             <>
     <Card className="z-[10] mt-[1rem] relative py-[.5rem] px-[.5rem] flex flex-col align-center justify-space-between">
       <CardBody>
@@ -135,6 +135,8 @@ return (
     </Card>
     </>
     ))}
+    </div>
+    
     
         <div className="flex w-full justify-center">
         <Pagination  
