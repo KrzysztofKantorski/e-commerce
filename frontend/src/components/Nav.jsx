@@ -83,22 +83,22 @@ function Nav() {
       <NavbarContent justify="start">
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className="block sm:block md:block  lg:hidden"/>
         <NavbarContent className="hidden lg:flex z-[1000]">
-          
           <NavbarItem>
-            <Link color="foreground" href="#">
+            <Link color="foreground" href="/">
+              Strona główna
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <Link color="foreground" href="/Newest">
               Nowości
             </Link>
           </NavbarItem>
-          <NavbarItem isActive>
-            <Link aria-current="page" color="primary" href="#">
-              Customers
-            </Link>
-          </NavbarItem>
           <NavbarItem>
-            <Link color="foreground" href="#">
-              Integrations
+            <Link color="foreground" href="/Discounts">
+             Promocje
             </Link>
           </NavbarItem>
+          
         </NavbarContent>
          <NavbarMenu className="flex flex-col lg:hidden ">
         
@@ -108,11 +108,11 @@ function Nav() {
             </Link>
 
             <Link>
-            Nowości
+            O nas
             </Link>
 
             <Link>
-            Nowości
+            FAQ
             </Link>
           </NavbarMenuItem>
       

@@ -13,6 +13,9 @@ import Order from "./pages/Order"
 import Customize from "./pages/Customize"
 import OrderSuccess from "./pages/OrderSuccess"
 import ShowOrders from "./pages/ShowOrders"
+import Discounts from './pages/Discounts'
+import Newest from './pages/Newest'
+import Category from './pages/Category'
 import {HeroUIProvider} from '@heroui/react'
 import { BrowserRouter, Routes, Route } from "react-router";
 import { CategoryProvider } from './Context/CategoyContext'
@@ -37,8 +40,10 @@ export default function App() {
         <Route path="/Customize" element={<Customize />}></Route>
         <Route path="/OrderSuccess" element={<OrderSuccess />}></Route>
         <Route path="/ShowOrders" element={<ShowOrders />}></Route>
+        <Route path="/Discounts" element={<Discounts />}></Route>
+        <Route path="/Newest" element={<Newest />}></Route>
+        <Route path="/Category" element={<Category />}></Route>
 
-        ShowOrders
       </Routes>
       </CategoryProvider>
       </UserDataProvider>

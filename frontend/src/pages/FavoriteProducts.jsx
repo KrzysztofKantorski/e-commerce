@@ -12,6 +12,7 @@ import { useCategory } from "../Context/CategoyContext";
 import {Card, CardBody, CardFooter, Image} from "@heroui/react";
 import { HyperText } from "@/components/magicui/hyper-text";
 import AnimatedBackground from '@/components/AnimatedBackground';
+import TextGlitchAnimation from '@/components/TextGlitchAnimation';
 
 const cookies = new Cookies();
 
@@ -114,17 +115,15 @@ if (error) {
     <>
     <AnimatedBackground gradientStyle={"to_bottom_right"}/>
     <div className="flex items-center justify-center min-h-[100vh] flex-col">
- <HyperText duration={1000} className="relative text-primary text-center text-[6rem] z-[1000]">Polubione produkty</HyperText>
-    <div className="flex  gap-5 justify-center items-center flex-wrap">
+<TextGlitchAnimation text="Polubione produkty"></TextGlitchAnimation>
+    <div className="flex gap-5 justify-center items-center flex-wrap w-[70%]">
         
     {favorites.length > 0 ? (
     favorites.map((favProduct, index) => (
         <>
-         <Card key={index} isPressable shadow="sm"  className="px-2 z-[10] w-[15rem] h-[18rem]"> 
+         <Card key={index} isPressable shadow="sm"  className="px-2 z-[10] w-[15rem] min-h-[20rem]"> 
           <CardBody className="overflow-visible p-0" onClick={()=>setDisplay(favProduct._id)}>
             <Image
-            
-            
               alt={favProduct.name}
               className="w-full object-cover h-[140px]"
               radius="lg"
@@ -132,10 +131,10 @@ if (error) {
                src={`http://localhost:3000${favProduct.images}`}
               width="100%"
             /> 
-          <p className="text-default-500 text-xl ml-[.5rem] mb-[.5rem] mt-[.5rem]" onClick={()=>setDisplay(favProduct._id)} >{favProduct.name}</p>
+          <p className="text-default-500 text-md ml-[.5rem] mb-[.5rem] mt-[.5rem]" onClick={()=>setDisplay(favProduct._id)} >{favProduct.name}</p>
       
           </CardBody>
-                <p className="text-xl text-left text-primary ml-[.5rem]" onClick={()=>setDisplay(favProduct._id)} >{favProduct.price} zł</p>
+                <p className="text-sm text-left text-primary ml-[.5rem]" onClick={()=>setDisplay(favProduct._id)} >{favProduct.price} zł</p>
           <CardFooter className="text-small justify-start" >
             <Tooltip content="Usuń produkt">
                 <FaTrashAlt onClick={()=>{removeFromFavorites(favProduct._id)}}className="text-lg"></FaTrashAlt>

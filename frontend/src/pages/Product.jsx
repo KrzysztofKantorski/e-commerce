@@ -12,19 +12,15 @@ import DisplayComments from "../components/DisplayComments";
 import TextGlitchAnimation from '@/components/TextGlitchAnimation';
 import AnimatedBackground from '@/components/AnimatedBackground';
 import Recommendations from '@/components/Recommendations';
-import { useCategory } from '../Context/CategoyContext';
 import Cookies from "universal-cookie"
 import { useFavorites } from '@/hooks/useFavorites';
 import { useCart } from '@/hooks/useCart';
-
+import Nav from "../components/Nav"
 const cookies = new Cookies();
 function Product() {
-    const {newProduct, setNewProduct} = useCategory();
     const [loading, setLoading] = useState(true);
     const [product, setProduct] = useState(null)
     const [error, setError] = useState(null);
-    const {addToCart, setAddToCart} = useCategory();
-    const [cart, setCart] = useState([]);
     const navigate = useNavigate();
     const {addToFavorites} = useFavorites();
     const {handleAddToCart} = useCart();
@@ -34,14 +30,15 @@ function Product() {
     const result = await addToFavorites(productId);
       if (result.success) {
     alert("Produkd został dodany do ulubionych"); 
-  } else {
+    } 
+    else {
     alert("Wystąpił błąd podczas dodawania do ulubionych"); 
-  }
-  };
+    }
+    };
 
-  const handleCart = async (productId) => {
-      await handleAddToCart(productId);
-  };
+    const handleCart = async (productId) => {
+        await handleAddToCart(productId);
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -50,11 +47,8 @@ function Product() {
                 const response = await axios.get(`http://localhost:3000/products/${id}`);
                 console.log("Full response:", response);
                 console.log("Response data:", response.data);
-                
-                
                 const productData = response.data.product || response.data || null;
                 setProduct(productData);
-                
                 setError(null);
             } catch (err) {
                 setError(err.message);
@@ -113,18 +107,9 @@ function Product() {
     return (
         <>
     <AnimatedBackground gradientStyle={"to_bottom_right"}/>
+    <Nav></Nav>
         <div className="container mx-auto p-3 max-w-6xl z-[1]" >
-            
-            <Button 
-            color="default" 
-            variant="light" 
-            onPress={() => navigate("/")}
-            className="z-100"
-            >
-                <FaArrowLeft className="mr-2" /> Back to Products
-            </Button>
-
-             <div className="grid grid-cols-1  md:grid-cols-2  gap-1 items-start  mt-[.5rem] ">
+        <div className="grid grid-cols-1  md:grid-cols-2  gap-1 items-start  mt-[.5rem] ">
             
              <Image
             src={`http://localhost:3000${product.images}`}

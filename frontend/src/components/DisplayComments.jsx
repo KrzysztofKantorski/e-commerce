@@ -118,7 +118,7 @@ return (
             Dodaj opinię
     </Button>
     </div>
-    <div className="h-[100vh]">
+    <div className="min-h-[50vh]">
         {reviews.map((item, index)=>(
             <>
     <Card className="z-[10] mt-[1rem] relative py-[.5rem] px-[.5rem] flex flex-col align-center justify-space-between">

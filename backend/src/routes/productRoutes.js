@@ -97,7 +97,74 @@ catch(error){
     }
 })
 
+//add discount to product
+router.put("/discount/:productId", async(req,res)=>{
+  try{
+    
+    const {productId} = req.params;
+    const {discount} = req.body;
+    console.log(productId)
+    const productToFind = await Product.findById(productId);
+    if(!productToFind){
+      return res.status(404).send({
+        message: "Product not found"
+      })
+    }
+    productToFind.discount = discount;
+   await productToFind.save();
+   return res.status(200).send({
+    message: "success",
+    product: productToFind
+  })
+  }
+  catch(error){
+    return res.status(500).send({
+      message: "An error occured",
+      error: error.message
+    })
+  }
+})
 
+
+//display products with discount
+router.get("/discount", async(req, res)=>{
+  try{
+  const productsWithDiscount = await Product.find({discount: {$gt: 1}});
+  if(!productsWithDiscount){
+    return res.status(404).send({
+      message: "There is no products with discount"
+    })
+  }
+  return res.status(200).send({
+    message: "success",
+    products: productsWithDiscount
+  })
+  }
+  catch(error){
+    return res.status(500).send({
+      message: "An error occured",
+      error: error.message
+    })
+  }
+  
+})
+
+
+//display the newest products (by date)
+router.get("/newest", async(req,res)=>{
+  try{
+    const newestProducts = await Product.find().sort({updatedAt: -1}).limit(5);
+    return res.status(200).send({
+      message: "Success",
+      products: newestProducts
+    })
+  }catch(error){
+    return res.status(500).send({
+      message: "An error occured",
+      error: error.message
+    })
+  }
+})
 //display searched products (from text input)
 router.get("/search", async(req, res)=>{
   try{

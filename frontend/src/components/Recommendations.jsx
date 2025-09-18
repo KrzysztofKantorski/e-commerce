@@ -8,6 +8,8 @@ import {useState, useEffect} from "react"
 import {useNavigate} from "react-router"
 import { FaCartPlus } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
+import { useFavorites } from '@/hooks/useFavorites';
+import { useCart } from '@/hooks/useCart';
 function Recommendations({category, id}) {
   const ProductToSkip = id;
   const productCategory = category;
@@ -16,7 +18,8 @@ function Recommendations({category, id}) {
   const [error, setError] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState();
-
+  const {addToFavorites} = useFavorites();
+  const {handleAddToCart} = useCart();
   const fetchProducts = async (page = 1) => {
       try {
       let url = "http://localhost:3000/products";
@@ -58,6 +61,19 @@ function Recommendations({category, id}) {
       setCurrentPage(clickedPage);
       fetchProducts(clickedPage)
   }
+
+  const handleAddToFavorites = async (productId) => {
+  const result = await addToFavorites(productId);
+  if (result.success) {
+    alert(result.message); 
+  } else {
+    alert(result.message); 
+  }
+};
+
+const handleCart = async (productId) => {
+    await handleAddToCart(productId);
+};
   if(error){
     <Error></Error>
   }
@@ -68,7 +84,7 @@ function Recommendations({category, id}) {
     <div>
    <div className="relative flex flex-wrap items-center justify-center w-[100%] mr-[10%]  gap-[1rem] relative ">
      
-      {products.map((product, index) => (
+    {products.map((product, index) => (
         
  <Card key={index} isPressable shadow="sm" className="px-2 min-h-[18rem] z-[10] self-start w-[13rem]" >
           <CardBody className="overflow-visible p-0">
@@ -93,25 +109,16 @@ function Recommendations({category, id}) {
            </div>
             
             <Tooltip content="Dodaj do ulubionych" showArrow={true}>
-                <FaHeart className="size-[2rem] mr-[.5rem]  radius-100 bg-[rgba(0,0,0,.1)] px-[.5rem] py-[.5rem] rounded-[100%] text-primary" onClick={()=>{addToFavorites(product._id)}}/>
+                <FaHeart className="size-[2rem] mr-[.5rem]  radius-100 bg-[rgba(0,0,0,.1)] px-[.5rem] py-[.5rem] rounded-[100%] text-primary" onClick={()=>{handleAddToFavorites(product._id)}}/>
             </Tooltip>
         </CardFooter>
            
       </Card>
-        
-       
-      ))}
-     
-       
-     
-       
+    ))}
     </div>
      <div className="flex w-full justify-center mt-[1rem]">
           <Pagination  initialPage={currentPage} showControls  total={pages} className="  relative text-center z-[10]" onChange={handlePageChange}/>
       </div>
-      
-
-
 </div>
 
   )

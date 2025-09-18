@@ -140,9 +140,16 @@ const finalizeOrder = async ()=>{
                      className="rounded-lg shadow-lg w-[3rem] object-cover h-[3rem]"
                      /> 
                    </TableCell>
-                   <TableCell>{item.product.price}
-                     
+                   {item.product.discount>0?(
+                    <TableCell>
+                    {item.product.discount}
                    </TableCell>
+                   ):(
+                    <TableCell>
+                    {item.product.price}
+                   </TableCell>
+                   )}
+                   
                    <TableCell>
                     <span>{item.quantity}</span>
                    </TableCell>

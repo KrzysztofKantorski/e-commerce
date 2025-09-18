@@ -20,7 +20,7 @@ exports.uploads = (file, folder)=>{
                 reject(error);
             } else {
                 resolve({
-                    url: result.secure_url, // lepiej użyć secure_url
+                    url: result.secure_url, 
                     id: result.public_id
                 });
             }

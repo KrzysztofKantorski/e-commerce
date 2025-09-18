@@ -124,7 +124,12 @@ function CartProducts() {
   }, [quantity, updateCart])
 
   const totalPrice = data.reduce((total, item) => {
-  return total + (item.product.price * item.quantity);
+    if(item.product.discount >0){
+      return total + (item.product.discount * item.quantity);
+    }
+    else{
+      return total + (item.product.price * item.quantity);
+    }
 }, 0);
   if(loading){
     return (
@@ -166,9 +171,18 @@ function CartProducts() {
               className="rounded-lg shadow-lg w-[3rem] object-cover h-[3rem]"
               /> 
             </TableCell>
-            <TableCell>{item.product.price}
-              
+            {item.product.discount>0 ? (
+            <TableCell>
+              {item.product.discount} zł
             </TableCell>
+            ):(
+            <TableCell>
+              {item.product.price} zł
+            </TableCell>
+            )}
+
+            
+         
             <TableCell>
               <input type="number" min={1} defaultValue={item.quantity}  onChange={(e) => updateQuantity(parseInt(e.target.value), item.product._id.toString())}></input>
             </TableCell>

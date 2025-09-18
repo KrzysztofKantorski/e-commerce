@@ -100,9 +100,16 @@ if(error){
                        {cartProduct.product.name}
                    </span>               
                </div>
-                   <span className="text-primary font-semibold ml-2 flex text-center w-[20%]">
+               {cartProduct.product.discount>0 ?(
+                 <span className="text-primary font-semibold ml-2 flex text-center w-[20%]">
+                       {cartProduct.product.discount} zł
+                   </span>
+               ):(
+                <span className="text-primary font-semibold ml-2 flex text-center w-[20%]">
                        {cartProduct.product.price} zł
                    </span>
+               )}
+                   
                      <span className="truncate">
                        {cartProduct.quantity}
                    </span>    

@@ -38,7 +38,7 @@ const handleAddToCart = async(product)=>{
       }
       catch(error){
         console.log("err", error.message)
-         // Obsługa różnych błędów
+      
       if (error.response?.status === 400) {
         alert("Produkt został już dodany do ulubionych");
         navigate("/");

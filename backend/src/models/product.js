@@ -8,14 +8,15 @@ const reviewSchema = new mongoose.Schema({
 });
 
 const productSchema = new mongoose.Schema({
-    name:        { type: String, required: true },  // nazwa produktu
-    description: { type: String },                  // opis
-    price:       { type: Number, required: true },  // cena
-    stock:       { type: Number, default: 0 },      // ile sztuk na stanie
-    category:    { type: String },                  // np. elektronika, moda
-    images:      [{ type: String }],                // linki do zdjęć produktu
-    reviews: [reviewSchema], // ⬅ tu dodajemy komentarze
-    averageRating: { type: Number, default: 1 }
+    name:        { type: String, required: true },  
+    description: { type: String },                  
+    price:       { type: Number, required: true },  
+    stock:       { type: Number, default: 0 },      
+    category:    { type: String },                  
+    images:      [{ type: String }],                
+    reviews: [reviewSchema], 
+    averageRating: { type: Number, default: 1 },
+    discount: {type: Number, default: 0}
 
 }, { timestamps: true });
 

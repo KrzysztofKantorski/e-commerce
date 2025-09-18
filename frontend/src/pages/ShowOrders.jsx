@@ -82,9 +82,16 @@ return (
                       className="rounded-lg shadow-lg w-[3rem] object-cover h-[3rem]"
                       /> 
                   </TableCell>
+                  {product.discount>0?(
                   <TableCell>
-                    {product.price}      
+                    {product.discount} zł      
                   </TableCell>
+                  ):(
+                  <TableCell>
+                    {product.price} zł      
+                  </TableCell>
+                  )}
+                  
                   <TableCell>
                     <span>{quantity}</span>
                   </TableCell>

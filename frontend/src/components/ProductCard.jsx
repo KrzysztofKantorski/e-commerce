@@ -131,7 +131,17 @@ return (
                   />
                   <p className="text-default-500 text-md mt-[.5rem] ml-[.5rem] mb-[.5rem]" onClick={()=>setDisplay(product._id)}>{product.name}</p>
                 </CardBody>
-                <p className="text-sm text-primary text-left ml-[.5rem] ">{product.price} zł</p>
+                 {product.discount > 0 ? (
+                  <>
+                   <p className="text-sm text-primary text-left ml-[.5rem] "><span className="line-through mr-[.5rem]">{product.price} zł</span> {product.discount} zł</p>
+                   
+                  </>
+                 ):(
+                   <p className="text-sm text-primary text-left ml-[.5rem] ">{product.price} zł</p>
+                 )}
+               
+               
+               
                 <CardFooter className="text-small justify-start">
                 
                 <div>

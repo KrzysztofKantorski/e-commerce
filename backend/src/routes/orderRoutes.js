@@ -27,7 +27,13 @@ router.post("/", auth, async(req, res)=>{
     let total = 0;
 
     const orderItems = userCart.map((item)=>{
-        total+= item.product.price * item.quantity;
+        if(item.product.discount>0){
+            total+= item.product.discount * item.quantity
+        }
+        else{
+            total+= item.product.price * item.quantity;
+        }
+      
 
         //get all products from cart
         return{
