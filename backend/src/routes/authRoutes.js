@@ -155,7 +155,7 @@ catch(error){
 router.post("/login", (req, res)=>{
 
     //check if username exists in database
-    User.findOne({username: req.body.username})
+   User.findOne({username: req.body.username})
 
     .then((user)=>{
 
@@ -173,7 +173,8 @@ router.post("/login", (req, res)=>{
                 {
                     userId: user._id,
                     userName: user.username,
-                    userEmail: user.email
+                    userEmail: user.email,
+                    userRole: user.role
                 },
                 process.env.JWT,
                 {expiresIn: 60 * 60 }
@@ -182,6 +183,7 @@ router.post("/login", (req, res)=>{
             res.status(201).send({
             message: "Login successfull",
             username: user.username,
+            role:  user.role,
             token
             })
 

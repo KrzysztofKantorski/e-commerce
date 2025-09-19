@@ -12,11 +12,9 @@ import {
   Avatar,
 } from "@heroui/react";
 import {
-  NavbarBrand,
   NavbarMenuToggle,
   NavbarMenu,
   NavbarMenuItem,
-  Button,
 } from "@heroui/react";
 import {useState, useEffect} from "react"
 import DisplaySearch from './DisplaySearch';
@@ -38,7 +36,7 @@ function Nav() {
   const fetchUserProfile = async () => {
     try {
        const token = cookies.get("TOKEN");
-    
+     
       
       const response = await axios.get(
         'http://localhost:3000/auth/uploadImage',
@@ -75,7 +73,7 @@ function Nav() {
     navigate("/ShowOrders")
   }
   const [searchText, setSearchText] = useState("");
-  console.log(searchText)
+  console.log(data.role)
   return (
     <>
     <Navbar isBordered className="flex justify-around w-[100%] z-[1000]" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
@@ -186,6 +184,12 @@ function Nav() {
               <DropdownItem key="email" >{data.email}</DropdownItem>
               <DropdownItem key="customize" onClick = {handleCustomize}>personalizacja</DropdownItem>
               <DropdownItem key="orders" onClick = {handleOrders}>zamówienia</DropdownItem>
+             
+              {data.role === "admin" ? (
+                <DropdownItem onClick={()=>{navigate("/DashbordHome")}}>Panel administratora</DropdownItem>
+              ) : (
+                 ""
+              )}
               <DropdownItem key="logout" onClick = {handleLogout}>Wyloguj się</DropdownItem>
             </>
           )}

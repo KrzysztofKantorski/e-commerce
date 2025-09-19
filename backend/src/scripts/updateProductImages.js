@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const envPath = path.join(__dirname, '../../.env'); // Dostosuj ścieżkę
+const envPath = path.join(__dirname, '../../.env'); 
 if (fs.existsSync(envPath)) {
   require('dotenv').config({ path: envPath });
   console.log('Environment variables loaded from:', envPath);
@@ -47,7 +47,7 @@ async function updateProductImages(){
     try{
     await connect();
     console.log("connected to database")
-    const imagesDir = path.join(__dirname, '../productImages');
+    const imagesDir = path.join(__dirname, '../../productImages');
     const imageFiles = fs.readdirSync(imagesDir)
       .filter(file => /\.(jpg|jpeg|png|gif|webp)$/i.test(file));
     
@@ -100,18 +100,18 @@ async function updateProductImages(){
   updateProductImages()
     .then(results => {
       console.log('=== WYNIKI AKTUALIZACJI ===');
-      console.log(`✅ Zaktualizowano: ${results.summary.updated}`);
+      console.log(` Zaktualizowano: ${results.summary.updated}`);
       console.log(` lista zaktualizowanych produktów:`)
       for(let i = 0; i<results.updated.length; i++){
         console.log(`${results.updated[i].productName}`)
       }
-      console.log(`❌ Nie znaleziono: ${results.summary.notFound}`);
+      console.log(` Nie znaleziono: ${results.summary.notFound}`);
       console.log(` lista niezaktualizowanych produktów:`)
        for(let i = 0; i<results.notFound.length; i++){
         console.log(`${results.notFound[i].productName}`)
       }
-      console.log(`📊 Łącznie produktów: ${results.summary.totalProducts}`);
-      console.log(`🖼️  Łącznie zdjęć: ${results.summary.totalImages}`);
+      console.log(` Łącznie produktów: ${results.summary.totalProducts}`);
+      console.log(`  Łącznie zdjęć: ${results.summary.totalImages}`);
     })
     .catch(error => {
       console.error('Błąd:', error);
@@ -121,7 +121,7 @@ async function updateProductImages(){
 
 
 
-// Eksport funkcji do użycia w innych modułach
+
 module.exports = {
   updateProductImages,
   normalizeName,

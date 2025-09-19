@@ -16,6 +16,11 @@ import ShowOrders from "./pages/ShowOrders"
 import Discounts from './pages/Discounts'
 import Newest from './pages/Newest'
 import Category from './pages/Category'
+import DashbordHome from './dashbord/DashbordHome'
+import Products from './dashbord/Products'
+import AddProduct from './dashbord/AddProduct'
+import UpdateProduct from './dashbord/UpdateProduct'
+import DeleteProduct from './dashbord/DeleteProduct'
 import {HeroUIProvider} from '@heroui/react'
 import { BrowserRouter, Routes, Route } from "react-router";
 import { CategoryProvider } from './Context/CategoyContext'
@@ -43,6 +48,12 @@ export default function App() {
         <Route path="/Discounts" element={<Discounts />}></Route>
         <Route path="/Newest" element={<Newest />}></Route>
         <Route path="/Category" element={<Category />}></Route>
+        <Route path="/DashbordHome" element={<DashbordHome />}></Route>
+        <Route path="/Products" element={<Products />}></Route>
+        <Route path="/AddProduct" element={<AddProduct />}></Route>
+        <Route path="/UpdateProduct" element={<UpdateProduct />}></Route>
+        <Route path="/DeleteProduct" element={<DeleteProduct />}></Route>
+
 
       </Routes>
       </CategoryProvider>

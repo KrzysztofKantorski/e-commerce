@@ -71,11 +71,11 @@ if(found){
     return res.json({message: `Product with name: ${name} alerdy exists`})
 }
     const product = new Product({
-    name: name,  // nazwa produktu
-    description: description,                  // opis
-    price: price,  // cena
-    stock: stock,      // ile sztuk na stanie
-    category: category,                  // np. elektronika, moda
+    name: name,  
+    description: description,                 
+    price: price,  
+    stock: stock,     
+    category: category,                  
     images: images, 
     });
 
@@ -165,6 +165,9 @@ router.get("/newest", async(req,res)=>{
     })
   }
 })
+
+
+
 //display searched products (from text input)
 router.get("/search", async(req, res)=>{
   try{
@@ -293,11 +296,11 @@ router.get("/category/:category", async(req, res)=>{
 })
 
 //update specific product
-router.put("/:id", async(req, res)=>{
+router.put("/:productId", async(req, res)=>{
     try{
-    const productId = req.params.id;
+    const {productId} = req.params;
     
-     if (!productId || !mongoose.Types.ObjectId.isValid(productId)) {
+     if (!productId) {
       return res.status(400).json({
         message: "Invalid product id"
       });
@@ -308,22 +311,21 @@ router.put("/:id", async(req, res)=>{
         message: "Product with provided id was not found"
       });
      }
-     const {name, description, price, stock, category, images} = req.body;
+     const {name, description, price, category} = req.body;
 
-  await Product.updateOne( 
+const productToUpdate =   await Product.updateOne( 
   {_id:  productId}, 
 
   {
     name: name,  // nazwa produktu
     description: description,                  // opis
-    price: price,  // cena
-    stock: stock,      // ile sztuk na stanie
-    category: category,                  // np. elektronika, moda
-    images: images, 
+    price: price,  // cena  
+    category: category,                  // np. elektronika, moda 
     updatedAt: new Date() 
   })
   res.status(201).send({
-    message: "Product updated successfully"
+    message: "Product updated successfully",
+    product: productToUpdate
   })
 }
 

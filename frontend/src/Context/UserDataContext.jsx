@@ -14,6 +14,7 @@ export const UserDataProvider = ({ children }) => {
         setData({
           username: decoded.userName,
           email: decoded.userEmail,
+          role: decoded.userRole
         });
       } catch (err) {
         console.error("Incorrect token", err);
