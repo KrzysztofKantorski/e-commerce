@@ -72,6 +72,15 @@ return (
             {item.products.map((productItem, index)=>{
               const product = productItem.product; 
               const quantity = productItem.quantity; 
+              if (!product) {
+                return (
+                  <TableRow key={index}>
+                    <TableCell colSpan="4" className="text-center text-default-500">
+                      Produkt został usunięty
+                    </TableCell>
+                  </TableRow>
+                );
+              }
               return(
                 <TableRow key={index} className={index % 2 === 0 ? "bg-grey-50" : "bg-accent"}>
                   <TableCell>{product.name}</TableCell>

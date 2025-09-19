@@ -123,8 +123,18 @@ router.put("/", auth, async(req, res)=>{
 router.get("/", auth, async(req, res)=>{
     try{
     const user = req.user.id;
+    const { startDate, endDate } = req.query;
+    let dateFilter = {};
+    if(startDate && endDate){
+        dateFilter.createdAt = {
+            $gte: new Date(startDate),
+            $lte: new Date(endDate)
+        }
+    }
     const userWithOrders = await User.findById(user).populate({
         path: "orders",
+        match: dateFilter,
+        options: {sort: {createdAt: -1}},
         populate:{
             path: "products.product",
             model: "Product"
@@ -138,6 +148,7 @@ router.get("/", auth, async(req, res)=>{
         res.status(200).json({
             message: "Orders displayed successfully",
             orders: userWithOrders.orders
+           
         })
     } 
     catch(error){
