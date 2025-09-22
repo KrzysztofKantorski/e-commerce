@@ -130,7 +130,12 @@ function Product() {
                 </div>
              
                <div className="flex flex-col justify-space-between align-end  gap-[1rem] z-[1]">
-                <p className="text-[2.5rem]">{product.price} zł</p>
+                {product.discount >0 ?(
+                    <p className="text-[2.5rem]">{product.discount} zł</p>
+                ):(
+                    <p className="text-[2.5rem]">{product.price} zł</p>
+                )}
+                
                 <div>
                     <Button size="md" color="primary" className="mr-[1rem]" onPress={()=>handleCart(product._id)}>Dodaj do koszyka</Button>
                   <Button size="md" color="primary" onPress={()=>handleAddToFavorites(product._id)}>Dodaj do ulubionych</Button> 

@@ -21,6 +21,7 @@ import Products from './dashbord/Products'
 import AddProduct from './dashbord/AddProduct'
 import UpdateProduct from './dashbord/UpdateProduct'
 import DeleteProduct from './dashbord/DeleteProduct'
+import UsersChart from './dashbord/UsersChart'
 import {HeroUIProvider} from '@heroui/react'
 import { BrowserRouter, Routes, Route } from "react-router";
 import { CategoryProvider } from './Context/CategoyContext'
@@ -53,8 +54,7 @@ export default function App() {
         <Route path="/AddProduct" element={<AddProduct />}></Route>
         <Route path="/UpdateProduct" element={<UpdateProduct />}></Route>
         <Route path="/DeleteProduct" element={<DeleteProduct />}></Route>
-
-
+        <Route path="/UsersChart" element={<UsersChart />}></Route>
       </Routes>
       </CategoryProvider>
       </UserDataProvider>

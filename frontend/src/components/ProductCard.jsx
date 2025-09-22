@@ -169,8 +169,8 @@ return (
             lg:bottom-[30rem]
             xl:left-[-18rem] 
             xl:bottom-[25rem]
-            2xl:left-[20rem] 
-            2xl:bottom-[15rem]
+            2xl:left-[24rem] 
+            2xl:bottom-[13rem]
           " onChange={handlePageChange}/>
 
       </div>

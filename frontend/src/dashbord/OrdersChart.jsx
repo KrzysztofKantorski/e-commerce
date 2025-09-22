@@ -12,12 +12,14 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+
 import { Bar, Line, Pie } from 'react-chartjs-2';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 import LoadingData from '@/components/handleData/LoadingData';
 import Error from '@/components/handleData/Error';
-
+import {useNavigate} from "react-router"
+import {Button} from "@heroui/react";
 // Register ChartJS components
 ChartJS.register(
   CategoryScale,
@@ -40,7 +42,13 @@ function OrdersChart() {
     startDate: '',
     endDate: ''
   });
-
+  const navigate = useNavigate();
+   const token = cookies.get("TOKEN");
+    if (!token) {
+      alert("Twoja sesja zakończyła się - zaloguj się ponownie");
+      navigate("/Login");
+      return;
+    }
    const fetchStats = async()=>{
     setLoading(true)
     setError(null)
@@ -69,9 +77,7 @@ function OrdersChart() {
     })
 
     if(response.status == 200){
-      console.log("git");
       setStats(response.data.stats);
-      console.log(response.data.stats);
     }
 
     } 
@@ -95,10 +101,10 @@ function OrdersChart() {
         label: 'Orders by Status',
         data: stats ? Object.values(stats.statusDistribution) : [],
         backgroundColor: [
-          'rgba(255, 99, 132, 0.6)',
-          'rgba(54, 162, 235, 0.6)',
-          'rgba(255, 206, 86, 0.6)',
-          'rgba(75, 192, 192, 0.6)',
+          'oklch(47.655% 0.23035 318.675)',
+          'rgba(0,0,0,.1)',
+          'rgba(238, 0, 198, 1)',
+          'rgba(0, 10, 150, 1)',
         ],
       }
     ]
@@ -110,8 +116,8 @@ function OrdersChart() {
       {
         label: 'Revenue by Month',
         data: stats ? Object.values(stats.revenueByMonth) : [],
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'oklch(47.655% 0.23035 318.675)',
+        backgroundColor: 'oklch(50.655% 0.23035 318.675)',
       },
     ],
   };
@@ -123,7 +129,7 @@ function OrdersChart() {
       {
         label: 'Units Sold',
         data: stats ? Object.values(stats.productSales).slice(0, 10) : [],
-        backgroundColor: 'rgba(153, 102, 255, 0.6)',
+        backgroundColor: 'oklch(47.655% 0.23035 318.675)',
       },
     ],
   };
@@ -146,19 +152,42 @@ return <LoadingData></LoadingData>;
 if(error){
   return <Error></Error>
 }
-  if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="flex gap-5">
-      <form onSubmit={handleSubmit} className="mb-6 p-4 bg-gray-100 rounded">
-         <div>
+    
+
+   
+    <div className="w-[80%] ml-[10%] gap-5 flex flex-col mt-[2rem] lg:flex-row ">
+      <div className="ml-[5rem] w-[20rem]">
+
+       {stats && (
+        <div className="mb-6 flex flex-col gap-3">
+          <div className="bg-white p-4 rounded shadow">
+            <h3 className="font-semibold text-primary">łącznie zamówień</h3>
+            <p className="text-2xl">{stats.totalOrders}</p>
+          </div>
+          <div className="bg-white p-4 rounded shadow">
+            <h3 className="font-semibold text-primary">Łączny przychód</h3>
+            <p className="text-2xl">${stats.totalRevenue.toFixed(2)}</p>
+          </div>
+          <div className="bg-white p-4 rounded shadow">
+            <h3 className="font-semibold text-primary">Okres czasu</h3>
+            <p className="text-sm">
+              {dateRange.startDate || 'Cały czas'} - {dateRange.endDate || 'Teraz'}
+            </p>
+          </div>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="mb-6 p-2 bg-gray-100 rounded max-h-[15rem]">
+         <div className="mb-[1rem] ">
          <label className="block mb-2">Początek</label>
             <input
               type="date"
               name="startDate"
               value={dateRange.startDate}
               onChange={handleDateChange}
-              className="p-2 border rounded"
+              className="p-2 border rounded "
             />
       </div>
 
@@ -172,64 +201,46 @@ if(error){
               className="p-2 border rounded"
             />
       </div>
-      <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Zastosuj
-        </button>
+    <Button type="submit" color="primary" className="mt-[1rem] mb-[1rem]">Zastosuj</Button>
       </form>
 
 
-      {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white p-4 rounded shadow">
-            <h3 className="font-semibold">łącznie zamówień</h3>
-            <p className="text-2xl">{stats.totalOrders}</p>
-          </div>
-          <div className="bg-white p-4 rounded shadow">
-            <h3 className="font-semibold">Łączny przychód</h3>
-            <p className="text-2xl">${stats.totalRevenue.toFixed(2)}</p>
-          </div>
-          <div className="bg-white p-4 rounded shadow">
-            <h3 className="font-semibold">Okres czasu</h3>
-            <p className="text-sm">
-              {dateRange.startDate || 'All time'} - {dateRange.endDate || 'Present'}
-            </p>
-          </div>
-        </div>
-      )}
-
+     
+      </div>
 
       {stats && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 ">
           
           <div className="bg-white p-4 rounded shadow">
-            <h3 className="font-semibold mb-4">Zamówienia na podstawie statusu</h3>
-            <div className="h-64">
+            <h3 className="font-semibold mb-4 text-primary">Zamówienia na podstawie statusu</h3>
+            <div className="h-64 flex justify-center">
               <Pie data={statusChartData} options={{ responsive: true }} />
             </div>
           </div>
 
           
           <div className="bg-white p-4 rounded shadow">
-            <h3 className="font-semibold mb-4">Przychód na przedziale miesiąca</h3>
-            <div className="h-64">
+            <h3 className="font-semibold mb-4 text-primary">Przychód na przedziale miesiąca</h3>
+            <div className="h-64 flex justify-center">
               <Line data={revenueChartData} options={{ responsive: true }} />
             </div>
           </div>
 
           
-          <div className="bg-white p-4 rounded shadow lg:col-span-2">
-            <h3 className="font-semibold mb-4">Top Selling Products</h3>
-            <div className="h-64">
+          <div className="bg-white p-4 rounded shadow lg:col-span-2 flex items-center flex-col">
+            <h3 className="font-semibold mb-4 text-primary">Najczęściej sprzedane produkty</h3>
+            <div className="flex items-center justify-center h-64 w-[70rem] xl:h-100" >
               <Bar data={productsChartData} options={{ responsive: true }} />
             </div>
           </div>
         </div>
+       
+        
       )}
 
     </div>
+     
   )
 }
 
