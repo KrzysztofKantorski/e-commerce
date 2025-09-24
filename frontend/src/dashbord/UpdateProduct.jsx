@@ -10,6 +10,7 @@ import {FaRegFaceSadCry} from "react-icons/fa6"
 import axios from "axios"
 import {useRef} from "react"
 import UpdateForm from "./UpdateForm" 
+import Hamburger from './Hamburger';
 function UpdateProduct() {
     const navigate = useNavigate();
     const [searchText, setSearchText] = useState("");
@@ -113,6 +114,7 @@ if(error){
     
     <div className="flex w-full min-h-[100vh] gap-5">
         <SideBar></SideBar>
+        <Hamburger></Hamburger>
         <div className="flex flex-col items-center justify-start w-full gap-5 mt-[2rem]">
             <h1 className="text-lg">Zarządzanie produktami</h1>
             <ButtonGroup>
@@ -146,7 +148,7 @@ if(error){
                                     <FaRegFaceSadCry className="text-5xl text-primary mx-auto" />
                                 </div>
                             ) : (
-                                <div className="w-full mt-4">
+                                <div className="w-[800px] mt-4 lg:w-full">
                                     <Card searchedProducts={searchedProducts} 
                                         onProductSelect={updateSelectedProduct}/>
                                 </div>

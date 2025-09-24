@@ -4,7 +4,7 @@ import Error from '@/components/handleData/Error'
 import axios from "axios"
 import {useState} from "react"
 import {useNavigate} from "react-router"
-import AnimatedBackground from '@/components/AnimatedBackground'
+
 import TextGlitchAnimation from '@/components/TextGlitchAnimation'
 import {Form, Input, Button} from "@heroui/react";
 import Cookies from "universal-cookie"
@@ -132,7 +132,7 @@ function Order() {
   }
   return (
     <div>
-      <AnimatedBackground></AnimatedBackground>
+      
       <div className="w-full flex flex-col items-center justify-center min-h-[90vh]">
       <TextGlitchAnimation text={"Dane do zamówienia"}></TextGlitchAnimation>
       

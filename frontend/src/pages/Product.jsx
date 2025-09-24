@@ -10,7 +10,6 @@ import CountStars  from "../components/CountStars";
 import DisplayProductDescription from "../components/DisplayProductDescription";
 import DisplayComments from "../components/DisplayComments";
 import TextGlitchAnimation from '@/components/TextGlitchAnimation';
-import AnimatedBackground from '@/components/AnimatedBackground';
 import Recommendations from '@/components/Recommendations';
 import Cookies from "universal-cookie"
 import { useFavorites } from '@/hooks/useFavorites';
@@ -106,7 +105,7 @@ function Product() {
 
     return (
         <>
-    <AnimatedBackground gradientStyle={"to_bottom_right"}/>
+    
     <Nav></Nav>
         <div className="container mx-auto p-3 max-w-6xl z-[1]" >
         <div className="grid grid-cols-1  md:grid-cols-2  gap-1 items-start  mt-[.5rem] ">

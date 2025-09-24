@@ -101,16 +101,15 @@ function Nav() {
          <NavbarMenu className="flex flex-col lg:hidden ">
         
           <NavbarMenuItem className="flex flex-col items-center gap-2 text-lg relative z-[10]">
-            <Link>
+            <Link href="/">
+            Strona główna
+            </Link>
+            <Link  href="/Newest">
             Nowości
             </Link>
 
-            <Link>
-            O nas
-            </Link>
-
-            <Link>
-            FAQ
+            <Link  href="/Discounts">
+            Promocje
             </Link>
           </NavbarMenuItem>
       

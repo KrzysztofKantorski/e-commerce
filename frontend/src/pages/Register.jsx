@@ -1,94 +1,170 @@
 import React from 'react'
-import {Form, Input, Button} from "@heroui/react";
-import { NeonGradientCard } from "@/components/magicui/neon-gradient-card";
-import { HyperText } from "@/components/magicui/hyper-text";
-import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
-import {useState, useEffect} from "react"
-import { cn } from "@/lib/utils";
+import LoadingData from '@/components/handleData/LoadingData'
+import Error from '@/components/handleData/Error'
 import axios from "axios"
-import "../styles/Login.css";
-import Cookies from "universal-cookie";
-import AnimatedBackground from '@/components/AnimatedBackground';
-import TextGlitchAnimation from '@/components/TextGlitchAnimation';
+import {useState} from "react"
+import {useNavigate} from "react-router"
+import { NeonGradientCard } from "@/components/magicui/neon-gradient-card";
+import TextGlitchAnimation from '@/components/TextGlitchAnimation'
+import {Form, Input, Button} from "@heroui/react";
+import Cookies from "universal-cookie"
+
 const cookies = new Cookies();
-function Login() {
+
+function Register() {
+  const [errors, setErrors] = useState({})
+  const [error, setError] = useState(null)
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const clear = ()=>{
-    setMessage("");
-    setPassword("");
-    setUsername("");
-    setEmail("")
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState()
+  const navigate = useNavigate();
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setErrors({});
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+    const newErrors = {};
+    let testEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let checkLowerLetters = /[a-z]/;
+    let checkUpperLetters = /[A-Z]/;
+    let checkNumber = /[0-9]/;
+    //validation
+   
+     if (data.username.length < 3) {
+      newErrors.username = "Imię i nazwisko musi mieć co najmniej 4 znaki";
+    } 
+    if(!testEmail.test(data.email)){
+      newErrors.email = "Podaj poprawny adres email";
+    }
+    const checkPassword = []
+    if(!checkLowerLetters.test(data.password)){
+      checkPassword.push("Hasło musi zawierać co najmniej 1 małą literę");
+    }
+    if(!checkUpperLetters.test(data.password)){
+      checkPassword.push("Hasło musi zawierać co najmniej 1 dużą literę");
+    }
+    if(!checkNumber.test(data.password)){
+      checkPassword.push("Hasło musi zawierać co najmniej 1 cyfę");
+    }
+     if(data.password.length<8){
+      checkPassword.push("Hasło musi zawierać co najmniej 8 znaków");
+    }
+    if(checkPassword.length !=0){
+       newErrors.password = `Hasło musi zawierać: ${checkPassword.join(', ')}`;
+    }
+   if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return; 
   }
 
- const registerAuth = async ()=>{}
+    try{
+     const response = await axios.post("http://localhost:3000/auth/register", {
+        username: username,
+        email: email,
+        password: password
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if(response.length === ""){
+        setMessage("Wprowadzono niepoprawne dane");
+      }
+     alert("rejestracja zakończona pomyślnie");
+     navigate("/")
+       setMessage(response.data.message);
+      
+    }
+    catch(err){
+    console.error("Login error:", err);     
+      if (err.response) {
+        setMessage(err.response.data?.message || "Błąd logowania");
+        if(err.response.status == 400){
+          alert("Użytkowni z tą nazwą już istnieje")
+          window.location.reload();
+        }
+        if(err.response.status == 500){
+          alert("Użytkowni z tą nazwą już istnieje")
+          window.location.reload();
+        }
+      } else if (err.request) {
+        
+        setError("Brak połączenia z serwerem");
+      } else {
+       
+        setError("Wystąpił błąd podczas logowania");
+      }
+   }
+
+  }
+  const reset = ()=>{
+    setUsername("");
+    setEmail("");
+    setPassword("");
+  
+  }
+  if(error){
+    return(<Error></Error>)
+  }
   return (
-    <>
-    <AnimatedBackground gradientStyle={"to_bottom_left"}/>
-   <div className="w-[100%] min[100vh] flex column items-center justify-center"> 
-      <div className="flex flex-col items-center justify-center py-[5rem]">
-     <HyperText duration={1000} className="relative text-primary text-center text-[6rem] z-[1000]">Zarejestruj się</HyperText>
+    <div>
+      
+      <div className="w-full flex flex-col items-center justify-center min-h-[90vh]">
+      <TextGlitchAnimation text={"Rejestracja"}></TextGlitchAnimation>
       <NeonGradientCard className="items-center justify-center text-center min-h-[20rem] max-w-sm z-[10] mt-[2rem]">
-       <Form
-      className="w-[30rem] max-w-xs flex flex-col gap-5 min-h-[20rem] text-left  justify-center"
-      onReset={() => clear()}
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}
-    >
+        <Form className="w-[30rem] max-w-xs flex flex-col gap-5 min-h-[20rem] text-left  justify-center" onSubmit={onSubmit}  validationErrors={errors}>
       <Input
         isRequired
-        errorMessage="niepoprawna nazwa użytkownika"
+        className="border-2 border-primary rounded-lg"
         label="Nazwa użytkownika"
         labelPlacement="outside"
+        name="username"
         placeholder="Nazwa użytkownika"
-        type="text"
-        className="border-2 border-primary rounded-lg"
         value={username}
-        onChange = {(e)=> setUsername(e.target.value)}
+        onChange={(e)=> setUsername(e.target.value)}
       />
-     
-       <Input
+         <Input
         isRequired
-        errorMessage="niepoprawny adres email"
+        
         label="Email"
         labelPlacement="outside"
-        placeholder="email"
-        type="email"
         className="border-2 border-primary rounded-lg"
-        value={email}
-        onChange = {(e)=> setEmail(e.target.value)}
+        name="email"
+        placeholder="Email"
+         value={email}
+        onChange={(e)=> setEmail(e.target.value)}
       />
-
-
-       <Input
+         <Input
         isRequired
-        errorMessage="niepoprawne hasło"
+        
         label="Hasło"
         labelPlacement="outside"
-        placeholder="hasło"
-        type="password"
+        name="password"
+        placeholder="Hasło"
         className="border-2 border-primary rounded-lg"
         value={password}
-        onChange = {(e)=> setPassword(e.target.value)}
+        onChange={(e)=> setPassword(e.target.value)}
       />
-  
+    
       <div className="flex items-center justify-center gap-2 text-center w-full mt-[1rem]">
-        <Button color="primary" type="submit" onPress={()=>{registerAuth()}}className="px-[1rem] px-[1rem]">
-          Zaloguj
-        </Button>
-        <Button type="reset" variant="flat" className="px-[1rem] px-[1rem]" onPress={()=>{clear()}}>
+          <Button type="submit" variant="bordered" >
+        Zatwierdź
+      </Button>
+       <Button type="reset" variant="bordered" onPress={()=>reset()}>
           Wyczyść
-        </Button>
+      </Button>
       </div>
+    
+      
     </Form>
-    </NeonGradientCard>
+</NeonGradientCard>
+      </div>
+      
     </div>
-   </div>
-     </>
+   
   )
 }
 
-export default Login
+export default Register

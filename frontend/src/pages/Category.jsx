@@ -1,6 +1,6 @@
 import React from 'react'
 import TextGlitchAnimation from '@/components/TextGlitchAnimation'
-import AnimatedBackground from '@/components/AnimatedBackground'
+
 import {useState, useEffect} from "react"
 import Error from "../components/handleData/Error"
 import LoadingData from "../components/handleData/LoadingData"
@@ -71,7 +71,7 @@ function Category() {
   return (
     <>
     <Nav></Nav>
-        <AnimatedBackground></AnimatedBackground>
+        
        
         <div className="min-h-[90vh] w-[80%] ml-[10%] flex items-center justify-center flex-col mt-[2rem]">
              <TextGlitchAnimation text="Elektronika"></TextGlitchAnimation>

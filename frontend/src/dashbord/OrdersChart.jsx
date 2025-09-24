@@ -32,7 +32,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
+import Hamburger from './Hamburger';
 const cookies = new Cookies();
 function OrdersChart() {
   const [stats, setStats] = useState(null);
@@ -157,12 +157,13 @@ if(error){
     
 
    
-    <div className="w-[80%] ml-[10%] gap-5 flex flex-col mt-[2rem] lg:flex-row ">
-      <div className="ml-[5rem] w-[20rem]">
+    <div className="w-[100%] ml-[0] gap-5 flex flex-col mt-[5rem] lg:flex-row lg:mt-[0] lg:w-[80%] lg:ml-[10%]">
+       <Hamburger></Hamburger>
+      <div className="ml-[1rem] w-[20rem] lg:ml-[5rem]">
 
        {stats && (
         <div className="mb-6 flex flex-col gap-3">
-          <div className="bg-white p-4 rounded shadow">
+          <div className="bg-white p-4 rounded shadow ">
             <h3 className="font-semibold text-primary">łącznie zamówień</h3>
             <p className="text-2xl">{stats.totalOrders}</p>
           </div>
@@ -228,9 +229,9 @@ if(error){
           </div>
 
           
-          <div className="bg-white p-4 rounded shadow lg:col-span-2 flex items-center flex-col">
+          <div className="bg-white p-4 rounded shadow lg:col-span-2 lg:flex lg:items-center lg:flex-col">
             <h3 className="font-semibold mb-4 text-primary">Najczęściej sprzedane produkty</h3>
-            <div className="flex items-center justify-center h-64 w-[70rem] xl:h-100" >
+            <div className="flex justify-center h-64  xl:h-90 xl:w-[70rem] xl:items-center " >
               <Bar data={productsChartData} options={{ responsive: true }} />
             </div>
           </div>

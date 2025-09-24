@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router';
 import { useCategory } from "../Context/CategoyContext";
 import {Card, CardBody, CardFooter, Image} from "@heroui/react";
 import { HyperText } from "@/components/magicui/hyper-text";
-import AnimatedBackground from '@/components/AnimatedBackground';
 import TextGlitchAnimation from '@/components/TextGlitchAnimation';
 
 const cookies = new Cookies();
@@ -113,11 +112,11 @@ if (error) {
   return (
   
     <>
-    <AnimatedBackground gradientStyle={"to_bottom_right"}/>
+   
     <div className="flex items-center justify-center min-h-[100vh] flex-col">
 <TextGlitchAnimation text="Polubione produkty"></TextGlitchAnimation>
     <div className="flex gap-5 justify-center items-center flex-wrap w-[70%]">
-        
+      
     {favorites.length > 0 ? (
     favorites.map((favProduct, index) => (
         <>

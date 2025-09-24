@@ -2,7 +2,6 @@ import React from 'react'
 import axios from "axios"
 import {useState, useEffect} from "react"
 import {useNavigate} from "react-router"
-import AnimatedBackground from '@/components/AnimatedBackground'
 import TextGlitchAnimation from '@/components/TextGlitchAnimation'
 import {Button} from "@heroui/react";
 import {Image} from "@heroui/react";
@@ -98,7 +97,7 @@ const finalizeOrder = async ()=>{
   
   return (
 <div>
-    <AnimatedBackground></AnimatedBackground>
+    
     <TextGlitchAnimation text={"Finalizacja"}></TextGlitchAnimation>
   <RadioGroup className="w-full z-[10] relative">
       <div className="flex flex-wrap items-center justify-center gap-5">

@@ -6,7 +6,7 @@ import Cookies from "universal-cookie"
 import {useNavigate} from "react-router"
 import {Button} from "@heroui/button";
 import TextGlitchAnimation from '@/components/TextGlitchAnimation';
-import AnimatedBackground from '@/components/AnimatedBackground';
+
 const cookies = new Cookies();
 
 
@@ -55,7 +55,7 @@ function Customize() {
 	};
   return (
     <>
-    <AnimatedBackground></AnimatedBackground>
+ 
         <div className="w-full flex items-center justify-center flex-col h-[100vh] z-[10] relative">
             <TextGlitchAnimation text="Wybierz zdjęcie profilowe"></TextGlitchAnimation>
             <StyledWrapper>

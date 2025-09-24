@@ -2,7 +2,6 @@ import React from 'react'
 import axios from "axios"
 import {useState, useEffect} from "react"
 import {useNavigate} from "react-router"
-import AnimatedBackground from '@/components/AnimatedBackground'
 import TextGlitchAnimation from '@/components/TextGlitchAnimation'
 import {Image} from "@heroui/react";
 import {Accordion, AccordionItem} from "@heroui/react";
@@ -54,9 +53,9 @@ displayTotal();
 
 return (
 <>
-<AnimatedBackground></AnimatedBackground>
+
 <TextGlitchAnimation text={"Zamówienia"}></TextGlitchAnimation>
-<div className="w-[50%] min-h-[10rem] ml-[25%] z-[10] relative text-right">
+<div className="w-[90%] min-h-[10rem] ml-[5%] z-[10] relative text-right lg:w-[50%] lg:ml-[25%]">
     {order.map((item, index)=>(
     <>
     <Accordion>

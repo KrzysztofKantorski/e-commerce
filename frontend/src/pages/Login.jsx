@@ -4,7 +4,6 @@ import { NeonGradientCard } from "@/components/magicui/neon-gradient-card";
 import { HyperText } from "@/components/magicui/hyper-text";
 
 import {useState, useEffect} from "react"
-import AnimatedBackground from '@/components/AnimatedBackground';
 import axios from "axios"
 import "../styles/Login.css";
 import Cookies from "universal-cookie";
@@ -99,7 +98,7 @@ const [action, setAction] = useState("")
   return (
     <>
    
-    <AnimatedBackground gradientStyle={"to_bottom_left"}/>
+   
     <TextGlitchAnimation text={"Zaloguj się"}></TextGlitchAnimation>
 
    <div className="w-[100%] min[100vh] flex column items-center justify-center"> 

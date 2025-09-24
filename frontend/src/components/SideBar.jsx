@@ -105,7 +105,7 @@ if (error) {
       <div className="w-full flex items-center justify-center gap-2">
         <Dropdown>
           <DropdownTrigger>
-            <Button variant="bordered" className="mt-[1.5rem]  py-[1.5rem]">Open Menu</Button>
+            <Button variant="bordered" className="mt-[1.5rem]  py-[1.5rem]">Kategorie</Button>
           </DropdownTrigger>
           <DropdownMenu aria-label="Action event example" onAction={(siup) => setCategory(siup)}>
           {product.map((prod, index)=>(

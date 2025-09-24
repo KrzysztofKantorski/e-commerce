@@ -7,6 +7,7 @@ import {Form, Input} from "@heroui/react";
 import Cookies from "universal-cookie"
 import {Textarea} from "@heroui/input";
 import axios from "axios"
+import Hamburger from './Hamburger';
 const cookies = new Cookies();
 function AddProduct() {
     const navigate = useNavigate();
@@ -89,6 +90,7 @@ const reset = ()=>{
   return (
     <div className="flex w-full min-h-[100vh] gap-5">
         <SideBar></SideBar>
+        <Hamburger></Hamburger>
         <div className="flex flex-col items-center justify-start w-full gap-5 mt-[2rem]">
             <h1 className="text-lg">Zarządzanie produktami</h1>
             <ButtonGroup>

@@ -108,7 +108,7 @@ if (error) {
             <FaHeart className="relative size-[2.5rem] mr-[.5rem] ml-[-0.5rem] radius-100 bg-[rgba(0,0,0,.1)] px-[.5rem] py-[.5rem] rounded-[100%] text-default-600"/>
         </DropdownTrigger>
 
-    <DropdownMenu aria-label="Favorite products" className="relative min-w-[400px]" >
+    <DropdownMenu aria-label="Favorite products" className="relative min-w-[300px] lg:min-w-[400px]" >
         <DropdownItem key="see_more" className="text-right w-[10%] ml-[90%] text-center">
             <Tooltip content="Zobacz wszystkie">
                 <FaArrowRight className="text-center" onClick={()=>{showFavorites()}}/>
@@ -121,7 +121,7 @@ if (error) {
        <DropdownItem 
         key={favProduct._id} 
         textValue={favProduct.name}
-        className="mt-[.5rem]"
+        className="mt-[.5rem] "
         >
         <div className="flex justify-space-between ">
 
