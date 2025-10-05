@@ -67,13 +67,14 @@ and add products to favorites.
     After adding images run in /backend/srcipts: node updateProductImages
 
   4. **API Reference**
-    ### Authorization ###
+
+    **Authorization**
    
     POST - /api/auth/register -  Register user 
     POST  /api/auth/login  Login 
     POST /api/auth/verify  User verification 
 
-    #### Products ###
+    **Products**
    
     GET     /api/products                       Display all products 
     GET     /api/products/:id                   Display product 
@@ -92,4 +93,3 @@ and add products to favorites.
 
 
     
-
