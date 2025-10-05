@@ -1,6 +1,6 @@
 # Ecommerce project:
 
-Online shop enables users to browse products. 
+-Online shop enables users to browse products. 
 Once user logges in, he can add products to cart, create orders, browse orders history 
 and add products to favorites. 
 
@@ -8,13 +8,24 @@ and add products to favorites.
 ## Functionalities:
 
 **User** 
-  Register and login, browse products, add to cart, add order, order history, add reviews.
+  - Register and login, 
+  - browse products, 
+  - add to cart, 
+  - add order, 
+  - order history, 
+  - add reviews.
 
 **Shopping** 
-  Add product to cart, add to order, add to favorites, search by text.
+  - Add product to cart, 
+  - add to order, 
+  - add to favorites, 
+  - search by text.
 
 **Admin panel** 
-  Add new products, delete products, best selling products (graph), users with most orders, etc.
+  - Add new products, 
+  - delete products, 
+  - best selling products (graph), 
+  - users with most orders, etc.
 
 
 ## Technologies:
@@ -44,12 +55,12 @@ and add products to favorites.
 ## Installation
 
   1. **Clone repository**
-    git clone https://github.com/KrzysztofKantorski/e-commerce.git
-    cd e-commerce
+    - git clone https://github.com/KrzysztofKantorski/e-commerce.git
+    - cd e-commerce
 
   2. **Install backend dependencies**
-    cd backend
-    npm install
+    - cd backend
+    - npm install
   
   3. **Configure environment**
     Add .env file in /backend directory and add your variables:
@@ -70,9 +81,9 @@ and add products to favorites.
 
     **Authorization**
    
-    POST - /api/auth/register -  Register user 
-    POST  /api/auth/login  Login 
-    POST /api/auth/verify  User verification 
+    POST  /api/auth/register   Register user 
+    POST  /api/auth/login      Login 
+    POST  /api/auth/verify     User verification 
 
     **Products**
    
