@@ -8,24 +8,24 @@ and add products to favorites.
 ## Functionalities:
 
 **User** 
-  - Register and login, 
-  - browse products, 
-  - add to cart, 
-  - add order, 
-  - order history, 
-  - add reviews.
+  - Register and login 
+  - browse products
+  - add to cart 
+  - add order 
+  - order history 
+  - add reviews
 
 **Shopping** 
-  - Add product to cart, 
-  - add to order, 
-  - add to favorites, 
-  - search by text.
+  - Add product to cart 
+  - add to order 
+  - add to favorites 
+  - search by text
 
 **Admin panel** 
-  - Add new products, 
-  - delete products, 
-  - best selling products (graph), 
-  - users with most orders, etc.
+  - Add new products 
+  - delete products 
+  - best selling products (graph) 
+  - users with most orders, etc
 
 
 ## Technologies:
