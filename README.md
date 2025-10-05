@@ -73,7 +73,7 @@ and add products to favorites.
     POST  /api/auth/login  Login 
     POST /api/auth/verify  User verification 
 
-    #### Products
+    #### Products ###
    
     GET     /api/products                       Display all products 
     GET     /api/products/:id                   Display product 
