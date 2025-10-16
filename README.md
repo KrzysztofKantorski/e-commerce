@@ -54,28 +54,28 @@ and add products to favorites.
 
 ## Installation
 
-  **Clone repository**
-  - git clone https://github.com/KrzysztofKantorski/e-commerce.git
-  - cd e-commerce
+  1. Clone repository**
+  git clone https://github.com/KrzysztofKantorski/e-commerce.git
+  cd e-commerce
 
-  **Install backend dependencies**
-  - cd backend
-  - npm install
+  2. Install backend dependencies
+  cd backend
+  npm install
   
-  **Configure environment**
-  - Add .env file in /backend directory and add your variables:
+  3. Configure environment
+  Add .env file in /backend directory and add your variables:
   - URI = your mongodb connection string
   - JWT = your jwt secret
   - CLOUD_NAME = copy from cloudinary
   - CLOUDINARY_API_KEY = copy from cloudinary
   - CLOUDINARY_API_SECRET = copy from cloudinary
 
-  - Create uploads directory in /backend for temporary files (when user adds his photo), 
-    they will be saved in cloudinary
+  4. Create uploads directory in /backend for temporary files (when user adds his photo), 
+  they will be saved in cloudinary
 
-  - Create productImages directory in /backend for storing product images. 
-    Add images and save them as: product_name.extension
-    After adding images run in /backend/srcipts: node updateProductImages
+  5. Create productImages directory in /backend for storing product images. 
+  Add images and save them as: product_name.extension
+  After adding images run in /backend/srcipts: node updateProductImages
 
 ## API Reference
 
