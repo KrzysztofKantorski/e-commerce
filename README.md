@@ -77,28 +77,30 @@ and add products to favorites.
     Add images and save them as: product_name.extension
     After adding images run in /backend/srcipts: node updateProductImages
 
-  4. **API Reference**
+   4. ## API Reference
 
-    **Authorization**
+    - **Authorization**
    
-    POST  /api/auth/register   Register user 
-    POST  /api/auth/login      Login 
-    POST  /api/auth/verify     User verification 
+      POST  /api/auth/register   Register user 
+      POST  /api/auth/login      Login 
+      POST  /api/auth/verify     User verification 
 
-    **Products**
+    - **Products**
    
-    GET     /api/products                       Display all products 
-    GET     /api/products/:id                   Display product 
-    POST    /api/products                       **(Admin)** Add new product 
-    PUT     /api/products/:productId            **(Admin)** Update product 
-    DELETE  /api/products/:productId            **(Admin)** Delete product 
-    PUT     /api/products/discount/:productId   **(Admin)** Add discount to product 
-    POST    /api/products/:id/reviews           Add review to product 
-    GET     /api/products/:id/reviews           Display reviews releted to product 
-    GET     /api/products/discount              Display products with discount 
-    GET     /api/products/search                Display searched products (from user input) 
-    GET     /api/products/category/count        Count items by cateory (for filters) 
-    GET     /api/products/category/:category    Display products by category 
+      GET     /api/products                       Display all products 
+      GET     /api/products/:id                   Display product 
+      POST    /api/products                       **(Admin)** Add new product 
+      PUT     /api/products/:productId            **(Admin)** Update product 
+      DELETE  /api/products/:productId            **(Admin)** Delete product 
+      PUT     /api/products/discount/:productId   **(Admin)** Add discount to product 
+      POST    /api/products/:id/reviews           Add review to product 
+      GET     /api/products/:id/reviews           Display reviews releted to product 
+      GET     /api/products/discount              Display products with discount 
+      GET     /api/products/search                Display searched products (from user input) 
+      GET     /api/products/category/count        Count items by cateory (for filters) 
+      GET     /api/products/category/:category    Display products by category 
+
+
 
 
 
