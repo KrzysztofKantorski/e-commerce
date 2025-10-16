@@ -56,9 +56,9 @@ and add products to favorites.
 
   1. Clone repository
      
-  git clone https://github.com/KrzysztofKantorski/e-commerce.git
-  
-  cd e-commerce
+    git clone https://github.com/KrzysztofKantorski/e-commerce.git
+    
+    cd e-commerce
 
   3. Install backend dependencies
   cd backend
