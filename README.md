@@ -82,49 +82,49 @@ and add products to favorites.
 
 **Authorization**
    
-  POST  /api/auth/register   Register user 
-  POST  /api/auth/login      Login 
-  POST  /api/auth/verify     User verification 
+    POST  /api/auth/register   Register user 
+    POST  /api/auth/login      Login 
+    POST  /api/auth/verify     User verification 
 
 **Products**
    
-  GET     /api/products                       Display all products 
-  GET     /api/products/:id                   Display product
-  POST    /api/products                       **(Admin)** Add new product 
-  PUT     /api/products/:productId            **(Admin)** Update product 
-  DELETE  /api/products/:productId            **(Admin)** Delete product 
-  PUT     /api/products/discount/:productId   **(Admin)** Add discount to product 
-  POST    /api/products/:id/reviews           Add review to product  
-  GET     /api/products/discount              Display products with discount 
-  GET     /api/products/search                Display searched products (from user input) 
-  GET     /api/products/category/count        Count items by cateory (for filters) 
-  GET     /api/products/category/:category    Display products by category 
-  GET     /api/products/:id/reviews           Display comments related to product 
-  GET     /api/products/newest                Display the newest products 
+    GET     /api/products                       Display all products 
+    GET     /api/products/:id                   Display product
+    POST    /api/products                       **(Admin)** Add new product 
+    PUT     /api/products/:productId            **(Admin)** Update product 
+    DELETE  /api/products/:productId            **(Admin)** Delete product 
+    PUT     /api/products/discount/:productId   **(Admin)** Add discount to product 
+    POST    /api/products/:id/reviews           Add review to product  
+    GET     /api/products/discount              Display products with discount 
+    GET     /api/products/search                Display searched products (from user input) 
+    GET     /api/products/category/count        Count items by cateory (for filters) 
+    GET     /api/products/category/:category    Display products by category 
+    GET     /api/products/:id/reviews           Display comments related to product 
+    GET     /api/products/newest                Display the newest products 
     
 **Cart**
       
-  GET     /api/cart                           Display all products 
-  POST    /api/cart/:productId                Add product to cart
-  PUT     /api/cart/:productId                Change quantity of product
-  DELETE  /api/cart/:productId                Delete product from cart
+    GET     /api/cart                           Display all products 
+    POST    /api/cart/:productId                Add product to cart
+    PUT     /api/cart/:productId                Change quantity of product
+    DELETE  /api/cart/:productId                Delete product from cart
 
 **Favorites**
       
-  DELETE  /api/favorites/remove/:productId    Display all products 
-  POST    /api/favorites/:productId           Add product to favorites
-  GET     /api/favorites                      Display products added to favorites
+    DELETE  /api/favorites/remove/:productId    Display all products 
+    POST    /api/favorites/:productId           Add product to favorites
+    GET     /api/favorites                      Display products added to favorites
 
 **Orders**
       
-  POST    /api/orders/                        Create order
-  GET     /api/orders/:id                     Display order
+    POST    /api/orders/                        Create order
+    GET     /api/orders/:id                     Display order
 
 **Stats**
       
-  GET     /api/stats/                        Orders by status, top products
-  GET     /api/stats/users                   New users, users with most orders
-
+    GET     /api/stats/                        Orders by status, top products
+    GET     /api/stats/users                   New users, users with most orders
+  
 
 
 
