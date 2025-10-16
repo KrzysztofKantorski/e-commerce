@@ -74,8 +74,8 @@ and add products to favorites.
   they will be saved in cloudinary
 
   5. Create productImages directory in /backend for storing product images 
-  Add images and save them as: product_name.extension
-  After adding images run in /backend/srcipts: 
+  - Add images and save them as: product_name.extension
+  - After adding images run in /backend/srcipts: 
   node updateProductImages
 
 ## API Reference
