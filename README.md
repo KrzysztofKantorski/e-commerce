@@ -61,10 +61,12 @@ and add products to favorites.
     cd e-commerce
 
   3. Install backend dependencies
-  cd backend
-  npm install
+     
+    cd backend
   
-  4. Configure environment
+    npm install
+  
+  5. Configure environment
   Add .env file in /backend directory and add your variables:
   - URI = your mongodb connection string
   - JWT = your jwt secret
