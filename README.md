@@ -55,14 +55,16 @@ and add products to favorites.
 ## Installation
 
   1. Clone repository
+     
   git clone https://github.com/KrzysztofKantorski/e-commerce.git
+  
   cd e-commerce
 
-  2. Install backend dependencies
+  3. Install backend dependencies
   cd backend
   npm install
   
-  3. Configure environment
+  4. Configure environment
   Add .env file in /backend directory and add your variables:
   - URI = your mongodb connection string
   - JWT = your jwt secret
