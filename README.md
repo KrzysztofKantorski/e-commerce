@@ -1,6 +1,6 @@
 # Ecommerce project:
 
--Online shop enables users to browse products. 
+Online shop enables users to browse products. 
 Once user logges in, he can add products to cart, create orders, browse orders history 
 and add products to favorites. 
 
