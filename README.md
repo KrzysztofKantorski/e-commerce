@@ -130,8 +130,13 @@ and add products to favorites.
     GET     /api/stats/users                   New users, users with most orders
   
 
-
-
+##Images
+  1. ![Main page](https://github.com/KrzysztofKantorski/e-commerce/blob/main/images/main_page.png)
+  2. ![Browse products](https://github.com/KrzysztofKantorski/e-commerce/blob/main/images/browse_products.png)
+  3. ![Product page](https://github.com/KrzysztofKantorski/e-commerce/blob/main/images/product_details.png)
+  4. ![Product data](https://github.com/KrzysztofKantorski/e-commerce/blob/main/images/product_data.png)
+  5. ![Product stats](https://github.com/KrzysztofKantorski/e-commerce/blob/main/images/dashbord.png)
+  6. ![Users stats](https://github.com/KrzysztofKantorski/e-commerce/blob/main/images/dashbord_users.png)
 
 
 
