@@ -26,7 +26,7 @@ import Cookies from "universal-cookie"
 import axios from "axios"
 const cookies = new Cookies();
 function Nav() {
-  const { data, logout } = useData(); 
+  const { data, logout, isAuthReady } = useData(); 
   const [image, setImage] = useState();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -35,6 +35,7 @@ function Nav() {
     
   const fetchUserProfile = async () => {
     try {
+      if(!isAuthReady) return;
        const token = cookies.get("TOKEN");
      
       
@@ -53,7 +54,7 @@ function Nav() {
   
   useEffect(() => {
     fetchUserProfile();
-  }, []);
+  }, [isAuthReady]);
   }
   const goToLogin = ()=>{
     console.log("siup")

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Product = require("../models/product");
+const User = require("../models/user");
 const mongoose = require("mongoose");
 const auth = require("../validators/login");
 
@@ -61,9 +62,20 @@ router.get("/", async (req, res)=>{
 
 
 //add product
-router.post("/", async(req, res)=>{
+router.post("/", auth, async(req, res)=>{
 try{
-
+const id = req.user.id;
+const user = await User.findById(id);
+if(!user){
+      return res.status(404).send({
+        message: "User not found"
+      })
+}
+if(user.role != "admin"){
+    return res.status(403).json({
+        message: "Access denied. Only admins can add products."
+    })
+}
 const {name, description, price, stock, category, images} = req.body;
    
 const found = await Product.findOne({name: name})

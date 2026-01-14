@@ -180,7 +180,7 @@ router.post("/login", (req, res)=>{
                 {expiresIn: 60 * 60 }
                 );
             
-            res.status(201).send({
+            res.status(200).send({
             message: "Login successfull",
             username: user.username,
             role:  user.role,

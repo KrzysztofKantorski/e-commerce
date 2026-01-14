@@ -6,6 +6,7 @@ const cookies = new Cookies();
 export const UserDataProvider = ({ children }) => {
 //set data here to see user data after refreshing website
   const [data, setData] = useState({}); 
+  const [isAuthReady, setIsAuthReady] = useState(false);
   useEffect(() => {
     const token = cookies.get("TOKEN");
     if (token) {
@@ -20,6 +21,7 @@ export const UserDataProvider = ({ children }) => {
         console.error("Incorrect token", err);
       }
     }
+    setIsAuthReady(true);
   }, []); 
 
    const logout = () => {
@@ -28,7 +30,7 @@ export const UserDataProvider = ({ children }) => {
   };
 
   return (
-    <UserDataContext.Provider value={{ data, setData, logout}}>
+    <UserDataContext.Provider value={{ data, setData, logout, isAuthReady, setIsAuthReady }}>
       {children}
     </UserDataContext.Provider>
   );

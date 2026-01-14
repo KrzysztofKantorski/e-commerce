@@ -1,25 +1,29 @@
 import React from 'react'
 import SideBar from "./SideBar"
 import {Button, ButtonGroup} from "@heroui/react";
-import {useNavigate} from "react-router"
+import { useNavigate } from "react-router";
 import {useState, useEffect} from "react"
 import {Form, Input} from "@heroui/react";
 import Cookies from "universal-cookie"
 import {Textarea} from "@heroui/input";
 import axios from "axios"
 import Hamburger from './Hamburger';
+import {useData} from "../Context/UserDataContext"
+import LoadingData from '@/components/handleData/LoadingData';
+import {useRole} from "../hooks/userRole"
 const cookies = new Cookies();
 function AddProduct() {
-    const navigate = useNavigate();
-    const [productName, setProductName] = useState("");
-    const [description, setDescription] = useState("");
-    const [price, setPrice] = useState("");
-    const [stock, setStock] = useState("");
-    const [category, setCategory] = useState("");
-    const [errors, setErrors] = useState({})
-
-    const onSubmit = async(e)=>{
-    e.preventDefault();
+  const [productName, setProductName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [stock, setStock] = useState("");
+  const [category, setCategory] = useState("");
+  const [errors, setErrors] = useState({})
+  const token = cookies.get("TOKEN");
+  const { isReady } = useRole();
+  const navigate = useNavigate();
+  const onSubmit = async(e)=>{
+  e.preventDefault();
     setErrors({});
     const data = Object.fromEntries(new FormData(e.currentTarget));
     const newErrors = {};
@@ -53,14 +57,7 @@ function AddProduct() {
     setErrors(newErrors);
     return; 
   }
-  try{
-     const token = cookies.get("TOKEN");
-    if (!token) {
-      alert("Twoja sesja zakończyła się - zaloguj się ponownie");
-      navigate("/Login");
-      return;
-    }
-    const url = "http://localhost:3000/products";
+  const url = "http://localhost:3000/products";
     const response = await axios.post(url, {
           name: data.productName, 
           description: data.description,
@@ -74,11 +71,8 @@ function AddProduct() {
         }
       });
     console.log(response.data);
-  }
-  catch(error){
-    console.log(error.message)
-  }
 }
+
 const reset = ()=>{
     setProductName("");
     setStock("");
@@ -86,7 +80,9 @@ const reset = ()=>{
     setCategory("");
     setDescription("");
   }
-
+  if(!isReady){
+    return <LoadingData></LoadingData>
+  }
   return (
     <div className="flex w-full min-h-[100vh] gap-5">
         <SideBar></SideBar>

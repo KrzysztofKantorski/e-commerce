@@ -1,10 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react' // 1. Dodaj import useEffect
 import SideBar from "./SideBar"
-import {Button, ButtonGroup} from "@heroui/react";
-import {useNavigate} from "react-router"
+import { Button, ButtonGroup } from "@heroui/react";
+import { useNavigate } from "react-router" // W nowszych wersjach react-router-dom to jest 'react-router-dom'
 import Hamburger from './Hamburger';
+import Cookies from "universal-cookie"
+
+const cookies = new Cookies();
 function Products() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const token = cookies.get("TOKEN");
+  useEffect(() => {
+    if (!token) {
+      navigate("/Login");
+    }
+  }, [token, navigate]); 
+    
   return (
 
     <div className="flex w-full min-h-[100vh] gap-5">

@@ -92,7 +92,7 @@ function OrdersChart() {
   
   useEffect(()=>{
     fetchStats();
-  },[])
+  },[token, navigate])
 
   const statusChartData = {
     labels: stats ? Object.keys(stats.statusDistribution) : [],

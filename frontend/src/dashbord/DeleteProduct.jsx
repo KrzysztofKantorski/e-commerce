@@ -10,6 +10,8 @@ import {FaRegFaceSadCry} from "react-icons/fa6"
 import axios from "axios"
 import Cookies from "universal-cookie"
 import Hamburger from './Hamburger';
+import {useData} from "../Context/UserDataContext"
+import LoadingData from '@/components/handleData/LoadingData';
 const cookies = new Cookies();
 function UpdateProduct() {
     const navigate = useNavigate();
@@ -21,10 +23,11 @@ function UpdateProduct() {
     const [loading, setLoading] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [showResults, setShowResults] = useState(false)
+    const { data, logout, isAuthReady } = useData(); 
 useEffect(() => {
     
-  setError(null);
-  setNoResults(false);
+setError(null);
+setNoResults(false);
 setShowResults(false);
   let isMounted = true;
   setLoading(true);
@@ -93,6 +96,7 @@ setShowResults(false);
       isMounted = false;
     };
 }, [searchText]);
+
 
 const selectProduct = async (id) => {
         try {
