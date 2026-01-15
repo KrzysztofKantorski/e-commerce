@@ -8,19 +8,20 @@ import Card from "./Card"
 import Error from '@/components/handleData/Error';
 import {FaRegFaceSadCry} from "react-icons/fa6"
 import axios from "axios"
-import {useRef} from "react"
 import UpdateForm from "./UpdateForm" 
 import Hamburger from './Hamburger';
+import LoadingData from '@/components/handleData/LoadingData';
+import {useRole} from "../hooks/userRole"
 function UpdateProduct() {
     const navigate = useNavigate();
     const [searchText, setSearchText] = useState("");
     const [error, setError] = useState(null);
     const [noResults, setNoResults] = useState(false);
     const [searchedProducts, setSearchedProducts] = useState([]);
-    const [change, setChange] = useState("")
     const [loading, setLoading] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [showResults, setShowResults] = useState(false)
+    const { isReady } = useRole();
 useEffect(() => {
     
   setError(null);
@@ -107,6 +108,9 @@ setShowResults(false);
 
 if(error){
     <Error></Error>
+}
+if(loading || !isReady){
+    <LoadingData></LoadingData>
 }
 
 

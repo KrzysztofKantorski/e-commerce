@@ -1,9 +1,7 @@
 import React from 'react'
 import {Form, Input, Button} from "@heroui/react";
 import { NeonGradientCard } from "@/components/magicui/neon-gradient-card";
-import { HyperText } from "@/components/magicui/hyper-text";
-
-import {useState, useEffect} from "react"
+import {useState} from "react"
 import axios from "axios"
 import "../styles/Login.css";
 import Cookies from "universal-cookie";
@@ -17,8 +15,8 @@ function Login(e) {
    const [loading, setLoading] = useState(true);
    const [errors, setErrors] = useState({});
    const [error, setError] = useState(false);
-  const [message, setMessage] = useState("");
-const [action, setAction] = useState("")
+   const [message, setMessage] = useState("");
+   const [action, setAction] = useState("")
   
   const loginAuth = async (e)=>{
       e.preventDefault();

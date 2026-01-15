@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import LoadingData from '@/components/handleData/LoadingData'
 import Error from '@/components/handleData/Error'
 import axios from "axios"
@@ -21,7 +21,15 @@ function Order() {
   const [country, setCountry] = useState("");
   const [number, setNumber] = useState("");
   const navigate = useNavigate();
-
+  const token = cookies.get("TOKEN");
+  useEffect(()=>{
+     if (!token) {
+      alert("Musisz być zalogowany aby złożyć zamówienie");
+      navigate("/");
+      return;
+  }
+  }, [navigate])
+   
   const onSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
@@ -73,19 +81,7 @@ function Order() {
   }
 
   try {
-
-
-    
-    const token = cookies.get("TOKEN");
-    if (!token) {
-      alert("Musisz być zalogowany aby złożyć zamówienie");
-      navigate("/Login");
-      return;
-    }
-    
     const url = `http://localhost:3000/orders`;
-    
-    
     const response = await axios.post(url, 
       {
         shippingAddress: {
@@ -111,11 +107,6 @@ function Order() {
   } catch (error) {
     console.error("Error:", error.response?.data || error.message);
     setError(error);
-    
-    if (error.response?.status === 401) {
-      alert("Sesja wygasła. Zaloguj się ponownie.");
-      navigate("/Login");
-    }
   }
    
   }

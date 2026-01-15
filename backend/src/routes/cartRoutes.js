@@ -151,7 +151,6 @@ router.delete("/:productId", auth, async(req, res)=>{
             message: "User was not found"
         })
     }
-
     //find product in user cart
    const cartItem = userToFind.cart.find(
       (item) => item.product.toString() === productId

@@ -1,14 +1,10 @@
 import React from 'react'
 import {
   Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
   NavbarMenuToggle,
   NavbarMenu,
   NavbarMenuItem,
   Link,
-  Button,
 } from "@heroui/react";
 import {useState} from "react"
 import {useNavigate} from "react-router"
@@ -23,15 +19,12 @@ function Hamburger() {
                 <Link onClick={()=>{navigate("/DashbordHome")}}>
                 Strona główna
                 </Link>
-    
                 <Link onClick={()=>{navigate("/Products")}}>
                 Zarządzaj produktami
                 </Link>
-    
                 <Link>
                 Dodaj promocję
                 </Link>
-
                 <Link onClick={()=>{navigate("/UsersChart")}}>
                 Użytkownicy
                 </Link>

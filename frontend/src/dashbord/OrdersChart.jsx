@@ -18,8 +18,9 @@ import axios from 'axios';
 import Cookies from 'universal-cookie';
 import LoadingData from '@/components/handleData/LoadingData';
 import Error from '@/components/handleData/Error';
-import {useNavigate} from "react-router"
 import {Button} from "@heroui/react";
+import {useNavigate} from "react-router"
+import {useRole} from "../hooks/userRole"
 // Register ChartJS components
 ChartJS.register(
   CategoryScale,
@@ -38,27 +39,18 @@ function OrdersChart() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { isReady } = useRole();
+  const navigate = useNavigate();
   const [dateRange, setDateRange] = useState({
     startDate: '',
     endDate: ''
   });
-  const navigate = useNavigate();
-   const token = cookies.get("TOKEN");
-    if (!token) {
-      alert("Twoja sesja zakończyła się - zaloguj się ponownie");
-      navigate("/Login");
-      return;
-    }
+  const token = cookies.get("TOKEN");
    const fetchStats = async()=>{
     setLoading(true)
     setError(null)
     try{
-       const token = cookies.get("TOKEN");
-    if (!token) {
-      alert("Twoja sesja zakończyła się - zaloguj się ponownie");
-      navigate("/Login");
-      return;
-    }
+    
     const params = {};
     if(dateRange.startDate){
       params.startDate = dateRange.startDate;
@@ -146,7 +138,7 @@ function OrdersChart() {
     e.preventDefault();
     fetchStats();
   };
-if (loading){
+if (loading || !isReady) {
 return <LoadingData></LoadingData>;
 } 
 if(error){

@@ -135,9 +135,8 @@ if (error) {
             siup={prod.count}
             key={prod.cat}
             endContent={<ItemCounter number={prod.count} />}>
-          
             {prod.cat}
-          </ListboxItem>
+            </ListboxItem>
           ))}
           <ListboxItem key="all">
             wszystkie

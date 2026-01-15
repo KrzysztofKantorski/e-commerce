@@ -33,7 +33,7 @@ function OrderSuccess() {
               setOrder([])
             try{
             const token = cookies.get("TOKEN");
-             if (!token) {
+            if (!token) {
             alert("Musisz być zalogowany aby złożyć zamówienie");
             navigate("/Login");
             return;

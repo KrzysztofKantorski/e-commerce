@@ -13,7 +13,7 @@ import {
   Legend,
 } from 'chart.js';
 import SideBar from "./SideBar"
-import { Bar, Line, Pie } from 'react-chartjs-2';
+import { Bar, Pie } from 'react-chartjs-2';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 import LoadingData from '@/components/handleData/LoadingData';
@@ -21,6 +21,8 @@ import Error from '@/components/handleData/Error';
 import {useNavigate} from "react-router"
 import {Button} from "@heroui/react";
 import Hamburger from './Hamburger';
+import {useRole} from "../hooks/userRole"
+
 // Register ChartJS components
 ChartJS.register(
   CategoryScale,
@@ -43,24 +45,13 @@ function UsersChart() {
         startDate: '',
         endDate: ''
       });
-      const navigate = useNavigate();
-       const token = cookies.get("TOKEN");
-        if (!token) {
-          alert("Twoja sesja zakończyła się - zaloguj się ponownie");
-          navigate("/Login");
-          return;
-        }
 
+const { isReady } = useRole();
 const fetchStats = async()=>{
     setLoading(true)
     setError(null)
     try{
-       const token = cookies.get("TOKEN");
-    if (!token) {
-      alert("Twoja sesja zakończyła się - zaloguj się ponownie");
-      navigate("/Login");
-      return;
-    }
+    const token = cookies.get("TOKEN");
     const params = {};
     if(dateRange.startDate){
       params.startDate = dateRange.startDate;
@@ -89,9 +80,6 @@ const fetchStats = async()=>{
    
      if (error.response && error.response.status === 404) {
         alert("Brak danych, wybierz inny zakres");
-    } else if (error.response && error.response.status === 401) {
-        alert("Twoja sesja zakończyła się - zaloguj się ponownie");
-        navigate("/Login");
     } else {
         console.error('Error fetching stats:', error);
         setError("Wystąpił błąd podczas pobierania statystyk");
@@ -158,7 +146,7 @@ const usersByOrdersChartData = {
       },
     ],
   };
-if (loading){
+if (loading || !isReady) {
 return <LoadingData></LoadingData>;
 } 
 if(error){
@@ -166,30 +154,27 @@ if(error){
 }
 
 
-  return (
-    <div className="w-full flex min-h-[100vh] mt-[5rem] xl:mt-[0]">
-        <SideBar></SideBar>
-        <Hamburger></Hamburger>
-        <div className="w-[80%] ml-[10%] gap-5 flex flex-col mt-[2rem] lg:flex-row lg:ml-[15%] lg:w-[100%]">
-          <div>
-             {stats && (
-              <div>
+return (
+<div className="w-full flex min-h-[100vh] mt-[5rem] xl:mt-[0]">
+  <SideBar></SideBar>
+  <Hamburger></Hamburger>
+<div className="w-[80%] ml-[10%] gap-5 flex flex-col mt-[2rem] lg:flex-row lg:ml-[15%] lg:w-[100%]">
+  <div>
+    {stats && (
+      <div>
         <div className="bg-white p-4 rounded shadow h-[7rem] mb-[1rem] flex justify-center flex-col">
             <h3 className="font-semibold text-primary">Łączna ilość użytkowników</h3> 
             <p className="text-2xl">{stats.totalUsers}</p>
 
           </div>
-                 <div className="bg-white p-4 rounded shadow mb-[1rem]">
+          <div className="bg-white p-4 rounded shadow mb-[1rem]">
             <h3 className="font-semibold text-primary">Okres czasu</h3>
             <p className="text-sm">
               {dateRange.startDate || 'Cały czas'} - {dateRange.endDate || 'Teraz'}
             </p>
           </div>
-              </div>
-         
-          
-
-             )}
+      </div>
+    )}
     <form onSubmit={handleSubmit} className="mb-6 bg-gray-100 rounded max-h-[15rem] lg:p-2">
          <div className="mb-[1rem] ">
          <label className="block mb-2">Początek</label>
@@ -201,7 +186,6 @@ if(error){
               className="p-2 border rounded "
             />
       </div>
-
       <div>
          <label className="block mb-2">Koniec</label>
             <input
@@ -212,11 +196,10 @@ if(error){
               className="p-2 border rounded"
             />
       </div>
-    <Button type="submit" color="primary" className="mt-[1rem] mb-[1rem]">Zastosuj</Button>
-      </form>
-     
-
-    </div>
+        <Button type="submit" color="primary" className="mt-[1rem] mb-[1rem]">Zastosuj</Button>
+    </form>
+    
+  </div>
     <div>
       
     </div>
@@ -245,17 +228,7 @@ if(error){
                  </div>
                </div>
              </div>
-            
-           
-     </div>
-      
-     
+      </div>
     </div>
-     
-
-     
-    
-  )
-}
-
+)}
 export default UsersChart

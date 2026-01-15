@@ -20,7 +20,9 @@ function AddProduct() {
   const [category, setCategory] = useState("");
   const [errors, setErrors] = useState({})
   const token = cookies.get("TOKEN");
+  
   const { isReady } = useRole();
+
   const navigate = useNavigate();
   const onSubmit = async(e)=>{
   e.preventDefault();

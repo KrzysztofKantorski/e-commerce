@@ -18,8 +18,8 @@ const [isRoleChecked, setIsRoleChecked] = useState(false);
             try {
               
               if(!token || token === "undefined" || token === "null"){
-                alert("Twoja sesja zakończyła się - zaloguj się ponownie");
-                navigate("/Login");
+                alert("Twoja sesja zakończyła się");
+                navigate("/");
                 return;
               }
               

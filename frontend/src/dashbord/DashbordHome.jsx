@@ -1,37 +1,27 @@
-import React, { use, useEffect } from 'react'
 import SideBar from "./SideBar"
 import OrdersChart from './OrdersChart'
-import Cookies from "universal-cookie"
-import {useNavigate} from "react-router"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import {useRole} from '@/hooks/userRole'
 import Error from '@/components/handleData/Error'
-const cookies = new Cookies();
+import LoadingData from '@/components/handleData/LoadingData'
 
 function DashbordHome() {
-const navigate = useNavigate();
-const token = cookies.get("TOKEN");
 const [error, setError] = useState(null);
-useEffect(() => {
-  if(!token){
-  setError("Brak tokena autoryzacyjnego. Zaloguj się ponownie.");
-  navigate("/Login");
-  }
- }, [navigate, token]);
-
+const { isReady } = useRole();
 if(error){
   return <Error message={error}></Error>
+}
+if(!isReady){
+  return <LoadingData></LoadingData>
 }
   return (
     <>
     <div className="flex w-full min-h-[100vh] gap-5">
         <SideBar></SideBar>
-     
         <OrdersChart></OrdersChart>
     </div>
     
-    
     </>
-    
   )
 }
 

@@ -205,13 +205,10 @@ router.post("/login", (req, res)=>{
     })
 
 })
-
 //user verification
 router.get("/verify", auth, (req, res)=>{
     res.status(200).send({message: "Authorized to access"
        
     });
 })
-
-
 module.exports = router

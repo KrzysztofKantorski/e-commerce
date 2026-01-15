@@ -8,22 +8,21 @@ import Card from "./Card"
 import Error from '@/components/handleData/Error';
 import {FaRegFaceSadCry} from "react-icons/fa6"
 import axios from "axios"
-import Cookies from "universal-cookie"
 import Hamburger from './Hamburger';
-import {useData} from "../Context/UserDataContext"
 import LoadingData from '@/components/handleData/LoadingData';
-const cookies = new Cookies();
+import {useRole} from "../hooks/userRole"
+
 function UpdateProduct() {
+    const { isReady } = useRole();
     const navigate = useNavigate();
     const [searchText, setSearchText] = useState("");
     const [error, setError] = useState(null);
     const [noResults, setNoResults] = useState(false);
     const [searchedProducts, setSearchedProducts] = useState([]);
-    const [change, setChange] = useState("")
     const [loading, setLoading] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [showResults, setShowResults] = useState(false)
-    const { data, logout, isAuthReady } = useData(); 
+
 useEffect(() => {
     
 setError(null);
@@ -100,12 +99,6 @@ setShowResults(false);
 
 const selectProduct = async (id) => {
         try {
-             const token = cookies.get("TOKEN");
-        if (!token) {
-        alert("Twoja sesja zakończyła się - zaloguj się ponownie");
-        navigate("/Login");
-        return;
-        }
             const response = await axios.get(`http://localhost:3000/products/${id}`);
             setSelectedProduct(response.data.product);
             setShowResults(false)
@@ -117,12 +110,6 @@ const selectProduct = async (id) => {
 
 const deleteProduct = async (id) => {
         try {
-        const token = cookies.get("TOKEN");
-        if (!token) {
-        alert("Twoja sesja zakończyła się - zaloguj się ponownie");
-        navigate("/Login");
-        return;
-        }
             const response = await axios.delete(`http://localhost:3000/products/${id}`);
             setShowResults(false)
             
@@ -136,7 +123,9 @@ const deleteProduct = async (id) => {
 if(error){
     <Error></Error>
 }
-
+if(!isReady || loading){
+    <LoadingData></LoadingData>
+}
   return (
     
     <div className="flex w-full min-h-[100vh] gap-5">
