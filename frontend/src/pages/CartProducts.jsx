@@ -1,6 +1,5 @@
 import React from 'react'
 import AnimatedBackground from '@/components/AnimatedBackground'
-import Cookies from "universal-cookie"
 import LoadingData from '@/components/handleData/LoadingData';
 import Error from '@/components/handleData/Error';
 import {useState, useEffect} from "react"
@@ -19,7 +18,6 @@ import {
 } from "@heroui/table";
 import { FaArrowRight } from "react-icons/fa";
 import axios from "axios"
-const cookies = new Cookies();
 function CartProducts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(true);
@@ -33,18 +31,8 @@ function CartProducts() {
 
   const removeFromCart = async (id)=>{
         try{
-            const token = cookies.get("TOKEN");
-            if(!token){
-                alert("Musisz być zalogowany aby zarządzać koszykiem");
-                navigate("/Login");
-                return;
-            }
             const url = `http://localhost:3000/cart/${id}`;
-            const response = await axios.delete(url, {
-            headers: {
-            Authorization: `Bearer ${token}`,
-            }
-        });
+            const response = await axios.delete(url);
 
             if(response.status == 200){
                 setUpdateCart(id);
@@ -60,20 +48,11 @@ function CartProducts() {
   const updateQuantity = async ( quantity,  id)=>{  
 
    console.log(typeof id)
-    try{
-      const token = cookies.get("TOKEN");
-            if(!token){
-                alert("Musisz być zalogowany aby zarządzać koszykiem");
-                navigate("/Login");
-                return;
-      }
+    try{  
       const url = `http://localhost:3000/cart/${id}`;
       const response = await axios.put(url, {
          quantity :quantity
-        } ,{
-            headers: {
-            Authorization: `Bearer ${token}`
-       }})
+        })
        if(response.status == 200){
         console.log("success");
         setQuantity(quantity)
@@ -89,23 +68,8 @@ function CartProducts() {
     setData([])
     const displayCart = async()=>{
       try{
-        const token = cookies.get("TOKEN");
-            if(!token){
-                alert("Musisz być zalogowany aby zarządzać koszykiem");
-                navigate("/Login");
-                return;
-            }
-            const url = `http://localhost:3000/cart`;
-            const response = await axios.get(url, {
-            headers: {
-            Authorization: `Bearer ${token}`
-            },
-            
-              
-            
-
-           
-        });
+        const url = `http://localhost:3000/cart`;
+        const response = await axios.get(url);
          if(response.status == 200){
                if (response.data.cart) {
                 setData(response.data.cart);

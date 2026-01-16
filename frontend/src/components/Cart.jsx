@@ -7,13 +7,11 @@ import {Tooltip} from "@heroui/tooltip";
 import {useData} from "../Context/UserDataContext"
 import LoadingData from './handleData/LoadingData';
 import Error from './handleData/Error';
-import Cookies from "universal-cookie"
 import { FaTrashAlt } from "react-icons/fa";
 import { FaCartPlus, FaArrowRight } from "react-icons/fa6";
 import { useCategory } from "../Context/CategoyContext";
 import {useNavigate} from "react-router"
 import { useCart } from '@/hooks/useCart';
-const cookies = new Cookies();
 function Cart() {
 const { data, logout } = useData(); 
 const {addToCart} = useCategory();
@@ -34,22 +32,12 @@ const handleRemoveFromCart = async (productId) => {
     axios.get(`http://localhost:3000/products/${id}`)
     navigate(`/product/${id}`)
 }
-const token = cookies.get("TOKEN");    
 useEffect(()=>{
 const displayCart = async ()=>{
     setLoading(true);
         try{
-            if(!token || token === "undefined" || token === "null"){
-                setError("Brak tokena autoryzacyjnego. Zaloguj się ponownie.");
-                console.log("No token found");
-                navigate("/Login");
-                return;
-            }
             const url = "http://localhost:3000/cart";
-            const response = await axios.get(url, {
-            headers: {
-            Authorization: `Bearer ${token}`,
-            }});
+            const response = await axios.get(url);
             if(response.status == 200){
                 setCart(response.data.cart);
                 console.log(response.data.cart);   
@@ -63,7 +51,7 @@ const displayCart = async ()=>{
         }
 }
 displayCart();
-}, [addToCart, updateCart, navigate, token])
+}, [addToCart, updateCart, navigate])
 if(loading){
     <LoadingData></LoadingData>
 }

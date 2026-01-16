@@ -4,12 +4,10 @@ import { NeonGradientCard } from "@/components/magicui/neon-gradient-card";
 import {useState} from "react"
 import axios from "axios"
 import "../styles/Login.css";
-import Cookies from "universal-cookie";
 import TextGlitchAnimation from '@/components/TextGlitchAnimation';
-const cookies = new Cookies();
-
-function Login(e) {
-  
+import {useData} from "../Context/UserDataContext"
+import { useNavigate } from "react-router";
+function Login() {
    const [username, setUsername] = useState("");
    const [password, setPassword] = useState("");
    const [loading, setLoading] = useState(true);
@@ -17,39 +15,39 @@ function Login(e) {
    const [error, setError] = useState(false);
    const [message, setMessage] = useState("");
    const [action, setAction] = useState("")
-  
+   const { checkAuth } = useData();
+  const navigate = useNavigate();
   const loginAuth = async (e)=>{
-      e.preventDefault();
+  e.preventDefault();
 
-  const data = Object.fromEntries(new FormData(e.currentTarget));
-  if(!data.username || data.username === ""){
+  if(!username || username === ""){
       setErrors({username: "Nazwa użytkownika jest wymagana"});
       return
   }
      try{
+      
      const response = await axios.post("http://localhost:3000/auth/login", {
         username: username,
         password: password
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
       })
 
+      const success = await checkAuth();
+      if (success) {
+             setMessage("Zalogowano pomyślnie");
+             navigate("/"); 
+          } else {
+             setMessage("Nie udało się pobrać danych profilu.");
+          }
       if(response.length === ""){
         setMessage("Niepoprawny login lub hasło");
        
         setErrors({password: "Niepoprawny login lub hasło"})
 
       }
-      cookies.set("TOKEN", response.data.token, {
-        path: "/",
-        expires: new Date(Date.now() + 60 * 60 * 1000) 
-      });
-       setMessage(response.data.message);
-      window.location.href = "/verify";
+      setMessage(response.data.message);
     }
     catch(err){
+      alert("Login error:", err);
     console.error("Login error:", err);
       
      
@@ -141,7 +139,7 @@ function Login(e) {
     
      
       <div className="flex items-center justify-center gap-2 text-center w-full mt-[1rem]">
-        <Button color="primary" type="submit" onPress={()=>{loginAuth()}}className="px-[1rem] px-[1rem]">
+        <Button color="primary" type="submit" className="px-[1rem] px-[1rem]">
           Zaloguj
         </Button>
         <Button type="reset" variant="flat" className="px-[1rem] px-[1rem]" onPress={()=>{clear()}}>

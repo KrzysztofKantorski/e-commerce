@@ -12,9 +12,6 @@ import { useCategory } from "../Context/CategoyContext";
 import {Card, CardBody, CardFooter, Image} from "@heroui/react";
 import { HyperText } from "@/components/magicui/hyper-text";
 import TextGlitchAnimation from '@/components/TextGlitchAnimation';
-
-const cookies = new Cookies();
-
 function FavoriteProducts() {
    
     const [loading, setLoading] = useState(true);
@@ -26,17 +23,8 @@ function FavoriteProducts() {
 
     const removeFromFavorites = async (id)=>{
            try{
-            const token = cookies.get("TOKEN");
-            if(!token){
-                alert("Musisz być zalogowany aby zarządzać ulubionymi produktami");
-                navigate("/Login");
-                return;
-            }
             const url = `http://localhost:3000/favorites/remove/${id}`;
             const response = await axios.delete(url, {
-            headers: {
-            Authorization: `Bearer ${token}`,
-            }
         });
 
             if(response.status == 200){
@@ -65,13 +53,9 @@ function FavoriteProducts() {
              setLoading(true);
               
             try{
-            const token = cookies.get("TOKEN");
+           
             const url = "http://localhost:3000/favorites";
-            const response = await axios.get(url, {
-            headers: {
-            Authorization: `Bearer ${token}`,
-            }
-        });
+            const response = await axios.get(url);
 
             if(response.status == 200){
                 setFavorites(response.data.favorites);

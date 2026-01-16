@@ -10,9 +10,7 @@ import { FaHeart } from "react-icons/fa";
 import { useFavorites } from '@/hooks/useFavorites';
 import { useCart } from '@/hooks/useCart';
 import { useNavigate } from 'react-router';
-import Cookies from "universal-cookie"
 import Nav from "../components/Nav"
-const cookies = new Cookies();
 function Discounts() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

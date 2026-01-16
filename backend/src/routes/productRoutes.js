@@ -433,7 +433,7 @@ router.post("/:id/reviews", auth, async(req, res)=>{
   const user = req.user.id
   const {comment, rating} = req.body;
   const productToFind = await Product.findById(id);
-  if(!productToFind){
+  if(!user){
     return(
       res.status(404).json({
       message: "User not found"

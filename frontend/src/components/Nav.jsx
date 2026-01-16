@@ -22,9 +22,7 @@ import {useNavigate} from "react-router"
 import {useData} from "../Context/UserDataContext"
 import Cart from "./Cart"
 import Favorites from "./Favorites"
-import Cookies from "universal-cookie"
 import axios from "axios"
-const cookies = new Cookies();
 function Nav() {
   const { data, logout, isAuthReady } = useData(); 
   const [image, setImage] = useState();
@@ -36,14 +34,8 @@ function Nav() {
   const fetchUserProfile = async () => {
     try {
       if(!isAuthReady) return;
-       const token = cookies.get("TOKEN");
-     
-      
       const response = await axios.get(
         'http://localhost:3000/auth/uploadImage',
-        {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }
       );
       setImage(response.data.image);
      

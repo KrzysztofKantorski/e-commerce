@@ -8,10 +8,8 @@ import Cookies from "universal-cookie"
 import {Textarea} from "@heroui/input";
 import axios from "axios"
 import Hamburger from './Hamburger';
-import {useData} from "../Context/UserDataContext"
 import LoadingData from '@/components/handleData/LoadingData';
 import {useRole} from "../hooks/userRole"
-const cookies = new Cookies();
 function AddProduct() {
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
@@ -19,8 +17,6 @@ function AddProduct() {
   const [stock, setStock] = useState("");
   const [category, setCategory] = useState("");
   const [errors, setErrors] = useState({})
-  const token = cookies.get("TOKEN");
-  
   const { isReady } = useRole();
 
   const navigate = useNavigate();
@@ -59,6 +55,7 @@ function AddProduct() {
     setErrors(newErrors);
     return; 
   }
+  try{
   const url = "http://localhost:3000/products";
     const response = await axios.post(url, {
           name: data.productName, 
@@ -66,13 +63,43 @@ function AddProduct() {
           price: data.price,
           stock: data.stock,
           category: data.category
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
       });
+    
     console.log(response.data);
+  }
+  catch(error){
+    if (error.response) {
+        const status = error.response.status;
+        const message = error.response.data.message || "Wystąpił błąd";
+        switch (status) {
+                case 401: 
+                    // Token expired or invalid
+                    alert("Twoja sesja wygasła. Zaloguj się ponownie.");
+                    // navigate to login page
+                    navigate("/Login");
+                    break;
+                case 403:
+                    // User does not have permission
+                    alert("Brak uprawnień do wykonania tej akcji.");
+                    break;
+
+                case 409:
+                    // Conflict error (e.g., duplicate product)
+                    alert(`Błąd: ${message}`); 
+                    setErrors({ productName: "Taki produkt już istnieje" });
+                    break;
+
+                default:
+                    alert(`Błąd serwera: ${message}`);
+            }
+        } else if (error.request) {
+            // No response received from server
+            alert("Błąd połączenia z serwerem. Spróbuj później.");
+        } else {
+            // Other errors
+            console.error("Error", error.message);
+        }
+  }
 }
 
 const reset = ()=>{

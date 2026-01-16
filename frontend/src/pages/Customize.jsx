@@ -2,14 +2,9 @@ import React from 'react'
 import styled from 'styled-components';
 import {useState, useRef} from "react"
 import axios from "axios"
-import Cookies from "universal-cookie"
 import {useNavigate} from "react-router"
 import {Button} from "@heroui/button";
 import TextGlitchAnimation from '@/components/TextGlitchAnimation';
-
-const cookies = new Cookies();
-
-
 function Customize() {
     const [selectedFile, setSelectedFile] = useState(null);
    const navigate = useNavigate();
@@ -29,18 +24,8 @@ function Customize() {
 		formData.append('file', selectedFile);
 		try{
             setLoading(true);
-            const token = cookies.get("TOKEN");
-            if(!token){
-                alert("Musisz być zalogowany aby zarządzać ulubionymi produktami");
-                navigate("/Login");
-                return;
-            }
             const url = `http://localhost:3000/auth/uploadImage`;
-            const response = await axios.post(url, formData,{
-            headers: {
-            Authorization: `Bearer ${token}`,
-            }
-            });
+            const response = await axios.post(url, formData);
             console.log('Upload successful:', response.data);
             alert('Plik przesłany pomyślnie!');
         }

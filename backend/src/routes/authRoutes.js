@@ -180,11 +180,18 @@ router.post("/login", (req, res)=>{
                 {expiresIn: 60 * 60 }
                 );
             
+            //set httponly cookie
+            res.cookie('token', token, {
+                httpOnly: true, 
+                secure: false,  
+                sameSite: 'lax', 
+                maxAge: 3600000 
+            });
+            
             res.status(200).send({
             message: "Login successfull",
             username: user.username,
-            role:  user.role,
-            token
+            role:  user.role
             })
 
 
@@ -205,10 +212,26 @@ router.post("/login", (req, res)=>{
     })
 
 })
-//user verification
-router.get("/verify", auth, (req, res)=>{
-    res.status(200).send({message: "Authorized to access"
-       
+
+
+
+//user logout
+router.post("/logout", (req, res)=>{
+       res.cookie('token', '', {
+        httpOnly: true,
+        expires: new Date(0) 
     });
-})
+    res.status(200).send({ message: "Logged out" });
+});
+
+//check if user is logged in
+router.get("/me", auth, (req, res) => {
+    res.status(200).json({
+        username: req.user.username,
+        email: req.user.email,
+        role: req.user.role,
+        isLoggedIn: true
+    });
+});
+
 module.exports = router

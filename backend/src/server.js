@@ -9,17 +9,20 @@ const stats = require("./routes/stats.js");
 const path = require('path');
 const fs = require('fs');
 const cors = require("cors")
-
+const cookieParser = require("cookie-parser");
 const auth = require("./validators/login.js");
 
 require("dotenv").config();
 const app = express();
 app.use(express.json())
-
+app.use(cookieParser());
 
 const port = 3000;
 
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:5173', //frontend address
+    credentials: true, // Allow cookies to be sent
+}))
 //connection with database
 connect();
 
