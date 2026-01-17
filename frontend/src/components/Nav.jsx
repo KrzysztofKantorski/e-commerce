@@ -22,34 +22,29 @@ import {useNavigate} from "react-router"
 import {useData} from "../Context/UserDataContext"
 import Cart from "./Cart"
 import Favorites from "./Favorites"
-import axios from "axios"
+import userProfile from '../api/userProfile';
+import handleApiError from '../api/hooks/handleApiError';
 function Nav() {
   const { data, logout, isAuthReady } = useData(); 
   const [image, setImage] = useState();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
-
-  if(data){
-    
-  const fetchUserProfile = async () => {
+  useEffect(() => {
+  if(!data || !isAuthReady) return;
+  const  fetchUserProfile = async () => {
     try {
-      if(!isAuthReady) return;
-      const response = await axios.get(
-        'http://localhost:3000/auth/uploadImage',
-      );
-      setImage(response.data.image);
-     
+      const response = await userProfile.displayPicture();
+      if (response?.image) {
+            setImage(response.image);
+      }
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      handleApiError(error);
     } 
   };
+  fetchUserProfile();
+  }, [isAuthReady, data]);
   
-  useEffect(() => {
-    fetchUserProfile();
-  }, [isAuthReady]);
-  }
   const goToLogin = ()=>{
-    console.log("siup")
     navigate("/Login")
   }
   const handleCustomize = ()=>{
@@ -66,7 +61,6 @@ function Nav() {
     navigate("/ShowOrders")
   }
   const [searchText, setSearchText] = useState("");
-  console.log(data.role)
   return (
     <>
     <Navbar isBordered className="flex justify-around w-[100%] z-[1000]" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>

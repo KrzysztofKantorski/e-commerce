@@ -1,39 +1,40 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import Home from "./pages/Home"
-import Product from "./pages/Product"
-import Login from "./pages/Login"
-import Register from "./pages/Register"
-import FavoriteProducts from "./pages/FavoriteProducts"
-import CartProducts from "./pages/CartProducts"
+import {lazy, Suspense} from "react";
+const Home = lazy(()=>import("./pages/Home"))
+const Product = lazy(()=> import("./pages/Product"))
+const Login = lazy(()=> import( "./pages/Login"))
+const Register = lazy(()=> import("./pages/Register"))
+const FavoriteProducts = lazy(()=> import("./pages/FavoriteProducts")) 
+const CartProducts = lazy(()=> import("./pages/CartProducts")) 
 import AddReview from "./pages/AddReview"
 import Order from "./pages/Order"
-import Customize from "./pages/Customize"
-import OrderSuccess from "./pages/OrderSuccess"
+const Customize = lazy(()=> import("./pages/Customize"))
+const OrderSuccess = lazy(()=> import("./pages/OrderSuccess"))
 import ShowOrders from "./pages/ShowOrders"
 import Discounts from './pages/Discounts'
 import Newest from './pages/Newest'
 import Category from './pages/Category'
-import DashbordHome from './dashbord/DashbordHome'
+const DashbordHome = lazy(()=> import('./dashbord/DashbordHome'))
 import Products from './dashbord/Products'
-import AddProduct from './dashbord/AddProduct'
-import UpdateProduct from './dashbord/UpdateProduct'
-import DeleteProduct from './dashbord/DeleteProduct'
-import UsersChart from './dashbord/UsersChart'
+const AddProduct = lazy(()=> import('./dashbord/AddProduct')) 
+const UpdateProduct = lazy(()=> import('./dashbord/UpdateProduct')) 
+const DeleteProduct = lazy(()=> import('./dashbord/DeleteProduct')) 
+const  UsersChart = lazy(()=> import('./dashbord/UsersChart'))
 import {HeroUIProvider} from '@heroui/react'
+import LoadingData from './components/handleData/LoadingData'
 import { BrowserRouter, Routes, Route } from "react-router";
 import { CategoryProvider } from './Context/CategoyContext'
 import { UserDataProvider } from './Context/UserDataContext'
-import axios from 'axios';
-// Enable sending cookies with requests
-axios.defaults.withCredentials = true; 
+
 export default function App() {
   return (
     <>
     <BrowserRouter>
     <UserDataProvider>
     <CategoryProvider>
+    <Suspense fallback={<LoadingData />}>
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/product/:id" element={<Product />}></Route>
@@ -56,6 +57,7 @@ export default function App() {
         <Route path="/DeleteProduct" element={<DeleteProduct />}></Route>
         <Route path="/UsersChart" element={<UsersChart />}></Route>
       </Routes>
+      </Suspense>
       </CategoryProvider>
       </UserDataProvider>
     </BrowserRouter>

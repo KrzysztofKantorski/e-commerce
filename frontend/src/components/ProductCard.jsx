@@ -9,12 +9,10 @@ import axios from "axios"
 import { useNavigate } from 'react-router';
 import SideBar from "./SideBar"
 import { useCategory } from '../Context/CategoyContext';
-import Cookies from "universal-cookie"
 import {Pagination} from "@heroui/react";
 import { useFavorites } from '@/hooks/useFavorites';
 import { useCart } from '@/hooks/useCart';
-const cookies = new Cookies();
-
+import product from '../api/product';
 function ProductCard() {
 const [currentPage, setCurrentPage] = useState(1);
 const firstRender = useRef(true)
@@ -41,28 +39,16 @@ const handleCart = async (productId) => {
     await handleAddToCart(productId);
 };
 
-const setDisplay = (id)=>{
-  axios.get(`http://localhost:3000/products/${id}`)
+const setDisplay = async (id)=>{
+    await product.displayProduct(id);
     navigate(`/product/${id}`)
 }
 
 const fetchProducts = async (page = 1) => {
     try {
-    let url = "http://localhost:3000/products";
-    const params = { page, limit: 10 };
-    
-    if (category && category !== "all") {
-      url += `/category/${category}`;
-    }
-
-    if (filter && filter !== "newest") {
-      params.sort = filter;
-    }
-
-    const response = await axios.get(url, { params });
-    
-    setProducts(response.data.products || []);
-    setPages(response.data.totalPages);
+    const response = await product.displayProducts(page, category, filter);
+    setProducts(response.products || []);
+    setPages(response.totalPages);
     setError(null);
     
   } catch (err) {
@@ -73,24 +59,17 @@ const fetchProducts = async (page = 1) => {
     setLoading(false);
     firstRender.current = false;
   }
-  }
+}
 
 useEffect(() => {
-  let isMounted = true;
   setCurrentPage(1);
-  
-  if (firstRender.current) {
-    setLoading(true);
-    setTimeout(() => {
-      if (isMounted) fetchProducts(1);
-    }, 2500);
-  } else {
-    if (isMounted) fetchProducts(1);
-  }
 
-  return () => {
-    isMounted = false;
-  }
+  setLoading(true);
+
+  setTimeout(() => {
+    fetchProducts(1);
+  }, 1000);
+  
 }, [category, filter]);
 
 

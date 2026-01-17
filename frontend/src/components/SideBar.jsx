@@ -3,7 +3,7 @@ import {useState, useEffect} from "react";
 import axios from "axios"
 import { useCategory } from "../Context/CategoyContext";
 import {Chip} from "@heroui/chip";
-import {Button, ButtonGroup} from "@heroui/react"
+import {Button} from "@heroui/react"
 import Filter from "./Filter"
 import {Dropdown, DropdownTrigger, DropdownMenu} from "@heroui/react";
 
@@ -80,9 +80,6 @@ if (error) {
       </ListboxItem>
       <ListboxItem key="moda">
         moda
-      </ListboxItem>
-      <ListboxItem key="siup">
-        siup
       </ListboxItem>
       <ListboxItem key="sport">
         sport

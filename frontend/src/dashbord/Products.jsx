@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react' // 1. Dodaj import useEffect
 import SideBar from "./SideBar"
 import { Button, ButtonGroup } from "@heroui/react";
-import { useNavigate } from "react-router" // W nowszych wersjach react-router-dom to jest 'react-router-dom'
+import { useNavigate } from "react-router" 
 import Hamburger from './Hamburger';
 import Cookies from "universal-cookie"
 

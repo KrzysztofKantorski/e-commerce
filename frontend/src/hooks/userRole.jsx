@@ -1,7 +1,4 @@
 import { useNavigate } from 'react-router';
-import axios from 'axios';
-import Cookies from 'universal-cookie';
-import { useCategory } from '../Context/CategoyContext';
 import {useState, useEffect} from "react"
 import {useData} from "../Context/UserDataContext"  
 export const useRole = ()=>{

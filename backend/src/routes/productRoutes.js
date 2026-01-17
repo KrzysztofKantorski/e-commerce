@@ -36,7 +36,7 @@ router.get("/", async (req, res)=>{
       return 0; // default (jeśli ktoś poda zły parametr)
         })
         
-        const start = (page -1)*limit;
+      const start = (page -1)*limit;
       const end = start + Number(limit);
       const paginatedProducts = displayInOrder.slice(start, end);
         res.status(201).send({
