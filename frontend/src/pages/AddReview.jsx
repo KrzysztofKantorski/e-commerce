@@ -42,24 +42,12 @@ console.log(product)
     setServerError("");
 
     try {
-      const token = cookies.get("TOKEN");
-      if (!token) {
-        alert("Zaloguj się aby dodać opinię");
-        navigate(-1);
-        return;
-      }
       const numericRating = parseInt(rating);
       const response = await axios.post(
         `http://localhost:3000/products/${product}/reviews`, 
         {
           comment: comment.trim(),
           rating: numericRating
-        }, 
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
         }
       );
       if (response.status === 200) {

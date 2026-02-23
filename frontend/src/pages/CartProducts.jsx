@@ -7,7 +7,7 @@ import {useNavigate} from "react-router"
 import TextGlitchAnimation from '@/components/TextGlitchAnimation';
 import {Form, Image, Button} from "@heroui/react"
 import { FaTrashAlt } from "react-icons/fa";
-import {NumberInput} from "@heroui/react";
+import cart from '../api/cart';
 import {
   Table,
   TableHeader,
@@ -31,16 +31,13 @@ function CartProducts() {
 
   const removeFromCart = async (id)=>{
         try{
-            const url = `http://localhost:3000/cart/${id}`;
-            const response = await axios.delete(url);
-
+            
+            const response = await cart.removeCartProduct(id);
             if(response.status == 200){
                 setUpdateCart(id);
                 console.log(response.data.cart);
                 
             }
-        
-
             }catch(error){
                 setError(error.message)
             }
@@ -68,8 +65,7 @@ function CartProducts() {
     setData([])
     const displayCart = async()=>{
       try{
-        const url = `http://localhost:3000/cart`;
-        const response = await axios.get(url);
+        const response = await cart.displayCartProducts();
          if(response.status == 200){
                if (response.data.cart) {
                 setData(response.data.cart);

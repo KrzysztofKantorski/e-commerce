@@ -63,9 +63,7 @@ const fetchStats = async()=>{
     const url = "http://localhost:3000/stats/users";
 
     const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
+      
       params
     })
 

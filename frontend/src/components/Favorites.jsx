@@ -3,61 +3,57 @@ import { FaHeart } from "react-icons/fa";
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@heroui/react";
 import {useState, useEffect} from "react";
 import LoadingData from './handleData/LoadingData';
-import Error from './handleData/Error';
-import axios from "axios"
 import {Tooltip} from "@heroui/tooltip";
-import Cookies from "universal-cookie"
 import { FaTrashAlt } from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa6";
 import { useNavigate } from 'react-router';
-import { useFavorites } from '@/hooks/useFavorites';
-const cookies = new Cookies();
-
+import favorites from '../api/favorites';
+import { useCategory } from '../Context/CategoyContext';
+import handleApiError from '../api/handleApiError';
+import product from '../api/product';
 function Favorites() {
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
-    const [favorites, setFavorites] = useState([]);
+    const [favorite, setFavorite] = useState([]);
     const navigate = useNavigate();
-    const {newProduct, removedProduct, removeFromFavorites} = useFavorites();
+    const {newProduct, setNewProduct} = useCategory();
+    const [removedProduct, setRemovedProduct] = useState("");
+    const {clearErrors, handleError, fieldErrors, globalError} = handleApiError()
+
     const showFavorites = ()=>{
         navigate("/FavoriteProducts")
     }
 
     const setDisplay = (id)=>{
-    axios.get(`http://localhost:3000/products/${id}`)
-    navigate(`/product/${id}`)
+        product.displayProduct(id);
+        navigate(`/product/${id}`)
     }
 
     const handleRemoveFromFavorites = async (productId) => {
-        const result = await removeFromFavorites(productId);
-        
-        if (result.success) {
-        alert(result.message); 
-        } else {
-        alert(result.message); 
-        
+        try{
+            clearErrors();
+            const result = await favorites.removeFavoriteProduct(productId);
+            setRemovedProduct(productId);
+            if(result.success){
+                console.log("Usunięto produkt z ulubionych");
+            }
+        }catch(error){
+           handleError(error, "favorites");
         }
+        
     };
 
     useEffect(()=>{
+        clearErrors();
         const displayFavorites = async ()=>{
-            setLoading(true);
-            try{
-                const token = cookies.get("TOKEN");
-                const url = "http://localhost:3000/favorites";
-                const response = await axios.get(url, {
-                headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        });
+        setLoading(true);
+        try{
+            const response = await favorites.displayFavoriteProducts();
             if(response.status == 200){
-                setFavorites(response.data.favorites);
-                console.log(response.data.favorites);
-                
+                setFavorite(response.data.favorites);
             }
             }
             catch(error){
-                setError(error.message)
+                handleError(error, "favorites");
             }
             finally{
                 setLoading(false);
@@ -82,7 +78,7 @@ if (loading) {
         );
     }
 
-if (error) {
+if (globalError!="") {
         return (
             <Dropdown>
                 <DropdownTrigger>
@@ -90,7 +86,7 @@ if (error) {
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Error">
                     <DropdownItem key="error" className="text-danger">
-                        <Error></Error>
+                        {globalError}
                     </DropdownItem>
                 </DropdownMenu>
             </Dropdown>
@@ -101,7 +97,7 @@ if (error) {
     <>
     <div className="relative ">
 
-    <div className="absolute top-[-0.5rem] right-[-0.1rem] text-white bg-primary px-[.5rem] py-[.1rem] rounded-[100%] z-[1000000]">{favorites.length}</div>
+    <div className="absolute top-[-0.5rem] right-[-0.1rem] text-white bg-primary px-[.5rem] py-[.1rem] rounded-[100%] z-[1000000]">{favorite.length}</div>
 
    <Dropdown>
         <DropdownTrigger>
@@ -115,8 +111,8 @@ if (error) {
             </Tooltip>
         </DropdownItem>
     
-    {favorites.length > 0 ? (
-    favorites.map((favProduct) => (
+    {favorite.length > 0 ? (
+    favorite.map((favProduct) => (
         <>
        <DropdownItem 
         key={favProduct._id} 

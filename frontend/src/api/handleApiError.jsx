@@ -19,13 +19,16 @@ const handleApiError = ()=>{
               username: "Podano niepoprawne dane logowania"
             });
           }
+          if(context == "favorites"){
+            setGlobalError("Produkt jest już w ulubionych");
+          }
           else{
-            setGolobalError(message);
+            setGlobalError(message);
           }
         break
 
 
-        //User unauthorized
+        //unauthorized
         case 403:
           if(context === "product"){
             setGlobalError("Brak uprawnień do wykonania tej akcji");
@@ -33,16 +36,19 @@ const handleApiError = ()=>{
           else{
             setGlobalError(message);
           }
+        break;
 
-
-        //User not found
+        //not found
         case 404:
           if(context == "login"){
             setGlobalError("Użytkownik nie istnieje");
             setFieldErrors({username: "Niepoprawna nazwa użytkownika"})
           }
+           if(context == "favorites"){
+            setGlobalError("Nie znaleziono produktu");
+          }
           else{
-            setGolobalError("Nie znaleziono zasobu");
+            setGlobalError("Nie znaleziono zasobu");
           }
           break;
 
@@ -55,7 +61,7 @@ const handleApiError = ()=>{
             setGlobalError(message);
           }
           
-          break;
+        break;
 
         // Server Error
         case 500: 

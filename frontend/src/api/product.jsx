@@ -23,7 +23,7 @@ const product = {
    //Display single product based in id
    displayProduct: async(id)=>{
       const response = await axiosClient.get(`/products/${id}`);
-      return response.data;
+      return response;
    }
 
 

@@ -61,12 +61,9 @@ function OrdersChart() {
 
     const url = "http://localhost:3000/stats";
 
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
+    const response = await axios.get(url, 
       params
-    })
+    )
 
     if(response.status == 200){
       setStats(response.data.stats);

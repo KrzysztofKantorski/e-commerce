@@ -9,19 +9,21 @@ import CountStars from "../components/CountStars";
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@heroui/react";
 import {Pagination} from "@heroui/react";
 import TextGlitchAnimation from './TextGlitchAnimation'
+import reviews from '../api/reviews';
+import handleApiError from '../api/handleApiError';
 function DisplayComments({id}) {
     const product = id;
     const [currentPage, setCurrentPage] = useState(1);
     const [pages, setPages] = useState();
-    const [reviews, setReviews] = useState([]);
+    const [review, setReview] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [filter, setFilter] = useState("newest");
     const navigate = useNavigate();
-
-   const AddRewiev = ()=>{
-    navigate(`/AddReview/${product}`);
-   }
+    const {clearErrors, handleError, globalError} = handleApiError()
+    const AddRewiev = ()=>{
+        navigate(`/AddReview/${product}`);
+    }
 
     const formatDateTime = (dateString) => {
     return new Date(dateString).toLocaleString('pl-PL', {
@@ -37,29 +39,16 @@ function DisplayComments({id}) {
         setLoading(true);
         setError(null)
         try{
-            let url = `http://localhost:3000/products/${id}/reviews`;
-            const params = { page, limit: 5 };
-            if(filter!="newest"){
-                url+=`?sort=${filter}`;
-                setCurrentPage(1);
-            }
-            const response = await axios.get(url, {params});
+            clearErrors();
+            const response = await reviews.displayReviews(id, page, filter);
             if (response.data.reviews) {
-                setReviews(response.data.reviews);
+                setReview(response.data.reviews);
                 setPages(response.data.totalPages)
             } 
         }
         catch(error){
-            if (error.response?.status === 400) {
-                alert("Produkt został już dodany do ulubionych");
-                navigate("/");
-            } 
-            else if (error.response?.status === 403) {
-                alert("Brak uprawnień do wykonania tej operacji");  
-            } 
-            else {
-                alert("Wystąpił błąd podczas dodawania do ulubionych");
-            } 
+           handleError(error);
+           console.log(globalError);
         }
         finally{
         setLoading(false)
@@ -67,6 +56,7 @@ function DisplayComments({id}) {
     }
 
 useEffect(()=>{
+    setCurrentPage(1);
     fetchReviews(1);
 }, [id, filter])
 
@@ -86,7 +76,7 @@ if(error){
 }
 return (
 <div className="min-h-[50vh]">
-      {reviews.length == 0 ? (
+      {review.length == 0 ? (
         <>
        <TextGlitchAnimation text={"Brak opinii"}></TextGlitchAnimation>
        <div className="text-center">
@@ -119,7 +109,7 @@ return (
     </Button>
     </div>
     <div className="min-h-[50vh]">
-        {reviews.map((item, index)=>(
+        {review.map((item, index)=>(
             <>
     <Card className="z-[10] mt-[1rem] relative py-[.5rem] px-[.5rem] flex flex-col align-center justify-space-between">
       <CardBody>

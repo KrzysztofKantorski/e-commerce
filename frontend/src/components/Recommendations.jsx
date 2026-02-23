@@ -31,7 +31,6 @@ function Recommendations({category, id}) {
   
       const response = await axios.get(url, { params });
       console.log(`RESPONSE: ${response}`)
-       // Filtruj produkty po stronie frontendu (dodatkowe zabezpieczenie)
       const filteredProducts = response.data.products.filter(
         product => product._id !== ProductToSkip
       );

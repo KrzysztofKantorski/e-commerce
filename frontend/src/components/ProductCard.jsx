@@ -5,14 +5,15 @@ import { FaCartPlus } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import {FaRegFaceSadCry} from "react-icons/fa6";
 import LoadingData from "./handleData/LoadingData"
-import axios from "axios"
 import { useNavigate } from 'react-router';
 import SideBar from "./SideBar"
 import { useCategory } from '../Context/CategoyContext';
 import {Pagination} from "@heroui/react";
-import { useFavorites } from '@/hooks/useFavorites';
-import { useCart } from '@/hooks/useCart';
+import favorites from '../api/favorites';
+import cart from '../api/cart';
 import product from '../api/product';
+import handleApiError from '../api/handleApiError';
+
 function ProductCard() {
 const [currentPage, setCurrentPage] = useState(1);
 const firstRender = useRef(true)
@@ -23,20 +24,35 @@ const [loading, setLoading] = useState(true);
 const [error, setError] = useState(null)
 const { category } = useCategory(); 
 const {filter} = useCategory();
-const {addToFavorites} = useFavorites();
-const {handleAddToCart} = useCart();
-   
+const {newProduct, setNewProduct, addToCart, setAddToCart} = useCategory();
+const {clearErrors, handleError, fieldErrors, globalError} = handleApiError()
 const handleAddToFavorites = async (productId) => {
-  const result = await addToFavorites(productId);
-  if (result.success) {
-    alert(result.message); 
-  } else {
-    alert(result.message); 
+  try{
+    clearErrors();
+    const response = await favorites.addToFavorites(productId);
+    if(response.status == 201){
+          setNewProduct(prev => [...prev, productId]);
+          alert("Produkt został dodany do ulubionych");
+    }
+  }
+  catch(error){
+    handleError(error, "favorites");
+    setError(error.message);
   }
 };
 
 const handleCart = async (productId) => {
-    await handleAddToCart(productId);
+  try{
+    clearErrors();
+    const response =await cart.addCartProduct(productId);
+    if(response.status == 201){
+      alert("Produkt został dodany do koszyka");
+      setAddToCart({product})   
+    }
+  }catch(error){
+      handleError(error);
+      console.log(error)
+  }
 };
 
 const setDisplay = async (id)=>{
@@ -46,14 +62,15 @@ const setDisplay = async (id)=>{
 
 const fetchProducts = async (page = 1) => {
     try {
+    clearErrors();
     const response = await product.displayProducts(page, category, filter);
     setProducts(response.products || []);
     setPages(response.totalPages);
     setError(null);
     
   } catch (err) {
-    console.error('Error:', err);
-    setError("Błąd ładowania produktów");
+    handleError(err);
+    console.error(err);
     setProducts([]);
   } finally {
     setLoading(false);
@@ -68,7 +85,7 @@ useEffect(() => {
 
   setTimeout(() => {
     fetchProducts(1);
-  }, 1000);
+  }, 100);
   
 }, [category, filter]);
 
@@ -86,7 +103,7 @@ return (
          <LoadingData title={loading}></LoadingData>
         </div>
      
-    ) : error ? (
+    ) : globalError !="" ? (
       <div className="text-center flex flex-col px-8 py-8 border-b">
         <h2 className="text-lg text-default-500 mb-4">Nie znaleziono żadnego produktu</h2>
         <FaRegFaceSadCry className="text-5xl text-primary mx-auto" />

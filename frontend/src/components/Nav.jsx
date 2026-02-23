@@ -23,22 +23,24 @@ import {useData} from "../Context/UserDataContext"
 import Cart from "./Cart"
 import Favorites from "./Favorites"
 import userProfile from '../api/userProfile';
-import handleApiError from '../api/hooks/handleApiError';
+import handleApiError from '../api/handleApiError';
 function Nav() {
   const { data, logout, isAuthReady } = useData(); 
   const [image, setImage] = useState();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const {clearErrors, handleError, fieldErrors, globalError} = handleApiError()
   useEffect(() => {
+  clearErrors();
   if(!data || !isAuthReady) return;
-  const  fetchUserProfile = async () => {
+  const fetchUserProfile = async () => {
     try {
       const response = await userProfile.displayPicture();
       if (response?.image) {
             setImage(response.image);
       }
     } catch (error) {
-      handleApiError(error);
+      handleError(error);
     } 
   };
   fetchUserProfile();

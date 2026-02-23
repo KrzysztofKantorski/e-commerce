@@ -143,7 +143,7 @@ function UpdateForm({product}) {
                
                 
                 <div className="flex gap-2 mt-[1rem]">
-                    <Button type="submit" variant="bordered" onPress={()=>{setId(product._id)}}>
+                <Button type="submit" variant="bordered" onPress={()=>{setId(product._id)}}>
                     Zatwierdź
                 </Button>
                 <Button type="reset" variant="bordered" onPress={()=>reset()}>

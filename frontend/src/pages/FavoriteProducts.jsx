@@ -2,63 +2,58 @@ import React from 'react'
 import { FaHeart } from "react-icons/fa";
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@heroui/react";
 import {useState, useEffect} from "react";
-import axios from "axios"
 import {Tooltip} from "@heroui/tooltip";
 import LoadingData from '../components/handleData/LoadingData';
-import Cookies from "universal-cookie"
 import { FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from 'react-router';
 import { useCategory } from "../Context/CategoyContext";
 import {Card, CardBody, CardFooter, Image} from "@heroui/react";
-import { HyperText } from "@/components/magicui/hyper-text";
 import TextGlitchAnimation from '@/components/TextGlitchAnimation';
+import favorites from '../api/favorites';
+import product from '../api/product';
+import Nav from '../components/Nav';
 function FavoriteProducts() {
-   
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const [favorites, setFavorites] = useState([]);
+    const [favoriteProducts, setFavoriteProducts] = useState([]);
     const {newProduct, setNewProduct} = useCategory();
     const [deleted, setDeleted] = useState([]);
     const navigate = useNavigate();
 
     const removeFromFavorites = async (id)=>{
            try{
-            const url = `http://localhost:3000/favorites/remove/${id}`;
-            const response = await axios.delete(url, {
-        });
+            
+            const response = await favorites.removeFavoriteProduct(id);
 
             if(response.status == 200){
                 setDeleted(id);
                 alert("produkt został usunięty z ulubionych")
                 console.log(response.data.favorites); 
             }
-        
             }catch(error){
                 setError(error.message)
             }
-          
         }
 
 
 
-    const setDisplay = (id)=>{
-    axios.get(`http://localhost:3000/products/${id}`)
-    navigate(`/product/${id}`)
+    const setDisplay = async (id)=>{
+        const response = await product.displayProduct(id)
+        if(response.status == 200){
+            navigate(`/product/${id}`)
+        }
     }
 
 
     useEffect(()=>{
        
         const displayFavorites = async ()=>{
-             setLoading(true);
-              
+            setLoading(true);
             try{
-           
-            const url = "http://localhost:3000/favorites";
-            const response = await axios.get(url);
+            const response = await favorites.displayFavoriteProducts();
 
             if(response.status == 200){
-                setFavorites(response.data.favorites);
+                setFavoriteProducts(response.data.favorites);
                 console.log(response.data.favorites);
                 
             }
@@ -96,13 +91,13 @@ if (error) {
   return (
   
     <>
-   
+    <Nav></Nav>
     <div className="flex items-center justify-center min-h-[100vh] flex-col">
 <TextGlitchAnimation text="Polubione produkty"></TextGlitchAnimation>
     <div className="flex gap-5 justify-center items-center flex-wrap w-[70%]">
       
-    {favorites.length > 0 ? (
-    favorites.map((favProduct, index) => (
+    {favoriteProducts.length > 0 ? (
+    favoriteProducts.map((favProduct, index) => (
         <>
          <Card key={index} isPressable shadow="sm"  className="px-2 z-[10] w-[15rem] min-h-[20rem]"> 
           <CardBody className="overflow-visible p-0" onClick={()=>setDisplay(favProduct._id)}>

@@ -6,7 +6,7 @@ import "../styles/Login.css";
 import TextGlitchAnimation from '@/components/TextGlitchAnimation';
 import {useData} from "../Context/UserDataContext"
 import { useNavigate } from "react-router";
-import handleApiError from "../api/hooks/handleApiError"
+import handleApiError from "../api/handleApiError"
 import auth from '../api/auth';
 
 function Login() {
