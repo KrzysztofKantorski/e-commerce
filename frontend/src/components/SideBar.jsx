@@ -22,7 +22,7 @@ const { category, setCategory } = useCategory();
 
 useEffect(()=>{
   setLoading(true)
-    const fetchCount = async()=>{
+  const fetchCount = async()=>{
   try{
     const response = await axios.get(`http://localhost:3000/products/category/count`);
     setProduct(response.data.count)

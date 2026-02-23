@@ -1,12 +1,13 @@
 import React from 'react'
 import {useState, useEffect} from "react"
 import {useNavigate} from "react-router"
-
-import axios from "axios"
 import LoadingData from "./handleData/LoadingData"
 import {Listbox, ListboxItem} from "@heroui/react";
 import { useScroll } from '../hooks/useScroll';
 import { FaRegFaceSadCry } from "react-icons/fa6";
+import handleApiError from '@/api/handleApiError'
+
+import product from '@/api/product'
 const ListboxWrapper = ({children}) => (
   <div className="w-full max-w-[100%]  border-small  rounded-small border-default-200 dark:border-default-100">
     {children}
@@ -16,18 +17,23 @@ const ListboxWrapper = ({children}) => (
 function DisplaySearch({search}) {
 const navigate = useNavigate();
 const [searchedProducts, setSearchedProducts] = useState([])
-const [error, setError] = useState(null)
 const [loading, setLoading] = useState(false)
 const [noResults, setNoResults] = useState(false)
 const isScrolled = useScroll()
-
+const {clearErrors, handleError, fieldErrors, globalError} = handleApiError()
 const setDisplay = (id)=>{
-    axios.get(`http://localhost:3000/products/${id}`)
+  try{
+    clearErrors();
+    product.displayProduct(id)
     navigate(`/product/${id}`)
+    
+  }catch(error){
+    handleError(error);
+    console.log(globalError);
+  }
 }
    
 useEffect(() => {
-  setError(null);
   setNoResults(false);
   let isMounted = true;
   setLoading(true);
@@ -40,50 +46,24 @@ useEffect(() => {
     return;
     }
       try {
-        let url = "http://localhost:3000/products";
-        
         if (search == "") {
-          setError("type something to find")
+          return;
         }
-        url += `/search?q=${search}`
-        const response = await axios.get(url);
-        
-       
-          if(response.data.products.length == 0){
-           
+        const response = await product.findProduct(search);
+        if(response.data.products.length == 0){
             setNoResults(true);
             setSearchedProducts([]);
             console.log("Nie znaleziono produktu")
-          }
-          else{
+        }
+        else{
             setSearchedProducts(response.data.products);
             
-          }
+        }
           
       } catch (err) {
-        if (isMounted) {
-            if (err.response) {
-              switch (err.response.status) {
-                case 404:
-                  setError("Endpoint wyszukiwania nie został znaleziony");
-                  break;
-                case 500:
-                  setError("Błąd serwera. Spróbuj ponownie później");
-                  break;
-                default:
-                  setError("Wystąpił błąd podczas wyszukiwania");
-              }
-            } 
-            else if (err.request) {
-              
-              setError("Brak połączenia z serwerem. Sprawdź swoje połączenie internetowe");
-            } 
-            else {
-              setError("Nie znaleziono produktów");
-            }
-            setSearchedProducts([]);
-            setNoResults(true);
-      } 
+        handleError(err);
+        setSearchedProducts([]);
+        setNoResults(true);
     }
       finally{
         setLoading(false)
@@ -91,16 +71,15 @@ useEffect(() => {
     };
 
     fetchProducts()
-    return () => {
-      isMounted = false;
-    };
+   
 }, [search]);
 
- if (error) {
-      console.log(error)
+ if (globalError != "") {
+      console.log(globalError)
   }
 
-  let containerClass = isScrolled?  "fixed top-[4rem] z-50 w-[90%] left-[5%] bg-background shadow-xl border-b xl:w-[30%] xl:left-[35%]": "absolute left-[5%] right-0 z-50 w-[90%] top-[4rem] mt-0 bg-background shadow-xl border-b xl:w-[30%] xl:left-[35%]"
+  let containerClass = isScrolled?  
+  "fixed top-[4rem] z-50 w-[90%] left-[5%] bg-background shadow-xl border-b xl:w-[30%] xl:left-[35%]": "absolute left-[5%] right-0 z-50 w-[90%] top-[4rem] mt-0 bg-background shadow-xl border-b xl:w-[30%] xl:left-[35%]"
   
 if (search.trim() === "") {
         return null;

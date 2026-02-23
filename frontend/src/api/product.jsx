@@ -20,12 +20,21 @@ const product = {
         return response.data;
    },
 
+   //display prodycts based on search query
+   findProduct:  async(search)=>{
+      let url = `http://localhost:3000/products/search?q=${search}`;
+      const response = await axiosClient.get(url);
+      return response;
+   },
+
+   
    //Display single product based in id
    displayProduct: async(id)=>{
       const response = await axiosClient.get(`/products/${id}`);
       return response;
    }
 
+     
 
 }
 

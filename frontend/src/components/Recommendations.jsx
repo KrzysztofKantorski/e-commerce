@@ -5,11 +5,14 @@ import {Pagination} from "@heroui/react";
 import {Card, CardBody, CardFooter, Tooltip, Image } from "@heroui/react";
 import axios from "axios"
 import {useState, useEffect} from "react"
-import {useNavigate} from "react-router"
 import { FaCartPlus } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
-import { useFavorites } from '@/hooks/useFavorites';
-import { useCart } from '@/hooks/useCart';
+import handleApiError from '@/api/handleApiError'
+import product from '@/api/product';
+import { useNavigate } from 'react-router';
+import { useCategory } from '../Context/CategoyContext';
+import favorites from '@/api/favorites';
+import cart from '@/api/cart';
 function Recommendations({category, id}) {
   const ProductToSkip = id;
   const productCategory = category;
@@ -18,34 +21,47 @@ function Recommendations({category, id}) {
   const [error, setError] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState();
-  const {addToFavorites} = useFavorites();
-  const {handleAddToCart} = useCart();
+  const {clearErrors, handleError, fieldErrors, globalError} = handleApiError()
+  const navigate = useNavigate();
+  const {newProduct, setNewProduct, addToCart, setAddToCart} = useCategory();
+
+  const setDisplay = (id)=>{
+    try{
+      clearErrors();
+      product.displayProduct(id)
+      navigate(`/product/${id}`)
+      
+    }
+    catch(error){
+      handleError(error);
+      console.log(globalError);
+    }
+  }
+
+
   const fetchProducts = async (page = 1) => {
       try {
-      let url = "http://localhost:3000/products";
-      const params = { page, limit: 5 };
-      
-      if (productCategory && productCategory !== "all") {
-        url += `/category/${productCategory}`;
-      }
-  
-      const response = await axios.get(url, { params });
-      console.log(`RESPONSE: ${response}`)
-      const filteredProducts = response.data.products.filter(
-        product => product._id !== ProductToSkip
-      );
-      setProducts(filteredProducts);
-      setPages(response.data.totalPages);
-      setError(null);
-      console.log(response.data.products)
+        let url = "http://localhost:3000/products";
+        const params = { page, limit: 5 };
+        if (productCategory && productCategory !== "all") {
+          url += `/category/${productCategory}`;
+        }
+        const response = await axios.get(url, { params });
+        const filteredProducts = response.data.products.filter(
+          product => product._id !== ProductToSkip
+        );
+        setProducts(filteredProducts);
+        setPages(response.data.totalPages);
+        setError(null);
+        console.log(response.data.products)
       
     } catch (err) {
-      console.error('Error:', err);
-      setError("Błąd ładowania produktów");
-      setProducts([]);
+        handleError(err);
+        console.log(globalError);
+        setError("Błąd ładowania produktów");
+        setProducts([]);
     } finally {
-      setLoading(false);
-      
+        setLoading(false);
     }
     }
   
@@ -62,16 +78,32 @@ function Recommendations({category, id}) {
   }
 
   const handleAddToFavorites = async (productId) => {
-  const result = await addToFavorites(productId);
-  if (result.success) {
-    alert(result.message); 
-  } else {
-    alert(result.message); 
-  }
-};
+    try{
+    clearErrors();
+    const result = await favorites.addToFavorites(productId);
+    setNewProduct(prev => [...prev, productId]);
+    alert("Produkt został dodany do ulubionych"); 
+    
+    }catch(error){
+        handleError(error, "favorites");
+        alert("Produkt jest już w ulubionych");
+        console.log(globalError)
+    }
+    
+  };
 
 const handleCart = async (productId) => {
-    await handleAddToCart(productId);
+  try{
+    clearErrors();
+    await cart.addCartProduct(productId);
+    alert("Produkt został dodany do koszyka");
+    setAddToCart({product})
+  }
+  catch(error){
+    handleError(error);
+    console.log(globalError);
+  }
+    
 };
   if(error){
     <Error></Error>
