@@ -9,6 +9,7 @@ const axiosClient = axios.create({
   },
 });
 
+let isRedirecting = false;
 //Interceptors
 export const requestInterceptor = (logout, navigate) => {
   axiosClient.interceptors.response.use(
@@ -16,10 +17,16 @@ export const requestInterceptor = (logout, navigate) => {
     async (error) =>{
       // Handle 401
       if(error.response && error.response.status === 401){
-        alert("Sesja wygasła, zaloguj się ponownie");
-        if(logout) logout();
-        if(navigate) navigate('/login');
-        return Promise.reject(error);
+        const currentPath = window.location.pathname;
+        if (currentPath === '/login' || isRedirecting) {
+          return Promise.reject(error);
+        }
+        isRedirecting = true;
+        alert("Nie jesteś zalogowany");
+        
+        if (logout) await logout();
+        if (navigate) navigate('/');
+        setTimeout(() => { isRedirecting = false; }, 2000);
       }
       // Handle 403
       if(error.response && error.response.status === 403){

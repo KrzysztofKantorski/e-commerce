@@ -27,12 +27,15 @@ import LoadingData from './components/handleData/LoadingData'
 import { BrowserRouter, Routes, Route } from "react-router";
 import { CategoryProvider } from './Context/CategoyContext'
 import { UserDataProvider } from './Context/UserDataContext'
-
+import { InterceptorSetup } from './interceptorSetup';
 export default function App() {
+
   return (
     <>
     <BrowserRouter>
+    
     <UserDataProvider>
+      <InterceptorSetup />
     <CategoryProvider>
     <Suspense fallback={<LoadingData />}>
       <Routes>
