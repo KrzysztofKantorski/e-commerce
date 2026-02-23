@@ -55,23 +55,13 @@ function UpdateForm({product}) {
     return; 
   }
   try{
-     const token = cookies.get("TOKEN");
-    if (!token) {
-      alert("Twoja sesja zakończyła się - zaloguj się ponownie");
-      navigate("/Login");
-      return;
-    }
+     
     const url = `http://localhost:3000/products/${id}`;
     const response = await axios.put(url, {
           name: data.productName, 
           description: data.description,
           price: data.price,
           category: data.category
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
       });
     console.log(response.data);
   }

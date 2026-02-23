@@ -73,7 +73,7 @@ function AddProduct() {
         const message = error.response.data.message || "Wystąpił błąd";
         switch (status) {
                 case 401: 
-                    // Token expired or invalid
+                    
                     alert("Twoja sesja wygasła. Zaloguj się ponownie.");
                     // navigate to login page
                     navigate("/Login");

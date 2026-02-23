@@ -14,8 +14,7 @@ import {
 } from 'chart.js';
 import SideBar from "./SideBar"
 import { Bar, Pie } from 'react-chartjs-2';
-import axios from 'axios';
-import Cookies from 'universal-cookie';
+import stats from '../api/stats';
 import LoadingData from '@/components/handleData/LoadingData';
 import Error from '@/components/handleData/Error';
 import {useNavigate} from "react-router"
@@ -36,9 +35,8 @@ ChartJS.register(
   Legend
 );
 
-const cookies = new Cookies();
 function UsersChart() {
-    const [stats, setStats] = useState(null);
+    const [data, setData] = useState(null);
       const [loading, setLoading] = useState(false);
       const [error, setError] = useState(null);
       const [dateRange, setDateRange] = useState({
@@ -51,7 +49,6 @@ const fetchStats = async()=>{
     setLoading(true)
     setError(null)
     try{
-    const token = cookies.get("TOKEN");
     const params = {};
     if(dateRange.startDate){
       params.startDate = dateRange.startDate;
@@ -60,15 +57,10 @@ const fetchStats = async()=>{
       params.endDate = dateRange.endDate;
     }
 
-    const url = "http://localhost:3000/stats/users";
-
-    const response = await axios.get(url, {
-      
-      params
-    })
+    const response = await stats.displayUserStats(params);
 
     if(response.status == 200){
-      setStats(response.data.stats);
+      setData(response.data.stats);
       console.log("success")
       console.log(response.data.stats)
     }
@@ -106,11 +98,11 @@ const handleSubmit = (e) => {
   };
 
 const userRoleChartData = {
-    labels: stats ? Object.keys(stats.roleDistribution) : [],
+    labels: data ? Object.keys(data.roleDistribution) : [],
     datasets: [
       {
         label: 'Role użytkowników',
-        data: stats ? Object.values(stats.roleDistribution) : [],
+        data: data ? Object.values(data.roleDistribution) : [],
         backgroundColor: [
           'oklch(47.655% 0.23035 318.675)',
           'rgba(0,0,0,.1)',
@@ -122,11 +114,11 @@ const userRoleChartData = {
   }
 
 const usersByOrdersChartData = {
-    labels: stats ? Object.keys(stats.topUsersByOrders) : [], // Top 10 products
+    labels: data ? Object.keys(data.topUsersByOrders) : [], // Top 10 products
     datasets: [
       {
         label: 'Ilość zamówień użytkownika',
-        data: stats ? Object.values(stats.topUsersByOrders).slice(0, 10) : [],
+        data: data ? Object.values(data.topUsersByOrders).slice(0, 10) : [],
         backgroundColor: 'oklch(47.655% 0.23035 318.675)',
       },
     ],
@@ -135,11 +127,11 @@ const usersByOrdersChartData = {
 
 
   const usersBySpending = {
-    labels: stats ? Object.keys(stats.topUsersBySpending) : [], // Top 10 products
+    labels: data ? Object.keys(data.topUsersBySpending) : [], // Top 10 products
     datasets: [
       {
-        label: 'Ilość zamówień użytkownika',
-        data: stats ? Object.values(stats.topUsersBySpending).slice(0, 10) : [],
+        label: 'Wartość zamówień użytkownika',
+        data: data ? Object.values(data.topUsersBySpending).slice(0, 10) : [],
         backgroundColor: 'oklch(47.655% 0.23035 318.675)',
       },
     ],
@@ -158,11 +150,11 @@ return (
   <Hamburger></Hamburger>
 <div className="w-[80%] ml-[10%] gap-5 flex flex-col mt-[2rem] lg:flex-row lg:ml-[15%] lg:w-[100%]">
   <div>
-    {stats && (
+    {data && (
       <div>
         <div className="bg-white p-4 rounded shadow h-[7rem] mb-[1rem] flex justify-center flex-col">
             <h3 className="font-semibold text-primary">Łączna ilość użytkowników</h3> 
-            <p className="text-2xl">{stats.totalUsers}</p>
+            <p className="text-2xl">{data.totalUsers}</p>
 
           </div>
           <div className="bg-white p-4 rounded shadow mb-[1rem]">

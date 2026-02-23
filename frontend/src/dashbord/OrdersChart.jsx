@@ -14,8 +14,7 @@ import {
 } from 'chart.js';
 
 import { Bar, Line, Pie } from 'react-chartjs-2';
-import axios from 'axios';
-import Cookies from 'universal-cookie';
+import stats from '../api/stats';
 import LoadingData from '@/components/handleData/LoadingData';
 import Error from '@/components/handleData/Error';
 import {Button} from "@heroui/react";
@@ -34,9 +33,8 @@ ChartJS.register(
   Legend
 );
 import Hamburger from './Hamburger';
-const cookies = new Cookies();
 function OrdersChart() {
-  const [stats, setStats] = useState(null);
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { isReady } = useRole();
@@ -45,7 +43,6 @@ function OrdersChart() {
     startDate: '',
     endDate: ''
   });
-  const token = cookies.get("TOKEN");
    const fetchStats = async()=>{
     setLoading(true)
     setError(null)
@@ -58,15 +55,9 @@ function OrdersChart() {
     if(dateRange.endDate){
       params.endDate = dateRange.endDate;
     }
-
-    const url = "http://localhost:3000/stats";
-
-    const response = await axios.get(url, 
-      params
-    )
-
+    const response = await stats.displayStats(params);
     if(response.status == 200){
-      setStats(response.data.stats);
+      setData(response.data.stats);
     }
 
     } 
@@ -81,14 +72,14 @@ function OrdersChart() {
   
   useEffect(()=>{
     fetchStats();
-  },[token, navigate])
+  },[navigate])
 
   const statusChartData = {
-    labels: stats ? Object.keys(stats.statusDistribution) : [],
+    labels: data ? Object.keys(data.statusDistribution) : [],
     datasets: [
       {
         label: 'Orders by Status',
-        data: stats ? Object.values(stats.statusDistribution) : [],
+        data: data ? Object.values(data.statusDistribution) : [],
         backgroundColor: [
           'oklch(47.655% 0.23035 318.675)',
           'rgba(0,0,0,.1)',
@@ -100,11 +91,11 @@ function OrdersChart() {
   }
 
   const revenueChartData = {
-    labels: stats ? Object.keys(stats.revenueByMonth) : [],
+    labels: data ? Object.keys(data.revenueByMonth) : [],
     datasets: [
       {
         label: 'Revenue by Month',
-        data: stats ? Object.values(stats.revenueByMonth) : [],
+        data: data ? Object.values(data.revenueByMonth) : [],
         borderColor: 'oklch(47.655% 0.23035 318.675)',
         backgroundColor: 'oklch(50.655% 0.23035 318.675)',
       },
@@ -113,11 +104,11 @@ function OrdersChart() {
 
 
   const productsChartData = {
-    labels: stats ? Object.keys(stats.productSales).slice(0, 10) : [], // Top 10 products
+    labels: data ? Object.keys(data.productSales).slice(0, 10) : [], // Top 10 products
     datasets: [
       {
         label: 'Units Sold',
-        data: stats ? Object.values(stats.productSales).slice(0, 10) : [],
+        data: data ? Object.values(data.productSales).slice(0, 10) : [],
         backgroundColor: 'oklch(47.655% 0.23035 318.675)',
       },
     ],
@@ -150,15 +141,15 @@ if(error){
        <Hamburger></Hamburger>
       <div className="ml-[1rem] w-[20rem] lg:ml-[5rem]">
 
-       {stats && (
+       {data && (
         <div className="mb-6 flex flex-col gap-3">
           <div className="bg-white p-4 rounded shadow ">
             <h3 className="font-semibold text-primary">łącznie zamówień</h3>
-            <p className="text-2xl">{stats.totalOrders}</p>
+            <p className="text-2xl">{data.totalOrders}</p>
           </div>
           <div className="bg-white p-4 rounded shadow">
             <h3 className="font-semibold text-primary">Łączny przychód</h3>
-            <p className="text-2xl">${stats.totalRevenue.toFixed(2)}</p>
+            <p className="text-2xl">${data.totalRevenue.toFixed(2)}</p>
           </div>
           <div className="bg-white p-4 rounded shadow">
             <h3 className="font-semibold text-primary">Okres czasu</h3>
@@ -198,7 +189,7 @@ if(error){
      
       </div>
 
-      {stats && (
+      {data && (
       
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 ">
           
