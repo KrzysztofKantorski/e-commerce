@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router';
 import { useCategory } from '../Context/CategoyContext';
 import favorites from '@/api/favorites';
 import cart from '@/api/cart';
+import { useData } from '../Context/UserDataContext';
 function Recommendations({category, id}) {
   const ProductToSkip = id;
   const productCategory = category;
@@ -24,7 +25,7 @@ function Recommendations({category, id}) {
   const {clearErrors, handleError, fieldErrors, globalError} = handleApiError()
   const navigate = useNavigate();
   const {newProduct, setNewProduct, addToCart, setAddToCart} = useCategory();
-
+  const { data } = useData();
   const setDisplay = (id)=>{
     try{
       clearErrors();
@@ -65,7 +66,7 @@ function Recommendations({category, id}) {
     }
     }
   
-  //fetch products
+
   useEffect(() => {
     setCurrentPage(1);
     fetchProducts(1)
@@ -80,6 +81,11 @@ function Recommendations({category, id}) {
   const handleAddToFavorites = async (productId) => {
     try{
     clearErrors();
+    if (!data || !data.username) {
+      alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+      navigate('/');
+      return; 
+    }
     const result = await favorites.addToFavorites(productId);
     setNewProduct(prev => [...prev, productId]);
     alert("Produkt został dodany do ulubionych"); 
@@ -95,6 +101,11 @@ function Recommendations({category, id}) {
 const handleCart = async (productId) => {
   try{
     clearErrors();
+    if (!data || !data.username) {
+      alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+      navigate('/');
+      return; 
+    }
     await cart.addCartProduct(productId);
     alert("Produkt został dodany do koszyka");
     setAddToCart({product})
@@ -106,10 +117,10 @@ const handleCart = async (productId) => {
     
 };
   if(error){
-    <Error></Error>
+    return <Error error={globalError}></Error>
   }
   if(loading){
-    <LoadingData></LoadingData>
+    return<LoadingData></LoadingData>
   }
   return (
     <div>

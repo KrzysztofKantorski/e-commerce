@@ -5,7 +5,8 @@ import {useNavigate} from "react-router"
 import TextGlitchAnimation from '@/components/TextGlitchAnimation'
 import {Image} from "@heroui/react";
 import {Accordion, AccordionItem} from "@heroui/react";
-import Cookies from "universal-cookie"
+import order from '../api/order';
+import handleApiError from '@/api/handleApiError';
 import {
   Table,
   TableHeader,
@@ -14,31 +15,21 @@ import {
   TableRow,
   TableCell
 } from "@heroui/table";
-const cookies = new Cookies();
+
 function ShowOrders() {
 const [loading, setLoading] = useState(true);
 const [error, setError] = useState(false);
-const [order, setOrder] = useState([]);
+const [orders, setOrders] = useState([]);
 const navigate = useNavigate(); 
 useEffect(()=>{
   const displayTotal = async ()=>{
   setLoading(true);
-  setOrder([])
+  setOrders([])
     try{
-        const token = cookies.get("TOKEN");
-        if (!token) {
-          alert("Musisz być zalogowany aby złożyć zamówienie");
-          navigate("/Login");
-          return;
-        }
-      const url = "http://localhost:3000/orders";
-      const response = await axios.get(url, {
-      headers: {
-      Authorization: `Bearer ${token}`,
-      }});
+      const response = await order.displayOrders();
       if(response.status == 200){
-        const orders = response.data.orders;
-        setOrder(orders);   
+        const userOrders = response.data.orders;
+        setOrders(userOrders);   
       }
     }
     catch(error){
@@ -56,7 +47,7 @@ return (
 
 <TextGlitchAnimation text={"Zamówienia"}></TextGlitchAnimation>
 <div className="w-[90%] min-h-[10rem] ml-[5%] z-[10] relative text-right lg:w-[50%] lg:ml-[25%]">
-    {order.map((item, index)=>(
+    {orders.map((item, index)=>(
     <>
     <Accordion>
       <AccordionItem key="1" aria-label="Zamówienie" title={`Zamówienie: ${new Date(item.createdAt).toLocaleDateString('pl-PL')}`} className="text-left">

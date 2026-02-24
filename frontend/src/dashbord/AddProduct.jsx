@@ -84,7 +84,7 @@ function AddProduct() {
                     break;
 
                 case 409:
-                    // Conflict error (e.g., duplicate product)
+                    // Conflict error
                     alert(`Błąd: ${message}`); 
                     setErrors({ productName: "Taki produkt już istnieje" });
                     break;

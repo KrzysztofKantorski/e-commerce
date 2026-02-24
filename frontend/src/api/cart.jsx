@@ -24,7 +24,17 @@ const cart = {
         return response;
    },
 
+   //update quantity of product in cart
+    updateCart: async(id, quantity)=>{
+          const url = `http://localhost:3000/cart/${id}`;
+          const response = await axiosClient.put(url, {
+          quantity :quantity
+          });
+          return response;
+     },
 
+
+    
 }
 
 export default cart

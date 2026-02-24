@@ -11,6 +11,7 @@ import {useNavigate} from "react-router"
 import cart from '../api/cart';
 import product from '../api/product';
 import handleApiError from '../api/handleApiError';
+import { useData } from '../Context/UserDataContext';
 function Cart() {
 const {addToCart} = useCategory();
 const [cartProducts, setCartProducts] = useState([]);
@@ -18,10 +19,15 @@ const [loading, setLoading] = useState(true);
 const navigate = useNavigate();
 const [updateCart, setUpdateCart] = useState([]);
 const {clearErrors, handleError, globalError} = handleApiError()
-
+const { data } = useData();
 const handleRemoveFromCart = async (productId) => {
     try{
         clearErrors();
+        if (!data || !data.username) {
+            alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+            navigate('/');
+            return; 
+        }
         const response =  await cart.removeCartProduct(productId);
         if(response.status == 200){
             setUpdateCart(prev => [...prev, productId]);
@@ -36,6 +42,11 @@ const handleRemoveFromCart = async (productId) => {
 
 
  const showCart = ()=>{
+    if (!data || !data.username) {
+    alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+    navigate('/');
+    return; 
+   }
     navigate("/CartProducts")
  }
 
@@ -49,6 +60,11 @@ const displayCart = async ()=>{
     setLoading(true);
         try{
             clearErrors();
+            if (!data || !data.username) {
+                alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+                navigate('/');
+                return; 
+            }
             const response = await cart.displayCart();
             if(response.status == 200){
                 setCartProducts(response.data.cart);
@@ -66,10 +82,10 @@ const displayCart = async ()=>{
 displayCart();
 }, [addToCart, updateCart, navigate])
 if(loading){
-    <LoadingData></LoadingData>
+    return <LoadingData></LoadingData>
 }
 if(globalError !=""){
-    <Error>{globalError}</Error>
+    return <Error error={globalError}></Error>
 }
   return (
     <>

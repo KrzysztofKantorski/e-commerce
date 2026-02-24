@@ -1,16 +1,12 @@
 import React, { useEffect } from 'react'
-import LoadingData from '@/components/handleData/LoadingData'
 import Error from '@/components/handleData/Error'
-import axios from "axios"
 import {useState} from "react"
 import {useNavigate} from "react-router"
-
+import order from '../api/order'; 
 import TextGlitchAnimation from '@/components/TextGlitchAnimation'
 import {Form, Input, Button} from "@heroui/react";
-import Cookies from "universal-cookie"
-
-const cookies = new Cookies();
-
+import handleApiError from '@/api/handleApiError';
+import { useData } from '../Context/UserDataContext';
 function Order() {
   const [errors, setErrors] = useState({})
   const [error, setError] = useState(null)
@@ -21,58 +17,57 @@ function Order() {
   const [country, setCountry] = useState("");
   const [number, setNumber] = useState("");
   const navigate = useNavigate();
-  const token = cookies.get("TOKEN");
-  useEffect(()=>{
-     if (!token) {
-      alert("Musisz być zalogowany aby złożyć zamówienie");
-      navigate("/");
-      return;
-  }
-  }, [navigate])
-   
+  const { data } = useData();
+  const {clearErrors, handleError, globalError} = handleApiError()
   const onSubmit = async (e) => {
+    clearErrors();
+    if (!data || !data.username) {
+      alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+      navigate('/');
+      return; 
+    }
     e.preventDefault();
     setErrors({});
-    const data = Object.fromEntries(new FormData(e.currentTarget));
+    const fieldData = Object.fromEntries(new FormData(e.currentTarget));
     const newErrors = {};
     let checkNumber = /\d/;
     //validation
-    if (!data.fullName.includes(" ")) {
+    if (!fieldData.fullName.includes(" ")) {
       newErrors.fullName = "Podaj zarówno imię jak i nazwisko";
     } 
-    else if (data.fullName.length < 4) {
+    else if (fieldData.fullName.length < 4) {
       newErrors.fullName = "Imię i nazwisko musi mieć co najmniej 4 znaki";
     } 
-    else if (checkNumber.test(data.fullName)) {
+    else if (checkNumber.test(fieldData.fullName)) {
       newErrors.fullName = "Imię i nazwisko nie może zawierać cyfr";
     }
     
-     if(data.street.length < 3){
+     if(fieldData.street.length < 3){
       newErrors.street= "podaj poprawną nazwę ulicy wraz z numerem";
     }
     
-    if (data.street.length < 3) {
+    if (fieldData.street.length < 3) {
       newErrors.street = "podaj poprawną nazwę ulicy (min. 3 znaki)";
     }
 
-    if(data.city.length < 3){
+    if(fieldData.city.length < 3){
       newErrors.city ="podaj poprawną nazwę miasta";
     }
 
     const postalCodeRegex = /^\d{2}-\d{3}$/;
-    if (!postalCodeRegex.test(data.postalCode)) {
+    if (!postalCodeRegex.test(fieldData.postalCode)) {
       newErrors.postalCode = "Podaj kod pocztowy w formacie 00-000";
     }
   
-    if (!data.country || data.country.length < 2) {
+    if (!fieldData.country || fieldData.country.length < 2) {
       newErrors.country = "Podaj poprawną nazwę kraju";
     }
     let checkPhoneNumber = /^\d{9}$/;
-    if(!checkPhoneNumber.test(data.number)){
+    if(!checkPhoneNumber.test(fieldData.number)){
       newErrors.number = "Podaj numer telefonu w prawidłowym formacie";
     }
 
-     if(data.number.length < 9){
+     if(fieldData.number.length < 9){
       newErrors.number = "Podaj numer telefonu w prawidłowym formacie";
     }
    if (Object.keys(newErrors).length > 0) {
@@ -81,30 +76,11 @@ function Order() {
   }
 
   try {
-    const url = `http://localhost:3000/orders`;
-    const response = await axios.post(url, 
-      {
-        shippingAddress: {
-          fullName: data.fullName, 
-          street: data.street,
-          city: data.city,
-          postalCode: data.postalCode,
-          country: data.country,
-          phone: data.number
-        }
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
-      }
-    );
-    
+    const response = await order.addUserData(fieldData);
     console.log("Success:", response.data);
-   
     navigate("/OrderSuccess");
-    
   } catch (error) {
+    handleError(error);
     console.error("Error:", error.response?.data || error.message);
     setError(error);
   }
@@ -119,15 +95,14 @@ function Order() {
     setNumber("");
   }
   if(error){
-    return(<Error></Error>)
+    return(<Error error={globalError}></Error>)
   }
   return (
     <div>
-      
       <div className="w-full flex flex-col items-center justify-center min-h-[90vh]">
       <TextGlitchAnimation text={"Dane do zamówienia"}></TextGlitchAnimation>
       
-        <Form className="w-full max-w-xs z-[10] relative flex flex-col items-center" onSubmit={onSubmit}  validationErrors={errors}>
+      <Form className="w-full max-w-xs z-[10] relative flex flex-col items-center" onSubmit={onSubmit}  validationErrors={errors}>
       <Input
         isRequired
         
@@ -202,11 +177,7 @@ function Order() {
     
       
     </Form>
-
       </div>
-      
-
-
     </div>
    
   )

@@ -7,9 +7,6 @@ import {useNavigate} from "react-router"
 import { NeonGradientCard } from "@/components/magicui/neon-gradient-card";
 import TextGlitchAnimation from '@/components/TextGlitchAnimation'
 import {Form, Input, Button} from "@heroui/react";
-import Cookies from "universal-cookie"
-
-const cookies = new Cookies();
 
 function Register() {
   const [errors, setErrors] = useState({})

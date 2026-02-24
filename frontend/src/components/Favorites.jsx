@@ -11,6 +11,7 @@ import favorites from '../api/favorites';
 import { useCategory } from '../Context/CategoyContext';
 import handleApiError from '../api/handleApiError';
 import product from '../api/product';
+import { useData } from '../Context/UserDataContext';
 function Favorites() {
     const [loading, setLoading] = useState(true);
     const [favorite, setFavorite] = useState([]);
@@ -18,9 +19,23 @@ function Favorites() {
     const {newProduct, setNewProduct} = useCategory();
     const [removedProduct, setRemovedProduct] = useState("");
     const {clearErrors, handleError, fieldErrors, globalError} = handleApiError()
-
+    const { data } = useData();
     const showFavorites = ()=>{
-        navigate("/FavoriteProducts")
+        try{
+            clearErrors();
+            if (!data || !data.username) {
+                alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+                navigate('/');
+                return; 
+            }
+             navigate("/FavoriteProducts")
+
+        }
+        catch(error){
+            handleError(error);
+            console.log(globalError);
+        }
+        
     }
 
     const setDisplay = (id)=>{
@@ -31,6 +46,11 @@ function Favorites() {
     const handleRemoveFromFavorites = async (productId) => {
         try{
             clearErrors();
+            if (!data || !data.username) {
+                alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+                navigate('/');
+                return; 
+            }
             const result = await favorites.removeFavoriteProduct(productId);
             setRemovedProduct(productId);
             if(result.success){
@@ -47,6 +67,11 @@ function Favorites() {
         const displayFavorites = async ()=>{
         setLoading(true);
         try{
+            if (!data || !data.username) {
+                alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+                navigate('/');
+                return; 
+            }
             const response = await favorites.displayFavoriteProducts();
             if(response.status == 200){
                 setFavorite(response.data.favorites);

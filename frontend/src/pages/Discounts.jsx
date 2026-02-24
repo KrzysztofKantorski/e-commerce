@@ -3,27 +3,30 @@ import TextGlitchAnimation from '@/components/TextGlitchAnimation'
 import {useState, useEffect} from "react"
 import Error from "../components/handleData/Error"
 import LoadingData from "../components/handleData/LoadingData"
-import axios from "axios"
 import {Card, CardBody, CardFooter, Image, Tooltip} from "@heroui/react";
 import { FaCartPlus } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
-import { useFavorites } from '@/hooks/useFavorites';
-import { useCart } from '@/hooks/useCart';
 import { useNavigate } from 'react-router';
 import Nav from "../components/Nav"
+import product from '@/api/product'
+import handleApiError from '../api/handleApiError';
+import cart from '../api/cart';
+import favorites from '@/api/favorites'
+import { useData } from '../Context/UserDataContext';
+import { useCategory } from '../Context/CategoyContext';
 function Discounts() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [products, setProducts] = useState([]);
-    const {addToFavorites} = useFavorites();
-    const {handleAddToCart} = useCart();
     const navigate = useNavigate();
+    const {clearErrors, handleError, fieldErrors, globalError} = handleApiError()
+    const { data } = useData();
+    const {newProduct, setNewProduct, addToCart, setAddToCart} = useCategory();
     useEffect(()=>{
         setLoading(true)
         const fetchProducts = async()=>{
             try{
-                const url = "http://localhost:3000/products/discount";
-                const response = await axios.get(url);
+                const response = await product.displayDiscount();
                 if(response.status === 200){
                     setProducts(response.data.products);
                  
@@ -40,25 +43,49 @@ function Discounts() {
     }, [])
 
     const handleAddToFavorites = async (productId) => {
-        const result = await addToFavorites(productId);
-        if (result.success) {
-            alert(result.message); 
-        } else {
-            alert(result.message); 
+    try{
+        clearErrors();
+        if (!data || !data.username) {
+            alert("Musisz się zalogować, aby dodać produkt do ulubionych!");
+            navigate('/');
+            return; 
+        }
+        const result = await favorites.addToFavorites(productId);
+        setNewProduct(prev => [...prev, productId]);
+        alert("Produkt został dodany do ulubionych");
+        }
+        catch(error){
+            handleError(error);
+            alert("Wystąpił błąd podczas dodawania produktu do ulubionych.");
+            console.log(globalError)
         }
     };
 
     const handleCart = async (productId) => {
-        await handleAddToCart(productId);
+        try{
+        clearErrors();
+        if (!data || !data.username) {
+            alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+            navigate('/');
+            return; 
+        }
+        await cart.addCartProduct(productId);
+        setAddToCart({product})   
+        alert("Produkt został dodany do koszyka");
+        }
+        catch(error){
+            handleError(error);
+            console.log(globalError)
+        }
     };
 
-    const setDisplay = (id)=>{
-    axios.get(`http://localhost:3000/products/${id}`)
+    const setDisplay = async (id)=>{
+        await product.displayProduct(id);
         navigate(`/product/${id}`)
     }
 
-    if(error){
-        return <Error></Error>
+    if(globalError !=""){
+        return <Error error={globalError}></Error>
     }
 
     if(loading){

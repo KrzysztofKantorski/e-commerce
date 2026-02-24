@@ -11,6 +11,7 @@ import {Pagination} from "@heroui/react";
 import TextGlitchAnimation from './TextGlitchAnimation'
 import reviews from '../api/reviews';
 import handleApiError from '../api/handleApiError';
+import { useData } from '../Context/UserDataContext';
 function DisplayComments({id}) {
     const product = id;
     const [currentPage, setCurrentPage] = useState(1);
@@ -21,8 +22,22 @@ function DisplayComments({id}) {
     const [filter, setFilter] = useState("newest");
     const navigate = useNavigate();
     const {clearErrors, handleError, globalError} = handleApiError()
+    const { data } = useData();
     const AddRewiev = ()=>{
+      try{
+        clearErrors();
+        if (!data || !data.username) {
+            alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+            navigate('/');
+            return; 
+        }
         navigate(`/AddReview/${product}`);
+      }
+      catch(error){
+        handleError(error);
+        console.log(globalError);
+      }
+      
     }
 
     const formatDateTime = (dateString) => {
@@ -71,7 +86,7 @@ if(loading){
 }
 if(error){
     return(
-        <Error></Error>
+       <Error error={globalError}></Error>
     ) 
 }
 return (
@@ -82,15 +97,15 @@ return (
        <div className="text-center">
          <Button color="primary" onPress={() => {AddRewiev()}} className="z-100 py-[1.5rem]">
             Dodaj opinię
-        </Button>
+          </Button>
        </div>
         </>
       ) : (
         <>
-        <TextGlitchAnimation text={"opinie"}></TextGlitchAnimation>
+    <TextGlitchAnimation text={"opinie"}></TextGlitchAnimation>
         <div className="text-center">
     <Dropdown  classNames={{
-        base: "before:bg-default-200", // change arrow background
+        base: "before:bg-default-200", 
         content:
           "py-1 px-1 border  border-default-200 bg-linear-to-br from-white to-default-200 dark:from-default-50 dark:to-black",
       }}>

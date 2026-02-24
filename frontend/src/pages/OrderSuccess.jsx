@@ -8,7 +8,6 @@ import {Image} from "@heroui/react";
 import {Accordion, AccordionItem} from "@heroui/react";
 import {RadioGroup} from "@heroui/react";
 import CustomRadio from '@/components/CustomRadio'
-import Cookies from "universal-cookie"
 import {
   Table,
   TableHeader,
@@ -17,49 +16,43 @@ import {
   TableRow,
   TableCell
 } from "@heroui/table";
-const cookies = new Cookies();
+import order from '../api/order';
+import handleApiError from '@/api/handleApiError';
+import { useData } from '../Context/UserDataContext';
 function OrderSuccess() {
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
     const [total, setTotal] = useState("");
-    const [order, setOrder] = useState([]);
+    const [userOrder, setUserOrder] = useState([]);
     const [adres, setAdres] = useState([]);
-    const [payment, setPayment] = useState("")
+    const [payment, setPayment] = useState("");
+    const {clearErrors, handleError, globalError} = handleApiError()
     const navigate = useNavigate(); 
-
+    const { data } = useData();
      useEffect(()=>{
         const displayTotal = async ()=>{
              setLoading(true);
-              setOrder([])
+              setUserOrder([])
             try{
-            const token = cookies.get("TOKEN");
-            if (!token) {
-            alert("Musisz być zalogowany aby złożyć zamówienie");
-            navigate("/Login");
-            return;
+              clearErrors();
+              if (!data || !data.username) {
+                alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+                navigate('/');
+                return; 
+              }
+              const response = await order.displayData();
+              console.log(response)
+              const orders = response.data.orders;
+              const sortedOrders = orders.sort((a, b) => 
+              new Date(b.createdAt) - new Date(a.createdAt)
+              );
+              const currentOrder = sortedOrders[0];
+              setTotal(currentOrder.totalPrice);
+              setUserOrder(currentOrder.products);
+              setAdres(currentOrder.shippingAddress);
             }
-            const url = "http://localhost:3000/orders";
-            console.log(url)
-            const response = await axios.get(url, {
-            headers: {
-            Authorization: `Bearer ${token}`,
-            }
-            });
-
-            if(response.status == 200){
-                const orders = response.data.orders;
-                const sortedOrders = orders.sort((a, b) => 
-                new Date(b.createdAt) - new Date(a.createdAt)
-                );
-                const currentOrder = sortedOrders[0];
-                setTotal(currentOrder.totalPrice);
-                setOrder(currentOrder.products);
-                setAdres(currentOrder.shippingAddress);
-               
-                
-            }
-            }catch(error){
-                setError(error.message)
+            catch(error){
+                handleError(error);
+                console.log(globalError);
             }
             finally{
                 setLoading(false);
@@ -69,29 +62,27 @@ function OrderSuccess() {
 }, [])
 
 const finalizeOrder = async ()=>{
-    if(payment === ""){
-      alert("wybierz metodę płatności");
-      return
+  clearErrors();
+  if (!data || !data.username) {
+    alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+    navigate('/');
+    return; 
+  }
+  if(payment === ""){
+    alert("wybierz metodę płatności");
+    return
+  }
+  try{
+    const response = await order.finalizeOrder(payment);
+    if(response.status == 200){
+      alert("Zamówienie zostało złożone");
+      setTimeout(()=>{navigate("/")}, 3000)
+      }
     }
-     try{
-          const token = cookies.get("TOKEN");
-          if (!token) {
-            alert("Musisz być zalogowany aby złożyć zamówienie");
-            navigate("/Login");
-            return;
-          }
-          const url = "http://localhost:3000/orders";
-          const response = await axios.put(url, {payment: payment, status: "paid"},{
-            headers: {
-            Authorization: `Bearer ${token}`,
-            }});
-         
-          alert("Zamówienie zostało złożone");
-          setTimeout(()=>{navigate("/")}, 3000)
-        }
-      catch(error){
-          setError(error.message)
-        }
+  catch(error){
+    handleError(error);
+    console.log(globalError);
+  }
 }
 
   
@@ -127,7 +118,7 @@ const finalizeOrder = async ()=>{
                  
                </TableHeader>
                <TableBody emptyContent={"Brak produktów w koszyku"}>
-                 {order.map((item, index)=>(
+                 {userOrder.map((item, index)=>(
                    <>
                    <TableRow key={index} className={index % 2 === 0 ? "bg-grey-50" : "bg-accent"}>
                    <TableCell>{item.product.name}</TableCell>

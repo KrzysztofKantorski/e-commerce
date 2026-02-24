@@ -8,6 +8,7 @@ import TextGlitchAnimation from '@/components/TextGlitchAnimation';
 import {Form, Image, Button} from "@heroui/react"
 import { FaTrashAlt } from "react-icons/fa";
 import cart from '../api/cart';
+import handleApiError from '../api/handleApiError';
 import {
   Table,
   TableHeader,
@@ -17,64 +18,84 @@ import {
   TableCell
 } from "@heroui/table";
 import { FaArrowRight } from "react-icons/fa";
-import axios from "axios"
+import { useData } from '../Context/UserDataContext';
 function CartProducts() {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(true);
-  const [data, setData] = useState([]);
+  const [userCart, setUserCart] = useState([]);
   const [updateCart, setUpdateCart] = useState([]);
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState();
+  const {clearErrors, handleError, globalError} = handleApiError();
+  const { data } = useData();
   const goToOrder = ()=>{
+    clearErrors();
+    if (!data || !data.username) {
+      alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+      navigate('/');
+      return; 
+    }
     navigate("/Order")
   }
 
   const removeFromCart = async (id)=>{
-        try{
-            
-            const response = await cart.removeCartProduct(id);
-            if(response.status == 200){
-                setUpdateCart(id);
-                console.log(response.data.cart);
-                
-            }
-            }catch(error){
-                setError(error.message)
-            }
-  }
-  const updateQuantity = async ( quantity,  id)=>{  
-
-   console.log(typeof id)
-    try{  
-      const url = `http://localhost:3000/cart/${id}`;
-      const response = await axios.put(url, {
-         quantity :quantity
-        })
-       if(response.status == 200){
-        console.log("success");
-        setQuantity(quantity)
-       }
+  try{  
+    clearErrors();
+    if (!data || !data.username) {
+      alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+      navigate('/');
+      return; 
+    }
+    const response = await cart.removeCartProduct(id);
+    if(response.status == 200){
+      setUpdateCart(id);
+      console.log(response.userCart.cart);    
+      }
     }
     catch(error){
-      console.log(error.message)
+      handleApiError(error);
+      console.log(globalError);
+    }
+  }
+  const updateQuantity = async ( quantity,  id)=>{  
+    clearErrors();
+    if (!data || !data.username) {
+          alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+          navigate('/');
+          return; 
+    }
+    try{  
+      const response = await cart.updateCart(id, quantity);
+      if(response.status == 200){
+        setQuantity(quantity)
+      }
+    }
+    catch(error){
+      handleApiError(error);
+      console.log(globalError);
     }
 
   }
   useEffect(()=>{   
     setLoading(true)
-    setData([])
+    setUserCart([])
     const displayCart = async()=>{
+      clearErrors();
       try{
-        const response = await cart.displayCartProducts();
-         if(response.status == 200){
-               if (response.data.cart) {
-                setData(response.data.cart);
-            } 
-          }
+        if (!data || !data.username) {
+          alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+          navigate('/');
+          return; 
+        }
+        const response = await cart.displayCart();
+        if(response.status == 200){
+          if (response.data.cart) {
+            setUserCart(response.data.cart);
+          } 
+        }
       }
       catch(error){
-        console.log(error.message);
-        setError(true)
+        handleError(error);
+        console.log(globalError);
       }
       finally{
         setLoading(false)
@@ -83,7 +104,7 @@ function CartProducts() {
     displayCart();
   }, [quantity, updateCart])
 
-  const totalPrice = data.reduce((total, item) => {
+  const totalPrice = userCart.reduce((total, item) => {
     if(item.product.discount >0){
       return total + (item.product.discount * item.quantity);
     }
@@ -97,8 +118,8 @@ function CartProducts() {
     )
   }
 
-  if(error){
-    <Error></Error>
+  if(globalError !=""){
+    return <Error error={globalError}></Error>
   }
   return (
     <>
@@ -119,7 +140,7 @@ function CartProducts() {
           <TableColumn>Usuń</TableColumn>
         </TableHeader>
         <TableBody emptyContent={"Brak produktów w koszyku"}>
-          {data.map((item, index)=>(
+          {userCart.map((item, index)=>(
             
             <TableRow key={index} className={index % 2 === 0 ? "bg-grey-50" : "bg-accent"}>
             <TableCell>{item.product.name}</TableCell>

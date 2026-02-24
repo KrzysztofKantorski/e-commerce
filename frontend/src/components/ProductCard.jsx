@@ -13,7 +13,7 @@ import favorites from '../api/favorites';
 import cart from '../api/cart';
 import product from '../api/product';
 import handleApiError from '../api/handleApiError';
-
+import { useData } from '../Context/UserDataContext';
 function ProductCard() {
 const [currentPage, setCurrentPage] = useState(1);
 const firstRender = useRef(true)
@@ -26,14 +26,19 @@ const { category } = useCategory();
 const {filter} = useCategory();
 const {newProduct, setNewProduct, addToCart, setAddToCart} = useCategory();
 const {clearErrors, handleError, fieldErrors, globalError} = handleApiError()
+const { data } = useData();
 const handleAddToFavorites = async (productId) => {
   try{
+    if (!data || !data.username) {
+    alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+    navigate('/');
+    return; 
+   }
     clearErrors();
     const response = await favorites.addToFavorites(productId);
-    if(response.status == 201){
-          setNewProduct(prev => [...prev, productId]);
-          alert("Produkt został dodany do ulubionych");
-    }
+    setNewProduct(prev => [...prev, productId]);
+    alert("Produkt został dodany do ulubionych");
+    
   }
   catch(error){
     handleError(error, "favorites");
@@ -43,6 +48,11 @@ const handleAddToFavorites = async (productId) => {
 
 const handleCart = async (productId) => {
   try{
+    if (!data || !data.username) {
+    alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+    navigate('/');
+    return; 
+   }
     clearErrors();
     const response =await cart.addCartProduct(productId);
     if(response.status == 201){

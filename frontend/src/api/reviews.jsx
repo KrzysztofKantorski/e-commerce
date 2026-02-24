@@ -13,6 +13,19 @@ const reviews = {
         return response;
    },
 
+   //Add review to product based on id
+   addReview: async(id, comment, rating)=>{
+    let url = `http://localhost:3000/products/${id}/reviews`
+    const response = await axiosClient.post(
+        url, 
+        {
+          comment: comment.trim(),
+          rating: rating
+        }
+      );
+      return response;
+   }
+   
 }
 
 export default reviews

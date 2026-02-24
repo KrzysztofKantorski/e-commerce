@@ -32,10 +32,21 @@ const product = {
    displayProduct: async(id)=>{
       const response = await axiosClient.get(`/products/${id}`);
       return response;
+   },
+
+   //display products based on category
+   displayByCategory: async()=>{
+      const url = `http://localhost:3000/products/category/elektronika`;
+      const response = await axiosClient.get(url);
+      return response;
+   },
+
+   //display products with discount
+   displayDiscount: async()=>{
+      const url = "http://localhost:3000/products/discount";
+      const response = await axiosClient.get(url);
+      return response;
    }
-
-     
-
 }
 
 export default product

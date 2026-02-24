@@ -3,79 +3,72 @@ import {Form, Input, Button, Textarea} from "@heroui/react";
 import { NeonGradientCard } from "@/components/magicui/neon-gradient-card";
 import { HyperText } from "@/components/magicui/hyper-text";
 import {useState, useEffect} from "react"
-import { cn } from "@/lib/utils";
-import axios from "axios"
 import "../styles/Login.css";
-import Cookies from "universal-cookie";
 import { FaStar } from "react-icons/fa";
 import { FaRegStar } from "react-icons/fa";
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem} from "@heroui/react";
 import {useNavigate} from "react-router"
 import { useParams } from 'react-router';
-const cookies = new Cookies();
-
+import reviews from '../api/reviews';
+import handleApiError from '../api/handleApiError';
+import LoadingData from '../components/handleData/LoadingData';
+import Error from '../components/handleData/Error';
+import { useData } from '../Context/UserDataContext';
 function AddReview(e) {
   const navigate = useNavigate();
-   const [comment, setComment] = useState("");
-   const [rating, setRating] = useState("");
-   const [loading, setLoading] = useState(true);
-   const [errors, setErrors] = useState({});
-   const [error, setError] = useState(false);
-   const {product} = useParams();
+  const [comment, setComment] = useState("");
+  const [rating, setRating] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const {product} = useParams();
+  const {clearErrors, handleError, globalError} = handleApiError()
+  const { data } = useData();
+  const addReview = async (e) => {
+     if (!data || !data.username) {
+        alert("Musisz się zalogować, aby dodać produkt do koszyka!");
+        navigate('/');
+        return; 
+      }
+      e.preventDefault();
+      if (!comment.trim() || !rating) {
+        setErrors({
+          comment: !comment.trim() ? "Komentarz jest wymagany" : "",
+          rating: !rating ? "Ocena jest wymagana" : ""
+        });
+        return;
+      }
 
-  const [serverError, setServerError] = useState("");
-console.log(product)
- const addReview = async (e) => {
-    e.preventDefault();
-
-    // Walidacja
-    if (!comment.trim() || !rating) {
-      setErrors({
-        comment: !comment.trim() ? "Komentarz jest wymagany" : "",
-        rating: !rating ? "Ocena jest wymagana" : ""
-      });
-      return;
-    }
-
-    setLoading(true);
-    setErrors({});
-    setServerError("");
+   
 
     try {
+      clearErrors();
+       
       const numericRating = parseInt(rating);
-      const response = await axios.post(
-        `http://localhost:3000/products/${product}/reviews`, 
-        {
-          comment: comment.trim(),
-          rating: numericRating
-        }
-      );
+      const response =  await reviews.addReview(product, comment, numericRating);
+      setLoading(true);
       if (response.status === 200) {
         alert("Opinia dodana pomyślnie!");
         navigate(`/product/${product}`);
       }
     } 
     catch (err) {
-      console.error("Błąd dodawania opinii:", err);
-      
-      if (err.response?.status === 401) {
-        setServerError("Nie jesteś zalogowany");
-        navigate("/Login");
-      } else if (err.response?.data?.message) {
-        setServerError(err.response.data.message);
-      } else {
-        setServerError("Wystąpił błąd podczas dodawania opinii");
-      }
+      handleApiError(err);
+      console.log(err);
     } 
-    finally {
-      setLoading(false);
-    }
+    
   };
    const clear = ()=>{
     setMessage("");
     setComment("");
     setRating("")
    }
+
+  if(loading){
+    return <LoadingData></LoadingData>
+  }
+  if(globalError !=""){
+    return <Error error={globalError}></Error>
+  }
   return (
     <>
    
@@ -102,7 +95,7 @@ console.log(product)
               onChange = {(e)=> setComment(e.target.value)}
               />
             <Dropdown  classNames={{
-                base: "before:bg-default-200", // change arrow background
+                base: "before:bg-default-200", 
                 content:
                   "py-1 px-1 border border-default-200 bg-linear-to-br from-white to-default-200 dark:from-default-50 dark:to-black",
               }}>
